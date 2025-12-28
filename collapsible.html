@@ -501,200 +501,27 @@
             border: none;
         }
 
-        /* FULL SCREEN INTERVENTION OVERLAY */
-        #fullscreen-intervention-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 99999 !important; /* Increased to highest possible */
-            display: none;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        #fullscreen-intervention-overlay.active {
-            display: flex !important;
-        }
-
-        /* Ensure iframe doesn't interfere */
-        #iframe-container, #collapsible-iframe {
-            z-index: 99998 !important;
-        }
-
-        #fullscreen-intervention-container {
-            width: 100%;
-            height: 100%;
-            background: #1a1a2e;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            text-align: center;
-            position: relative;
-            overflow-y: auto;
-        }
-
-        .intervention-close-btn {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: #d84a54;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 28px;
-            cursor: pointer;
-            z-index: 20001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            opacity: 0.5;
-        }
-
-        .intervention-close-btn:hover {
-            background: #ff6b8b;
-            transform: scale(1.1);
-            opacity: 1;
-        }
-
-        .intervention-close-btn.disabled {
-            background: #666;
-            cursor: not-allowed;
-            opacity: 0.3;
-        }
-
-        .intervention-close-btn.disabled:hover {
-            background: #666;
-            transform: none;
-            opacity: 0.3;
-        }
-
-        .intervention-avatar {
-            width: 200px;
-            height: 200px;
-            margin-bottom: 40px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .intervention-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
-        }
-
-        .intervention-options-container {
-            display: grid !important;
-            grid-template-columns: repeat(4, 1fr) !important;
-            gap: 25px !important;
-            width: 100% !important;
-            max-width: 1000px !important;
-            max-height: 100px !important;
-        }
-
-        .intervention-option-fullscreen {
-            padding: 25px 20px;
-            background: rgba(233, 233, 233, 0.1);
-            border: 3px solid #e9a946;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            min-height: 160px;
-        }
-
-        .intervention-option-fullscreen:hover {
-            background: rgba(233, 233, 233, 0.2);
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 15px 30px rgba(233, 169, 70, 0.2);
-        }
-
-        .intervention-option-fullscreen i {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .intervention-option-fullscreen span {
-            font-size: 1.3rem;
-            font-family: 'Fredoka One', cursive;
-            color: white;
-            text-align: center;
-            line-height: 1.3;
-        }
-
-        .intervention-timer {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ffb8c6;
-            font-size: 1.2rem;
-            font-family: 'Comic Neue', cursive;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 25px;
-            border-radius: 25px;
-            border: 2px solid #ffb8c6;
-        }
-
-        .intervention-blocked-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ff6b8b;
-            font-size: 2.5rem;
-            font-family: 'Fredoka One', cursive;
-            text-align: center;
-            animation: pulse-red 1.5s infinite;
-            z-index: 20002;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 40px;
-            border-radius: 20px;
-            border: 4px solid #ff6b8b;
-            display: none;
-        }
-
-        .intervention-blocked-message.active {
-            display: block;
-        }
-
-        /* SPEAKING BOT VISUAL INDICATOR */
+        /* Speaking indicator */
         .speaking-indicator {
-            position: absolute;
-            bottom: 120px;
+            position: fixed;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(149, 225, 211, 0.2);
-            padding: 15px 30px;
-            border-radius: 20px;
-            border: 3px solid #95e1d3;
-            color: #95e1d3;
-            font-family: 'Comic Neue', cursive;
-            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            backdrop-filter: blur(10px);
-            animation: float 2s ease-in-out infinite;
-            z-index: 20003;
+            gap: 10px;
+            z-index: 10001;
+            font-family: 'Comic Neue', cursive;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .speaking-indicator i {
-            font-size: 1.5rem;
-            animation: pulse 1.5s infinite;
+            color: #4CAF50;
+            animation: pulse 1s infinite;
         }
 
         /* ANIMATIONS */
@@ -752,31 +579,15 @@
             }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 10px rgba(233, 169, 70, 0.7); }
-            to { text-shadow: 0 0 20px rgba(233, 169, 70, 0.9); }
-        }
-
-        @keyframes pulse-red {
-            0%, 100% { 
-                transform: translate(-50%, -50%) scale(1);
-                box-shadow: 0 0 20px rgba(255, 107, 139, 0.5);
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
             }
-            50% { 
-                transform: translate(-50%, -50%) scale(1.05);
-                box-shadow: 0 0 40px rgba(255, 107, 139, 0.8);
+            to {
+                opacity: 0;
+                transform: translateX(20px);
             }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-50%, -50%) rotate(-2deg); }
-            20%, 40%, 60%, 80% { transform: translate(-50%, -50%) rotate(2deg); }
         }
 
         /* RESPONSIVE */
@@ -806,35 +617,6 @@
             #speaking-bot-container-main {
                 width: 95%;
                 height: 85vh;
-            }
-            
-            .intervention-avatar {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .intervention-options-container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .intervention-option-fullscreen {
-                min-height: 120px;
-                padding: 20px 15px;
-            }
-            
-            .intervention-option-fullscreen i {
-                font-size: 2.5rem;
-            }
-            
-            .intervention-option-fullscreen span {
-                font-size: 1.1rem;
-            }
-            
-            .speaking-indicator {
-                font-size: 1rem;
-                padding: 10px 20px;
-                bottom: 100px;
             }
         }
     </style>
@@ -985,33 +767,6 @@
         </div>
     </div>
 
-    <!-- FULL SCREEN INTERVENTION OVERLAY -->
-    <div id="fullscreen-intervention-overlay">
-        <div id="fullscreen-intervention-container">
-            <button class="intervention-close-btn" id="intervention-close-btn" disabled title="Complete intervention to continue">
-                <i class="fas fa-lock"></i>
-            </button>
-            
-            <div class="intervention-avatar">
-                <img src="images/toodles.png" alt="Intervention Helper">
-            </div>
-            
-            <div class="intervention-options-container" id="intervention-options-container">
-                <!-- Options will be inserted here -->
-            </div>
-            
-            <div class="intervention-timer" id="intervention-timer">
-                Complete an option to continue
-            </div>
-            
-            <div class="intervention-blocked-message" id="intervention-blocked-message">
-                <i class="fas fa-exclamation-triangle"></i><br>
-                You must complete the intervention<br>
-                to continue the game!
-            </div>
-        </div>
-    </div>
-
     <!-- SPEAKING INDICATOR -->
     <div class="speaking-indicator" id="speaking-indicator" style="display: none;">
         <i class="fas fa-volume-up"></i>
@@ -1091,7 +846,12 @@
                 };
                 
                 this.currentUtterance.onerror = (event) => {
-                    console.error('❌ Speech synthesis error:', event);
+                    if (event.error === 'interrupted' || event.error === 'canceled') {
+                        console.log('🔄 Speech was interrupted/canceled (normal behavior)');
+                    } else {
+                        console.error('❌ Speech synthesis error:', event);
+                    }
+                    
                     this.isSpeaking = false;
                     this.currentUtterance = null;
                     this.hideSpeakingIndicator();
@@ -1100,7 +860,6 @@
                         setTimeout(onComplete, 500);
                     }
                     
-                    // Process next in queue
                     this.processQueue();
                 };
                 
@@ -1130,7 +889,6 @@
             // Show speaking indicator
             showSpeakingIndicator(text) {
                 if (this.speakingIndicator && this.speakingText) {
-                    // Truncate long text for display
                     const displayText = text.length > 50 ? text.substring(0, 47) + '...' : text;
                     this.speakingText.textContent = displayText;
                     this.speakingIndicator.style.display = 'flex';
@@ -1207,16 +965,14 @@
         }
 
         function initBubbleHandlers() {
-            // Emotion camera bubble - VIEW ONLY, no activation
+            // Emotion camera bubble
             const emotionBubble = document.getElementById('side-emotion-camera');
             if (emotionBubble) {
                 emotionBubble.addEventListener('click', function(event) {
                     event.stopPropagation();
                     
-                    // Just open camera panel to view status
                     openCameraPanel();
                     
-                    // Show info message if not active
                     if (window.dualCameraDetection && !window.dualCameraDetection.isEmotionRunning) {
                         showNotification(
                             "Auto-Activation",
@@ -1228,21 +984,18 @@
                     closeSideBubbles();
                 });
                 
-                // Add disabled style
                 emotionBubble.style.cursor = 'pointer';
                 emotionBubble.title = 'View Emotion Detection Status (Auto-activated with games)';
             }
             
-            // Eye camera bubble - VIEW ONLY, no activation
+            // Eye camera bubble
             const eyeBubble = document.getElementById('side-eye-camera');
             if (eyeBubble) {
                 eyeBubble.addEventListener('click', function(event) {
                     event.stopPropagation();
                     
-                    // Just open camera panel to view status
                     openCameraPanel();
                     
-                    // Show info message if not active
                     if (window.dualCameraDetection && !window.dualCameraDetection.isEyeTracking) {
                         showNotification(
                             "Auto-Activation",
@@ -1254,7 +1007,6 @@
                     closeSideBubbles();
                 });
                 
-                // Add disabled style
                 eyeBubble.style.cursor = 'pointer';
                 eyeBubble.title = 'View Eye Tracking Status (Auto-activated with games)';
             }
@@ -1265,7 +1017,6 @@
                 speakingBotBubble.addEventListener('click', function(event) {
                     event.stopPropagation();
                     
-                    // Show speaking bot overlay
                     showSpeakingBotOverlay();
                     
                     closeSideBubbles();
@@ -1289,22 +1040,6 @@
                     hideSpeakingBotOverlay();
                 });
             }
-            
-            // Close intervention button
-            const closeInterventionBtn = document.getElementById('intervention-close-btn');
-            if (closeInterventionBtn) {
-                closeInterventionBtn.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    // Show blocked message
-                    const blockedMsg = document.getElementById('intervention-blocked-message');
-                    if (blockedMsg) {
-                        blockedMsg.classList.add('active');
-                        setTimeout(() => {
-                            blockedMsg.classList.remove('active');
-                        }, 2000);
-                    }
-                });
-            }
         }
 
         // SPEAKING BOT OVERLAY FUNCTIONS
@@ -1313,10 +1048,9 @@
             if (overlay) {
                 overlay.classList.add('show');
                 
-                // Reset iframe source to ensure fresh load
                 const iframe = document.getElementById('speaking-bot-iframe');
                 if (iframe) {
-                    iframe.src = iframe.src; // Reload iframe
+                    iframe.src = iframe.src;
                 }
             }
         }
@@ -1402,7 +1136,6 @@
                 this.currentIntervention = null;
                 this.blockGameEvents = true;
                 
-                // Initialize speech manager
                 this.speechManager = new SpeechSynthesisManager();
                 
                 this.interventionOptions = {
@@ -1412,7 +1145,7 @@
                         options: [
                             { text: "Take breath", icon: "fa-wind", action: "breathe", color: "#95e1d3", response: "Great! Let's take three deep breaths together. In... and out... In... and out..." },
                             { text: "Take break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a 30-second break. Stretch and relax!" },
-                            { text: "Do strecthing", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Excellent choice! Let's stretch our arms and shake out the frustration!" },
+                            { text: "Do stretching", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Excellent choice! Let's stretch our arms and shake out the frustration!" },
                             { text: "Tell joke", icon: "fa-grin-squint", action: "joke", color: "#e9a946", response: "Why did the math book look sad? Because it had too many problems! 😄 Ready to continue?" }
                         ]
                     },
@@ -1459,7 +1192,6 @@
                 };
             }
             
-            // Show full screen intervention
 show(emotion) {
     if (this.isActive) return;
     
@@ -1467,252 +1199,110 @@ show(emotion) {
     this.isActive = true;
     this.currentIntervention = emotion;
     
-    // Get intervention data
     const interventionData = this.interventionOptions[emotion] || this.interventionOptions.anger;
     
-    // Send ALL intervention data to parent window
     if (window.parent !== window) {
         window.parent.postMessage({
             type: 'SHOW_FULLSCREEN_INTERVENTION',
             emotion: emotion,
             title: interventionData.title,
-            message: interventionData.message,
+            message: interventionData.message,  // Send message to parent
             options: interventionData.options,
             timestamp: Date.now()
         }, '*');
     }
     
-    // Block game events locally
     this.blockGameInput();
-    
-    // Start timer
     this.startTimer();
+    
+    // DO NOT SPEAK HERE - Let parent handle it
+    // this.speechManager.speak(interventionData.message, () => {
+    //     console.log('✅ Finished speaking intervention message');
+    // });
+    
+    console.log('📤 Sent intervention to parent for speaking');
 }
 
-            // Hide full screen intervention
-            hide() {
-                if (!this.isActive) return;
-                
-                console.log("✅ Hiding full screen intervention");
-                this.isActive = false;
-                this.currentIntervention = null;
-                
-                const overlay = document.getElementById('fullscreen-intervention-overlay');
-                if (overlay) {
-                    overlay.classList.remove('active');
-                }
-                
-                // Clear options
-                const optionsContainer = document.getElementById('intervention-options-container');
-                if (optionsContainer) {
-                    optionsContainer.innerHTML = '';
-                }
-                
-                // Stop any ongoing speech
-                this.speechManager.stop();
-                
-                // Stop timer
-                this.stopTimer();
-                
-                // Unblock game events
-                this.unblockGameInput();
-                
-                // Notify parent window
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'fullscreen-intervention-completed',
-                        timestamp: Date.now()
-                    }, '*');
-                }
-            }
-            
-            // Speak intervention message
+hide() {
+    if (!this.isActive) return;
+    
+    console.log("✅ Hiding full screen intervention");
+    this.isActive = false;
+        
+    // Clear the auto-hide timer
+    if (this.autoHideTimer) {
+        clearTimeout(this.autoHideTimer);
+        this.autoHideTimer = null;
+    }
+    
+    this.speechManager.stop();
+    this.stopTimer();
+    this.unblockGameInput();
+    
+    // Notify parent window that intervention is COMPLETELY done
+    if (window.parent !== window) {
+        window.parent.postMessage({
+            type: 'INTERVENTION_FULLY_COMPLETED',  // Changed type
+            emotion: this.currentIntervention,
+            timestamp: Date.now()
+        }, '*');
+    }
+    
+    // Clear the current intervention
+    this.currentIntervention = null;
+    
+    // Also notify local InterventionMonitor that intervention is over
+    if (window.interventionMonitor) {
+        window.interventionMonitor.enableMonitoring();
+        console.log('✅ Notified InterventionMonitor that intervention ended');
+    }
+}
+
             speakInterventionMessage(message, onComplete = null) {
                 this.speechManager.speak(message, onComplete);
             }
             
-            // Speak option response
             speakOptionResponse(response, onComplete = null) {
                 this.speechManager.speak(response, onComplete);
             }
             
-            // Create intervention options
-            createOptions(options, emotion) {
-                const container = document.getElementById('intervention-options-container');
-                if (!container) return;
-                
-                container.innerHTML = '';
-                
-                options.forEach((option, index) => {
-                    const optionElement = document.createElement('div');
-                    optionElement.className = 'intervention-option-fullscreen';
-                    optionElement.style.borderColor = option.color;
-                    
-                    optionElement.innerHTML = `
-                        <i class="fas ${option.icon}" style="color: ${option.color};"></i>
-                        <span>${option.text}</span>
-                    `;
-                    
-                    optionElement.addEventListener('click', () => {
-                        this.handleOptionClick(option, emotion);
-                    });
-                    
-                    container.appendChild(optionElement);
-                });
-            }
-            
-            // Handle option selection
-            handleOptionClick(option, emotion) {
-                console.log(`✅ Intervention option selected: ${option.action} for ${emotion}`);
-                
-                // Disable all options to prevent multiple clicks
-                const options = document.querySelectorAll('.intervention-option-fullscreen');
-                options.forEach(opt => {
-                    opt.style.pointerEvents = 'none';
-                    opt.style.opacity = '0.6';
-                });
-                
-                // Highlight selected option
-                event.target.closest('.intervention-option-fullscreen').style.borderColor = '#95e1d3';
-                event.target.closest('.intervention-option-fullscreen').style.boxShadow = '0 0 30px #95e1d3';
-                
-                // SPEAK THE OPTION RESPONSE
-                this.speakOptionResponse(option.response, () => {
-                    console.log('✅ Finished speaking option response');
-                    
-                    // Notify parent that intervention is completed
-                    if (window.parent !== window) {
-                        window.parent.postMessage({
-                            type: 'INTERVENTION_COMPLETED',
-                            action: option.action,
-                            emotion: emotion,
-                            response: option.response,
-                            timestamp: Date.now()
-                        }, '*');
-                    }
-                    
-                    // Hide the intervention after a delay
-                    setTimeout(() => {
-                        this.hide();
-                    }, 1000);
-                });
-            }
-            
-            
-            // Start timer display
             startTimer() {
-                const timerElement = document.getElementById('intervention-timer');
-                if (!timerElement) return;
-                
-                let seconds = 0;
                 this.timerInterval = setInterval(() => {
-                    seconds++;
-                    timerElement.textContent = `Complete an option to continue (${seconds}s)`;
+                    // Internal timer logic
                 }, 1000);
             }
             
-            // Stop timer
             stopTimer() {
                 if (this.timerInterval) {
                     clearInterval(this.timerInterval);
                     this.timerInterval = null;
                 }
-                
-                const timer = document.getElementById('intervention-timer');
-                if (timer) {
-                    timer.textContent = 'Complete an option to continue';
-                    timer.style.color = '#ffb8c6';
-                    timer.style.borderColor = '#ffb8c6';
-                }
             }
             
-            // Block game input
             blockGameInput() {
-                // Disable close button
-                const closeBtn = document.getElementById('intervention-close-btn');
-                if (closeBtn) {
-                    closeBtn.disabled = true;
-                    closeBtn.classList.add('disabled');
-                }
-                
-                // Block keyboard events
-                document.addEventListener('keydown', this.blockKeyboardEvents, true);
-                
-                // Block mouse events
-                document.addEventListener('click', this.blockMouseEvents, true);
-                
-                // Prevent any game interaction
                 this.blockGameEvents = true;
             }
             
-            // Unblock game input
             unblockGameInput() {
-                // Enable close button
-                const closeBtn = document.getElementById('intervention-close-btn');
-                if (closeBtn) {
-                    closeBtn.disabled = false;
-                    closeBtn.classList.remove('disabled');
-                }
-                
-                // Unblock keyboard events
-                document.removeEventListener('keydown', this.blockKeyboardEvents, true);
-                
-                // Unblock mouse events
-                document.removeEventListener('click', this.blockMouseEvents, true);
-                
                 this.blockGameEvents = false;
             }
             
-            // Block keyboard events
-            blockKeyboardEvents(event) {
-                // Allow only specific keys
-                const allowedKeys = ['Escape', 'Tab'];
-                if (!allowedKeys.includes(event.key)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    // Show blocked message
-                    const blockedMsg = document.getElementById('intervention-blocked-message');
-                    if (blockedMsg) {
-                        blockedMsg.classList.add('active');
-                        setTimeout(() => {
-                            blockedMsg.classList.remove('active');
-                        }, 1500);
-                    }
-                }
-            }
-            
-            // Block mouse events
-            blockMouseEvents(event) {
-                // Only block if clicking outside intervention
-                const overlay = document.getElementById('fullscreen-intervention-overlay');
-                const optionsContainer = document.getElementById('intervention-options-container');
-                
-                if (overlay && !optionsContainer.contains(event.target) && 
-                    event.target.id !== 'intervention-close-btn') {
-                    
-                    // Show blocked message
-                    const blockedMsg = document.getElementById('intervention-blocked-message');
-                    if (blockedMsg) {
-                        blockedMsg.style.top = event.clientY + 'px';
-                        blockedMsg.style.left = event.clientX + 'px';
-                        blockedMsg.style.transform = 'translate(-50%, -50%)';
-                        blockedMsg.classList.add('active');
-                        setTimeout(() => {
-                            blockedMsg.classList.remove('active');
-                        }, 1500);
-                    }
-                }
-            }
-            
-            // Check if intervention is active
             isInterventionActive() {
                 return this.isActive;
             }
             
-            // Check if currently speaking
             isCurrentlySpeaking() {
                 return this.speechManager.isCurrentlySpeaking();
+            }
+            
+            handleOptionResponse(optionResponse, onComplete = null) {
+                this.speakOptionResponse(optionResponse, () => {
+                    console.log('✅ Finished speaking option response');
+                    
+                    setTimeout(() => {
+                        this.hide();
+                    }, 1000);
+                });
             }
         }
 
@@ -1722,50 +1312,249 @@ show(emotion) {
 
         class InterventionMonitor {
             constructor() {
-                // Paul Ekman's 7 Universal Emotions
-                this.PAUL_EKMAN_EMOTIONS = [
-                    'anger',      // Red
-                    'disgust',    // Green
-                    'fear',       // Purple
-                    'happy',      // Yellow
-                    'sad',        // Blue
-                    'surprise',   // Orange
-                    'contempt'    // Gray
-                ];
-                
                 this.state = {
                     emotionHistory: [],
-                    focusHistory: [],
-                    lastEmotionIntervention: 0,
-                    lastFocusIntervention: 0,
-                    negativeEmotionCount: 0,
-                    lowFocusCount: 0,
-                    EMOTION_THRESHOLD: 3,      // Need 3 consecutive negative emotions
-                    FOCUS_THRESHOLD: 5,        // Need 5 consecutive low focus readings
-                    COOLDOWN: 30000            // 30 seconds between interventions
+                    lastEmotionDetection: 0,
+                    sameEmotionCount: 0,
+                    currentDetectedEmotion: 'neutral',
+                    emotionFrameColor: '#ffffff',
+                    EMOTION_TRIGGER_COUNT: 3,
+                    COOLDOWN: 1000,
+                    monitoringEnabled: true  // Added flag to control monitoring
                 };
                 
-                // Emotion colors for display
                 this.emotionColors = {
-                    'anger': '#d84a54',     // Red
-                    'disgust': '#95e1d3',   // Green
-                    'fear': '#b8b8ff',      // Purple
-                    'happy': '#e9a946',     // Yellow
-                    'sad': '#8ac6d1',       // Blue
-                    'surprise': '#ffb8c6',  // Pink
-                    'contempt': '#cccccc',  // Gray
-                    'neutral': '#ffffff'    // White
+                    'anger': '#d84a54',
+                    'disgust': '#95e1d3',
+                    'fear': '#b8b8ff',
+                    'happy': '#e9a946',
+                    'sad': '#8ac6d1',
+                    'surprise': '#ffb8c6',
+                    'contempt': '#cccccc',
+                    'neutral': '#ffffff'
                 };
                 
-                // Which emotions trigger interventions
-                this.negativeEmotions = ['anger', 'disgust', 'fear', 'sad', 'contempt'];
+                this.focusHistory = [];
+                this.lastFocusIntervention = 0;
+                this.lowFocusCount = 0;
+                this.FOCUS_THRESHOLD = 5;
                 
-                // Initialize full screen intervention system
+                this.lastInterventionTime = 0;
+                this.INTERVENTION_COOLDOWN = 30000;
+                
+                this.recentlyTriggeredEmotions = {};
+                this.EMOTION_COOLDOWN = 30000;
+                
                 this.fullScreenIntervention = new FullScreenIntervention();
+                
+                this.startPeriodicLogging();
+                this.startPeriodicCleanup();
+                
+                console.log('✅ Intervention Monitor initialized with monitoring enabled');
             }
 
-            // Map detected emotion to Paul Ekman's 7 emotions
-            mapToPaulEkman(emotion) {
+            startPeriodicLogging() {
+                setInterval(() => {
+                    this.logInterventionStatus();
+                }, 5000);
+            }
+            
+            startPeriodicCleanup() {
+                setInterval(() => {
+                    this.cleanupOldTriggers();
+                }, 10000);
+            }
+            
+            logInterventionStatus() {
+                const now = Date.now();
+                const timeSinceLastIntervention = now - this.lastInterventionTime;
+                const emotionHistoryLength = this.state.emotionHistory ? this.state.emotionHistory.length : 0;
+                const focusHistoryLength = this.focusHistory ? this.focusHistory.length : 0;
+                
+                console.log(`⏳ INTERVENTION MONITOR STATUS:`);
+                console.log(`   - Last intervention time: ${new Date(this.lastInterventionTime).toLocaleTimeString()}`);
+                console.log(`   - Time since last: ${Math.round(timeSinceLastIntervention/1000)}s`);
+                console.log(`   - Cooldown needed: ${Math.round(this.INTERVENTION_COOLDOWN/1000)}s`);
+                console.log(`   - Can trigger next? ${timeSinceLastIntervention > this.INTERVENTION_COOLDOWN ? '✅ YES' : '⏳ NO'}`);
+                console.log(`   - Remaining wait: ${Math.max(0, Math.round((this.INTERVENTION_COOLDOWN - timeSinceLastIntervention)/1000))}s`);
+                console.log(`   - Emotion history: ${emotionHistoryLength} entries`);
+                console.log(`   - Same emotion count: ${this.state.sameEmotionCount}/${this.state.EMOTION_TRIGGER_COUNT}`);
+                console.log(`   - Focus low count: ${this.lowFocusCount}/${this.FOCUS_THRESHOLD}`);
+                console.log(`   - Currently active emotions in cooldown: ${Object.keys(this.recentlyTriggeredEmotions).length}`);
+                console.log(`   - Monitoring enabled: ${this.state.monitoringEnabled ? '✅ YES' : '⏳ NO'}`);
+                console.log('====================================');
+            }
+
+            monitorEmotion(emotion, confidence, timestamp) {
+                // Check if monitoring is enabled
+                if (!this.state.monitoringEnabled) {
+                    console.log('⏸️ Emotion monitoring is temporarily paused');
+                    return null;
+                }
+                
+                // DEBUG: Log intervention status
+                const interventionActive = this.fullScreenIntervention && this.fullScreenIntervention.isInterventionActive();
+                console.log(`🔍 DEBUG: Intervention active = ${interventionActive}, monitoring enabled = ${this.state.monitoringEnabled}`);
+                
+                // Always process emotions even if intervention is "supposedly" active
+                // This fixes the stuck intervention issue
+                if (interventionActive) {
+                    console.log('⚠️ WARNING: Emotion detected during supposedly active intervention');
+                    console.log('⚠️ Forcing intervention to inactive state');
+                    
+                    // Force intervention to inactive
+                    this.fullScreenIntervention.isActive = false;
+                    this.fullScreenIntervention.currentIntervention = null;
+                    this.state.monitoringEnabled = true;
+                }
+                
+                if (confidence < 0.6) {
+                    console.log('📊 Low confidence emotion ignored:', emotion, Math.round(confidence*100)+'%');
+                    return null;
+                }
+                            
+                const mappedEmotion = this.mapEmotion(emotion.toLowerCase());
+                
+                console.log(`🎭 Emotion detected: ${mappedEmotion} (${Math.round(confidence*100)}%)`);
+                
+                // Add to history
+                if (!this.state.emotionHistory) {
+                    this.state.emotionHistory = [];
+                }
+                
+                this.state.emotionHistory.push({
+                    emotion: mappedEmotion,
+                    confidence: confidence,
+                    timestamp: timestamp
+                });
+                
+                // Keep only recent history (last 30 seconds)
+                const recentCutoff = timestamp - 30000;
+                this.state.emotionHistory = this.state.emotionHistory.filter(
+                    e => e.timestamp > recentCutoff
+                );
+                
+                // Check if same emotion continues
+                if (mappedEmotion === this.state.currentDetectedEmotion) {
+                    this.state.sameEmotionCount++;
+                    console.log(`🔢 Same emotion "${mappedEmotion}": ${this.state.sameEmotionCount}/${this.state.EMOTION_TRIGGER_COUNT}`);
+                } else {
+                    console.log(`🔄 Emotion changed: ${this.state.currentDetectedEmotion} -> ${mappedEmotion}`);
+                    this.state.currentDetectedEmotion = mappedEmotion;
+                    this.state.sameEmotionCount = 1;
+                }
+                
+                // Only trigger interventions for negative emotions
+                const negativeEmotions = ['anger', 'disgust', 'fear', 'sad'];
+                
+                if (negativeEmotions.includes(mappedEmotion)) {
+                    if (this.state.sameEmotionCount >= 3) {
+                        console.log(`🎨 Emotion frame changed to: ${mappedEmotion.toUpperCase()}`);
+                        this.state.emotionFrameColor = this.getEmotionColor(mappedEmotion);
+                        
+                        const currentTime = Date.now();
+                        const timeSinceLastIntervention = currentTime - this.lastInterventionTime;
+                        
+                        // Check if we can trigger an intervention
+                        const canTrigger = this.canTriggerIntervention(mappedEmotion, currentTime);
+                        
+                        if (canTrigger) {
+                            console.log(`🚨 TRIGGERING INTERVENTION for: ${mappedEmotion}`);
+                            
+                            if (this.fullScreenIntervention && !this.fullScreenIntervention.isInterventionActive()) {
+                                // Temporarily pause monitoring during intervention
+                                this.state.monitoringEnabled = false;
+                                
+                                // Show intervention
+                                this.fullScreenIntervention.show(mappedEmotion);
+                                
+                                // Update tracking
+                                this.lastInterventionTime = currentTime;
+                                this.recentlyTriggeredEmotions[mappedEmotion] = currentTime;
+                                
+                                // Reset tracking for this emotion
+                                this.resetEmotionTrackingFor(mappedEmotion);
+                                
+                                this.updateEmotionFrameUI(mappedEmotion);
+                                
+                                // Schedule re-enablement of monitoring
+                                setTimeout(() => {
+                                    this.state.monitoringEnabled = true;
+                                    console.log('✅ Emotion monitoring re-enabled after intervention');
+                                }, 1000);
+                            }
+                        } else {
+                            console.log(`⏳ Cannot trigger intervention for ${mappedEmotion}: ${this.getInterventionBlockReason(mappedEmotion, currentTime)}`);
+                        }
+                    }
+                }
+                
+                return mappedEmotion;
+            }
+
+            canTriggerIntervention(emotion, currentTime) {
+                // Check cooldown
+                const timeSinceLastIntervention = currentTime - this.lastInterventionTime;
+                if (timeSinceLastIntervention < this.INTERVENTION_COOLDOWN) {
+                    return false;
+                }
+                
+                // Check if this emotion is in cooldown
+                if (this.recentlyTriggeredEmotions[emotion]) {
+                    const timeSinceLastTrigger = currentTime - this.recentlyTriggeredEmotions[emotion];
+                    if (timeSinceLastTrigger < this.EMOTION_COOLDOWN) {
+                        return false;
+                    }
+                }
+                
+                // Check if intervention is already active
+                if (this.fullScreenIntervention && this.fullScreenIntervention.isInterventionActive()) {
+                    return false;
+                }
+                
+                return true;
+            }
+
+            getInterventionBlockReason(emotion, currentTime) {
+                const timeSinceLastIntervention = currentTime - this.lastInterventionTime;
+                
+                if (timeSinceLastIntervention < this.INTERVENTION_COOLDOWN) {
+                    return `Global cooldown: ${Math.round((this.INTERVENTION_COOLDOWN - timeSinceLastIntervention)/1000)}s left`;
+                }
+                
+                if (this.recentlyTriggeredEmotions[emotion]) {
+                    const timeSinceLastTrigger = currentTime - this.recentlyTriggeredEmotions[emotion];
+                    if (timeSinceLastTrigger < this.EMOTION_COOLDOWN) {
+                        return `Emotion cooldown: ${Math.round((this.EMOTION_COOLDOWN - timeSinceLastTrigger)/1000)}s left`;
+                    }
+                }
+                
+                if (this.fullScreenIntervention && this.fullScreenIntervention.isInterventionActive()) {
+                    return 'Intervention already active';
+                }
+                
+                return 'Unknown reason';
+            }
+
+            updateEmotionFrameUI(emotion) {
+                const emotionInfoElement = document.getElementById('emotion-info');
+                if (emotionInfoElement) {
+                    const emotionColor = this.getEmotionColor(emotion);
+                    emotionInfoElement.innerHTML = `
+                        Emotion: <span style="color: ${emotionColor}; font-weight: bold;">
+                            ${emotion.toUpperCase()}
+                        </span><br>
+                        Color: ${emotionColor}
+                    `;
+                }
+                
+                const dominantEmotionElement = document.getElementById('dominant-emotion');
+                if (dominantEmotionElement) {
+                    dominantEmotionElement.style.color = this.state.emotionFrameColor;
+                }
+            }
+
+            mapEmotion(emotion) {
                 const emotionMap = {
                     'angry': 'anger',
                     'disgust': 'disgust',
@@ -1780,94 +1569,162 @@ show(emotion) {
                 return emotionMap[emotion] || 'neutral';
             }
 
-            // Monitor emotion data from detection
-            monitorEmotion(emotion, confidence, timestamp) {
-                if (confidence < 0.6) return; // Not confident enough
-                
-                // Map to Paul Ekman's emotions
-                const mappedEmotion = this.mapToPaulEkman(emotion.toLowerCase());
-                
-                // Track emotion history
-                this.state.emotionHistory.push({
-                    emotion: mappedEmotion,
-                    confidence: confidence,
-                    timestamp: timestamp
-                });
-                
-                // Keep only recent history (last 10 seconds)
-                const recentCutoff = timestamp - 10000;
-                this.state.emotionHistory = this.state.emotionHistory.filter(
-                    e => e.timestamp > recentCutoff
-                );
-                
-                // Check for negative emotions
-                if (this.negativeEmotions.includes(mappedEmotion)) {
-                    this.state.negativeEmotionCount++;
-                    
-                    // Check if intervention is needed
-                    if (this.state.negativeEmotionCount >= this.state.EMOTION_THRESHOLD &&
-                        (timestamp - this.state.lastEmotionIntervention) > this.state.COOLDOWN) {
-                        
-                        // Trigger FULL SCREEN intervention
-                        this.fullScreenIntervention.show(mappedEmotion);
-                        this.state.lastEmotionIntervention = timestamp;
-                        this.state.negativeEmotionCount = 0;
-                    }
-                } else {
-                    // Reset if emotion is positive
-                    if (mappedEmotion === 'happy' || mappedEmotion === 'neutral') {
-                        this.state.negativeEmotionCount = 0;
-                    }
+            monitorFocus(eyeScore, level, confidence, timestamp) {
+                // Check if monitoring is enabled
+                if (!this.state.monitoringEnabled) {
+                    return;
                 }
                 
-                return mappedEmotion;
-            }
-
-            // Monitor focus data from eye tracking
-            monitorFocus(eyeScore, level, confidence, timestamp) {
-                if (confidence < 0.3) return; // Not confident enough
+                // Check if intervention is active
+                if (this.fullScreenIntervention && this.fullScreenIntervention.isInterventionActive()) {
+                    return;
+                }
                 
-                // Track focus history
-                this.state.focusHistory.push({
+                if (confidence < 0.3) return;
+                
+                if (!this.focusHistory) {
+                    this.focusHistory = [];
+                }
+                
+                this.focusHistory.push({
                     score: eyeScore,
                     level: level,
                     confidence: confidence,
                     timestamp: timestamp
                 });
                 
-                // Keep only recent history
                 const recentCutoff = timestamp - 15000;
-                this.state.focusHistory = this.state.focusHistory.filter(
+                this.focusHistory = this.focusHistory.filter(
                     f => f.timestamp > recentCutoff
                 );
                 
-                // Check for low focus
                 if (level === 'low' && eyeScore < 30) {
-                    this.state.lowFocusCount++;
+                    this.lowFocusCount++;
                     
-                    // Check if intervention is needed
-                    if (this.state.lowFocusCount >= this.state.FOCUS_THRESHOLD &&
-                        (timestamp - this.state.lastFocusIntervention) > this.state.COOLDOWN) {
+                    console.log(`👁️ Low focus detected: score=${eyeScore}, level=${level} (count: ${this.lowFocusCount}/${this.FOCUS_THRESHOLD})`);
+                    
+                    if (this.lowFocusCount >= this.FOCUS_THRESHOLD &&
+                        (timestamp - this.lastFocusIntervention) > 10000) {
                         
-                        // Trigger FULL SCREEN intervention
-                        this.fullScreenIntervention.show('distracted');
-                        this.state.lastFocusIntervention = timestamp;
-                        this.state.lowFocusCount = 0;
+                        console.log(`🚨 TRIGGERING INTERVENTION for distraction`);
+                        
+                        const currentTime = Date.now();
+                        const timeSinceLastIntervention = currentTime - this.lastInterventionTime;
+                        
+                        if (timeSinceLastIntervention > this.INTERVENTION_COOLDOWN) {
+                            this.recentlyTriggeredEmotions['distracted'] = currentTime;
+                            
+                            if (this.fullScreenIntervention && !this.fullScreenIntervention.isInterventionActive()) {
+                                // Temporarily pause monitoring
+                                this.state.monitoringEnabled = false;
+                                
+                                this.fullScreenIntervention.show('distracted');
+                                this.lastInterventionTime = currentTime;
+                                this.lastFocusIntervention = timestamp;
+                                
+                                this.resetFocusTracking();
+                                
+                                // Schedule re-enablement
+                                setTimeout(() => {
+                                    this.state.monitoringEnabled = true;
+                                    console.log('✅ Focus monitoring re-enabled after intervention');
+                                }, 1000);
+                            }
+                        } else {
+                            console.log(`⏳ Intervention on cooldown for distraction`);
+                            console.log(`   - ${Math.round((this.INTERVENTION_COOLDOWN - timeSinceLastIntervention)/1000)}s remaining`);
+                        }
                     }
                 } else if (level === 'high' || level === 'medium') {
-                    // Reset if focus is good
-                    this.state.lowFocusCount = 0;
+                    console.log(`👁️✅ Good focus detected: score=${eyeScore}, level=${level}, resetting low focus count`);
+                    this.lowFocusCount = 0;
                 }
             }
 
-            // Get color for emotion display
             getEmotionColor(emotion) {
                 return this.emotionColors[emotion] || '#ffffff';
             }
             
-            // Check if intervention is blocking
+            resetEmotionTrackingFor(emotion) {
+                if (!this.state.emotionHistory) {
+                    this.state.emotionHistory = [];
+                }
+                
+                // Filter out this emotion from history
+                this.state.emotionHistory = this.state.emotionHistory.filter(
+                    e => e.emotion !== emotion
+                );
+                
+                // Reset current detection if it matches
+                if (this.state.currentDetectedEmotion === emotion) {
+                    this.state.currentDetectedEmotion = 'neutral';
+                    this.state.sameEmotionCount = 0;
+                    this.state.emotionFrameColor = '#ffffff';
+                }
+                
+                console.log(`🔄 Reset tracking for emotion: ${emotion}`);
+            }
+            
+            resetFocusTracking() {
+                this.lowFocusCount = 0;
+                this.focusHistory = [];
+                console.log('🔄 Reset focus tracking');
+            }
+            
+            cleanupOldTriggers() {
+                const currentTime = Date.now();
+                for (const emotion in this.recentlyTriggeredEmotions) {
+                    const triggerTime = this.recentlyTriggeredEmotions[emotion];
+                    if (currentTime - triggerTime > this.EMOTION_COOLDOWN * 2) {
+                        delete this.recentlyTriggeredEmotions[emotion];
+                        console.log(`🧹 Cleaned up old trigger for: ${emotion}`);
+                    }
+                }
+            }
+            
             isBlockingGame() {
-                return this.fullScreenIntervention.isInterventionActive();
+                return this.fullScreenIntervention ? this.fullScreenIntervention.isInterventionActive() : false;
+            }
+            
+            getTimeSinceLastIntervention() {
+                return Date.now() - this.lastInterventionTime;
+            }
+            
+            getCooldownRemaining() {
+                return Math.max(0, this.INTERVENTION_COOLDOWN - this.getTimeSinceLastIntervention());
+            }
+            
+            resetTracking() {
+                this.state = {
+                    emotionHistory: [],
+                    lastEmotionDetection: 0,
+                    sameEmotionCount: 0,
+                    currentDetectedEmotion: 'neutral',
+                    emotionFrameColor: '#ffffff',
+                    EMOTION_TRIGGER_COUNT: 3,
+                    COOLDOWN: 1000,
+                    monitoringEnabled: true
+                };
+                
+                this.focusHistory = [];
+                this.lastFocusIntervention = 0;
+                this.lowFocusCount = 0;
+                this.lastInterventionTime = 0;
+                this.recentlyTriggeredEmotions = {};
+                
+                console.log('🔄 Intervention tracking fully reset');
+            }
+            
+            // Add a method to explicitly enable monitoring
+            enableMonitoring() {
+                this.state.monitoringEnabled = true;
+                console.log('✅ Emotion monitoring enabled');
+            }
+            
+            // Add a method to explicitly disable monitoring
+            disableMonitoring() {
+                this.state.monitoringEnabled = false;
+                console.log('⏸️ Emotion monitoring disabled');
             }
         }
 
@@ -1877,11 +1734,10 @@ show(emotion) {
 
         class DualCameraDetection {
             constructor() {
-                // Initialize video elements FIRST
+                // Initialize video elements
                 this.emotionVideo = document.getElementById('emotion-video');
                 this.eyeVideo = document.getElementById('eye-video');
                 
-                // Check if elements exist
                 if (!this.emotionVideo) {
                     console.error('Emotion video element not found!');
                     this.emotionVideo = document.createElement('video');
@@ -1905,11 +1761,14 @@ show(emotion) {
                 // State management
                 this.isEmotionRunning = false;
                 this.isEyeTracking = false;
-                this.emotionFrameCount = 0;
+                this.emotionSecondCount = 0;
                 this.emotionLastTimestamp = 0;
                 this.emotionFPS = 0;
                 this.lastInterventionTime = 0;
                 this.INTERVENTION_COOLDOWN = 30000;
+
+                // Initialize intervention monitor
+                this.interventionMonitor = new InterventionMonitor();
 
                 // Canvas elements
                 this.emotionCanvas = document.getElementById('emotion-overlay');
@@ -1923,9 +1782,6 @@ show(emotion) {
                     this.eyeCtx = this.eyeCanvas.getContext('2d');
                 }
 
-                // Initialize intervention monitor
-                this.interventionMonitor = new InterventionMonitor();
-                
                 // Create separate video elements for processing only
                 this.irisVideo = document.createElement('video');
                 this.irisVideo.id = 'eye-processing-video';
@@ -1947,7 +1803,7 @@ show(emotion) {
                     confidence: 0
                 };
                 
-                // Emotion tracking (Paul Ekman's 7 emotions)
+                // Emotion tracking
                 this.currentEmotion = 'neutral';
                 this.emotionConfidence = 0;
                 this.emotionHistory = [];
@@ -1971,13 +1827,23 @@ show(emotion) {
                 this.eyeScoreHistory = [];
                 this.EYE_SCORE_HISTORY_MAX = 30;
                 
+                // Performance optimization properties
+                this.DEBUG_MODE = false;
+                this.lastIrisData = null;
+                this.noFaceEyeCount = 0;
+                this.eyeFrameCount = 0;
+                this.emotionFrameCount = 0;
+                this.lastEmotionDrawTime = 0;
+                this.lastEmotionUpdate = 0;
+                this.lastEyeUpdate = 0;
+                
                 // Initialize
                 this.init();
             }
             
             async init() {
                 try {
-                    // Initialize Human.js for emotion detection
+                    // Lighter emotion config
                     this.emotionHuman = new Human.default({
                         modelBasePath: 'https://cdn.jsdelivr.net/npm/@vladmandic/human/models/',
                         backend: 'webgl',
@@ -1985,13 +1851,13 @@ show(emotion) {
                             enabled: true,
                             detector: { 
                                 maxDetected: 1,
-                                rotation: true,
+                                rotation: false,
                                 return: true,
-                                modelPath: 'blazeface-back.json'
+                                modelPath: 'blazeface-back.json',
+                                skipFrames: 2
                             },
                             mesh: { 
-                                enabled: true,
-                                modelPath: 'facemesh.json'
+                                enabled: false,
                             },
                             iris: { enabled: false },
                             emotion: { 
@@ -2002,15 +1868,12 @@ show(emotion) {
                             liveness: { enabled: false },
                             antispoof: { enabled: false }
                         },
-                        body: { enabled: false },
-                        hand: { enabled: false },
-                        object: { enabled: false },
-                        segmentation: { enabled: false },
-                        cacheSensitivity: 0,
-                        skipFrames: 0
+                        cacheSensitivity: 0.9,
+                        skipFrames: 2,
+                        deallocate: true
                     });
                     
-                    // Initialize Human.js for eye tracking
+                    // Even lighter eye config
                     this.eyeHuman = new Human.default({
                         modelBasePath: 'https://cdn.jsdelivr.net/npm/@vladmandic/human/models/',
                         backend: 'webgl',
@@ -2018,9 +1881,10 @@ show(emotion) {
                             enabled: true,
                             detector: { 
                                 maxDetected: 1,
-                                rotation: true,
+                                rotation: false,
                                 return: true,
-                                modelPath: 'blazeface-back.json'
+                                modelPath: 'blazeface-back.json',
+                                skipFrames: 3
                             },
                             mesh: { 
                                 enabled: true,
@@ -2028,7 +1892,7 @@ show(emotion) {
                             },
                             iris: { 
                                 enabled: true,
-                                maxDetected: 2,
+                                maxDetected: 1,
                                 minConfidence: 0.1
                             },
                             emotion: { enabled: false },
@@ -2036,12 +1900,9 @@ show(emotion) {
                             liveness: { enabled: false },
                             antispoof: { enabled: false }
                         },
-                        body: { enabled: false },
-                        hand: { enabled: false },
-                        object: { enabled: false },
-                        segmentation: { enabled: false },
-                        cacheSensitivity: 0,
-                        skipFrames: 0
+                        cacheSensitivity: 0.9,
+                        skipFrames: 3,
+                        deallocate: true
                     });
                     
                     await Promise.all([
@@ -2065,7 +1926,6 @@ show(emotion) {
             }
 
             resizeCanvases() {
-                // Get container dimensions
                 const getContainerSize = (selector) => {
                     const container = document.querySelector(selector);
                     if (!container) return { width: 300, height: 180 };
@@ -2080,13 +1940,11 @@ show(emotion) {
                 const emotionSize = getContainerSize('.emotion-screen .video-container');
                 const eyeSize = getContainerSize('.eye-screen .video-container');
                 
-                // Resize emotion canvas
                 if (this.emotionCanvas) {
                     this.emotionCanvas.width = emotionSize.width;
                     this.emotionCanvas.height = emotionSize.height;
                 }
                 
-                // Resize eye canvas
                 if (this.eyeCanvas) {
                     this.eyeCanvas.width = eyeSize.width;
                     this.eyeCanvas.height = eyeSize.height;
@@ -2094,7 +1952,6 @@ show(emotion) {
             }
             
             initUI() {
-                // Update initial status
                 this.updateStatusIndicators();
                 this.updateCameraBubbles();
             }
@@ -2142,7 +1999,6 @@ show(emotion) {
                 console.log("🎮 Starting BOTH detection systems for gameplay");
                 
                 try {
-                    // Update immediately
                     const irisInfo = document.getElementById('iris-info');
                     const focusStatus = document.getElementById('focus-status');
                     
@@ -2154,11 +2010,9 @@ show(emotion) {
                         `;
                     }
                     
-                    // Start detections
                     await this.startEmotionDetection();
                     await this.startEyeDetection();
                     
-                    // Update again to show active
                     if (irisInfo) irisInfo.textContent = 'Eye tracking active. Looking for eyes...';
                     if (focusStatus) {
                         focusStatus.innerHTML = `
@@ -2167,7 +2021,6 @@ show(emotion) {
                         `;
                     }
                     
-                    // Update bubbles
                     this.updateCameraBubbles();
                     
                     console.log("✅ Both detection systems started for gameplay");
@@ -2178,25 +2031,25 @@ show(emotion) {
             }
             
             async startEmotionDetection() {
-                // If already running, return
                 if (this.isEmotionRunning) return;
                 
                 try {
-                    // Get camera for emotion detection
+                    // Get camera with LOWER RESOLUTION
                     this.emotionStream = await navigator.mediaDevices.getUserMedia({
-                        video: { width: 640, height: 480 },
+                        video: { 
+                            width: { ideal: 320 },
+                            height: { ideal: 240 },
+                            frameRate: { ideal: 15 }
+                        },
                         audio: false
                     });
                     
-                    // Connect stream to video element
                     this.emotionVideo.srcObject = this.emotionStream;
                     
-                    // Wait for video to load
                     await new Promise(resolve => {
                         this.emotionVideo.onloadedmetadata = resolve;
                     });
                     
-                    // Play video
                     await this.emotionVideo.play();
                     
                     this.isEmotionRunning = true;
@@ -2211,34 +2064,29 @@ show(emotion) {
             }
             
             async startEyeDetection() {
-                // If already running, return
                 if (this.isEyeTracking) return;
                 
                 try {
-                    // Make sure we have the video element
                     if (!this.eyeVideo) {
                         this.eyeVideo = document.getElementById('eye-video');
                         if (!this.eyeVideo) {
-                            console.error('Eye video element not found!');
                             throw new Error('Eye video element not found');
                         }
                     }
                     
-                    // Get camera stream
+                    // Get camera with LOWER RESOLUTION
                     this.eyeStream = await navigator.mediaDevices.getUserMedia({
                         video: { 
-                            width: { ideal: 640 },
-                            height: { ideal: 480 },
+                            width: { ideal: 320 },
+                            height: { ideal: 240 },
                             facingMode: 'user',
-                            frameRate: { ideal: 30 }
+                            frameRate: { ideal: 15 }
                         },
                         audio: false
                     });
                     
-                    // Connect stream to video element
                     this.eyeVideo.srcObject = this.eyeStream;
                     
-                    // Wait for video to be ready
                     await new Promise((resolve) => {
                         const checkReady = () => {
                             if (this.eyeVideo.readyState >= 2) {
@@ -2250,14 +2098,12 @@ show(emotion) {
                         checkReady();
                     });
                     
-                    // Play video
                     await this.eyeVideo.play();
                     
                     this.isEyeTracking = true;
                     this.updateStatusIndicators();
                     this.updateCameraBubbles();
                     
-                    // Start detection loop
                     this.detectEyeFrame();
                     
                     console.log('✅ Eye tracking started');
@@ -2278,24 +2124,14 @@ show(emotion) {
                     };
                 }
                 
-                // Get normalized iris center (0-1 coordinates)
                 const irisCenter = this.irisData.center;
-                
-                // Calculate distance from screen center (0.5, 0.5 in normalized coordinates)
                 const distanceX = irisCenter.x - 0.5;
                 const distanceY = irisCenter.y - 0.5;
                 const rawDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-                
-                // Normalize distance to 0-1 scale (max possible distance from center is ~0.707)
                 const normalizedDistance = Math.min(1, rawDistance / 0.707);
-                
-                // Calculate eye score based on how close to center
                 const eyeScore = Math.round(100 * (1 - normalizedDistance));
-                
-                // Apply confidence penalty (lower confidence = lower max possible score)
                 const confidenceAdjustedScore = Math.round(eyeScore * this.irisData.confidence);
                 
-                // Determine direction
                 let direction = 'CENTER';
                 if (Math.abs(distanceX) > 0.1 || Math.abs(distanceY) > 0.1) {
                     if (Math.abs(distanceX) > Math.abs(distanceY)) {
@@ -2305,7 +2141,6 @@ show(emotion) {
                     }
                 }
                 
-                // Determine level based on score
                 let level = 'low';
                 if (confidenceAdjustedScore >= 80) level = 'high';
                 else if (confidenceAdjustedScore >= 50) level = 'medium';
@@ -2322,62 +2157,77 @@ show(emotion) {
             }
 
             updateGameActiveUI() {
-                // Update emotion status
                 const emotionStatus = document.getElementById('emotion-status');
+                const eyeStatus = document.getElementById('eye-status');
+                
                 if (emotionStatus) {
                     emotionStatus.innerHTML = '<i class="fas fa-circle" style="color: #95e1d3;"></i> ACTIVE (Game)';
                     emotionStatus.className = 'screen-status active';
                 }
                 
-                // Update eye status
-                const eyeStatus = document.getElementById('eye-status');
                 if (eyeStatus) {
                     eyeStatus.innerHTML = '<i class="fas fa-circle" style="color: #95e1d3;"></i> ACTIVE (Game)';
                     eyeStatus.className = 'screen-status active';
                 }
                 
-                // Update camera bubbles
                 this.updateCameraBubbles();
             }
             
             autoStopBothDetectionsAfterGame() {
                 console.log("🛑 Stopping BOTH detection systems after game");
                 
-                // Stop emotion detection
                 if (this.isEmotionRunning) {
                     this.stopEmotionDetection();
                 }
                 
-                // Stop eye tracking
                 if (this.isEyeTracking) {
                     this.stopEyeDetection();
                 }
                 
-                // Show info
                 this.showInfo("Game monitoring stopped.");
-                
-                // Reset UI to inactive state
                 this.updateInactiveUI();
                 
                 console.log("✅ Both detection systems stopped after game");
             }
             
+            updateEmotionDisplayThrottled(emotion, confidence) {
+                this.lastEmotionUpdate = this.lastEmotionUpdate || 0;
+                const now = Date.now();
+                
+                if (now - this.lastEmotionUpdate > 500) {
+                    const confidencePercent = Math.round(confidence * 100);
+                    const emotionColor = this.interventionMonitor.getEmotionColor(emotion);
+                    
+                    const dominantEmotionElement = document.getElementById('dominant-emotion');
+                    const emotionConfidenceElement = document.getElementById('emotion-confidence');
+                    
+                    if (dominantEmotionElement) {
+                        dominantEmotionElement.textContent = emotion;
+                        dominantEmotionElement.style.color = emotionColor;
+                    }
+                    
+                    if (emotionConfidenceElement) {
+                        emotionConfidenceElement.textContent = `${confidencePercent}%`;
+                    }
+                    
+                    this.lastEmotionUpdate = now;
+                }
+            }
+
             updateInactiveUI() {
-                // Update emotion status
                 const emotionStatus = document.getElementById('emotion-status');
+                const eyeStatus = document.getElementById('eye-status');
+                
                 if (emotionStatus) {
                     emotionStatus.innerHTML = '<i class="fas fa-circle" style="color: #ff6b8b;"></i> INACTIVE (Start Game)';
                     emotionStatus.className = 'screen-status';
                 }
                 
-                // Update eye status
-                const eyeStatus = document.getElementById('eye-status');
                 if (eyeStatus) {
                     eyeStatus.innerHTML = '<i class="fas fa-circle" style="color: #ff6b8b;"></i> INACTIVE (Start Game)';
                     eyeStatus.className = 'screen-status';
                 }
                 
-                // Update camera bubbles
                 this.updateCameraBubbles();
             }
             
@@ -2393,18 +2243,15 @@ show(emotion) {
                 
                 this.isEmotionRunning = false;
                 
-                // Clear canvas
                 if (this.emotionCtx) {
                     this.emotionCtx.clearRect(0, 0, this.emotionCanvas.width, this.emotionCanvas.height);
                 }
                 
-                // Reset displays
                 document.getElementById('face-count').textContent = '0';
                 document.getElementById('dominant-emotion').textContent = '-';
                 document.getElementById('emotion-confidence').textContent = '0%';
                 document.getElementById('emotion-info').textContent = 'Emotion: Waiting for game to start';
                 
-                // Update bubbles
                 this.updateCameraBubbles();
                 
                 console.log('🛑 Emotion detection stopped');
@@ -2422,19 +2269,16 @@ show(emotion) {
                 
                 this.isEyeTracking = false;
                 
-                // Clear canvas
                 if (this.eyeCtx) {
                     this.eyeCtx.clearRect(0, 0, this.eyeCanvas.width, this.eyeCanvas.height);
                 }
                 
-                // Reset displays
                 const irisConfidenceElement = document.getElementById('eye-iris-confidence');
                 const focusDirectionElement = document.getElementById('focus-direction');
                 
                 if (irisConfidenceElement) irisConfidenceElement.textContent = '0%';
                 if (focusDirectionElement) focusDirectionElement.textContent = '-';
                 
-                // Update bubbles
                 this.updateCameraBubbles();
                 
                 console.log('🛑 Eye tracking stopped');
@@ -2466,105 +2310,207 @@ show(emotion) {
                 this.stopEyeDetection();
             }
             
+            // Optimized emotion detection with frame skipping
             async detectEmotionFrame() {
                 if (!this.isEmotionRunning) return;
                 
+                // FRAME SKIPPING: Process only every 2nd frame (30 FPS instead of 60)
+                this.emotionFrameCount = this.emotionFrameCount || 0;
+                this.emotionFrameCount++;
+                
+                if (this.emotionFrameCount % 2 !== 0) {
+                    requestAnimationFrame(() => this.detectEmotionFrame());
+                    return;
+                }
+                
                 try {
-                    // Update FPS
+                    // Update FPS counter less frequently
                     this.updateEmotionFPS();
                     
-                    // Run detection
-                    const result = await this.emotionHuman.detect(this.emotionVideo);
+                    // Run detection with optimization
+                    const result = await this.emotionHuman.detect(this.emotionVideo, {
+                        skipFrames: 1,
+                        cacheSensitivity: 0.9
+                    });
                     
-                    // Clear and draw
-                    this.emotionCtx.clearRect(0, 0, this.emotionCanvas.width, this.emotionCanvas.height);
+                    this.lastEmotionDrawTime = this.lastEmotionDrawTime || 0;
+                    const now = Date.now();
                     
-                    // Draw video frame
-                    this.emotionCtx.drawImage(this.emotionVideo, 0, 0, 
-                        this.emotionCanvas.width, this.emotionCanvas.height);
+                // In detectEmotionFrame method:
+                if (result.face && result.face.length > 0) {
+                    const face = result.face[0];
+                    const dominantEmotion = this.getDominantEmotion(face);
+                    const mappedEmotion = this.interventionMonitor.mapEmotion(dominantEmotion.name);
                     
-                    // Check for faces
-                    if (result.face && result.face.length > 0) {
-                        const face = result.face[0];
-                        const dominantEmotion = this.getDominantEmotion(face);
-                        
-                        // Map to Paul Ekman's emotions
-                        const paulEkmanEmotion = this.interventionMonitor.mapToPaulEkman(dominantEmotion.name);
-                        const emotionColor = this.interventionMonitor.getEmotionColor(paulEkmanEmotion);
-                        
-                        // Update face count if element exists
-                        const faceCountElement = document.getElementById('face-count');
-                        if (faceCountElement) {
-                            faceCountElement.textContent = result.face.length;
-                        }
-                        
-                        // Update emotion displays with Paul Ekman emotion
-                        this.updateEmotionDisplay(paulEkmanEmotion, dominantEmotion.confidence, emotionColor);
-                        
-                        // Draw face detection
-                        this.drawEmotionFace(face, paulEkmanEmotion, dominantEmotion.confidence, emotionColor);
-                        
-                        // Check for interventions (but only if intervention is not already active)
-                        if (this.interventionMonitor && !this.interventionMonitor.isBlockingGame()) {
-                            this.interventionMonitor.monitorEmotion(
-                                dominantEmotion.name,
-                                dominantEmotion.confidence,
-                                Date.now()
-                            );
-                        }
-                        
-                    } else {
-                        // No faces found
-                        const faceCountElement = document.getElementById('face-count');
-                        const dominantEmotionElement = document.getElementById('dominant-emotion');
-                        const emotionConfidenceElement = document.getElementById('emotion-confidence');
-                        const emotionInfoElement = document.getElementById('emotion-info');
-                        
-                        if (faceCountElement) faceCountElement.textContent = '0';
-                        if (dominantEmotionElement) {
-                            dominantEmotionElement.textContent = '-';
-                            dominantEmotionElement.style.color = '';
-                        }
-                        if (emotionConfidenceElement) emotionConfidenceElement.textContent = '0%';
-                        if (emotionInfoElement) emotionInfoElement.textContent = 'Emotion: No face detected';
+                    // Draw face detection
+                    this.drawEmotionFaceDetection(face, mappedEmotion, dominantEmotion.confidence);
+                    
+                    // Update displays (throttled)
+                    this.updateEmotionDisplayThrottled(mappedEmotion, dominantEmotion.confidence);
+                    
+                    // Check for interventions - ALWAYS call monitorEmotion
+                    const monitoredEmotion = this.interventionMonitor.monitorEmotion(
+                        dominantEmotion.name,
+                        dominantEmotion.confidence,
+                        Date.now()
+                    );
+                    
+                    // Update face count
+                    const faceCountElement = document.getElementById('face-count');
+                    if (faceCountElement) {
+                        faceCountElement.textContent = result.face.length;
                     }
                     
+                    this.lastEmotionDrawTime = now;
+                }
+                                    
                 } catch (error) {
                     console.log('Detection error:', error);
                 }
                 
-                // Loop
-                if (this.isEmotionRunning) {
+                // Continue with throttled loop
+                setTimeout(() => {
                     requestAnimationFrame(() => this.detectEmotionFrame());
+                }, 33); // Target ~30 FPS
+            }
+            
+            // Optimized eye detection with frame skipping
+            async detectEyeFrame() {
+                if (!this.isEyeTracking || !this.eyeHuman || !this.eyeVideo) {
+                    return;
+                }
+                
+                // FRAME SKIPPING for eye tracking
+                this.eyeFrameCount = this.eyeFrameCount || 0;
+                this.eyeFrameCount++;
+                
+                if (this.eyeFrameCount % 3 !== 0) { // Process every 3rd frame (~20 FPS)
+                    requestAnimationFrame(() => this.detectEyeFrame());
+                    return;
+                }
+                
+                try {
+                    if (this.eyeVideo.readyState >= 2) {
+                        // Use optimized detection settings
+                        const result = await this.eyeHuman.detect(this.eyeVideo, {
+                            skipFrames: 2,
+                            cacheSensitivity: 0.9,
+                            face: {
+                                iris: {
+                                    enabled: true,
+                                    maxDetected: 1
+                                }
+                            }
+                        });
+                        
+                        if (result.face && result.face.length > 0) {
+                            const face = result.face[0];
+                            const irisData = this.extractIrisData(face);
+                            
+                            // Update display only if data changed significantly
+                            if (this.shouldUpdateEyeDisplay(irisData)) {
+                                this.updateEyeInfoDisplay(irisData);
+                                this.updateIrisData(irisData.left, irisData.right, irisData.confidence);
+                            }
+                            
+                            // Check focus
+                            const eyeScoreData = this.calculateEyeScore();
+                            if (this.interventionMonitor && !this.interventionMonitor.isBlockingGame()) {
+                                this.interventionMonitor.monitorFocus(
+                                    eyeScoreData.score,
+                                    eyeScoreData.level,
+                                    eyeScoreData.confidence,
+                                    Date.now()
+                                );
+                            }
+                            
+                        } else {
+                            // Update less frequently when no face
+                            this.noFaceEyeCount = this.noFaceEyeCount || 0;
+                            if (this.noFaceEyeCount++ % 10 === 0) {
+                                this.updateEyeInfoDisplay({confidence: 0});
+                                this.updateIrisData([0.5, 0.5], [0.5, 0.5], 0);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Eye detection error:', error);
+                }
+                
+                // Throttled loop continuation
+                setTimeout(() => {
+                    requestAnimationFrame(() => this.detectEyeFrame());
+                }, 50); // Target ~20 FPS
+            }
+            
+            // Helper method to check if eye display should update
+            shouldUpdateEyeDisplay(newIrisData) {
+                if (!this.lastIrisData) {
+                    this.lastIrisData = newIrisData;
+                    return true;
+                }
+                
+                const confidenceChanged = Math.abs(newIrisData.confidence - this.lastIrisData.confidence) > 0.1;
+                const positionChanged = newIrisData.left && this.lastIrisData.left ?
+                    Math.abs(newIrisData.left[0] - this.lastIrisData.left[0]) > 0.05 ||
+                    Math.abs(newIrisData.left[1] - this.lastIrisData.left[1]) > 0.05 : false;
+                
+                if (confidenceChanged || positionChanged) {
+                    this.lastIrisData = newIrisData;
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            // Clear emotion canvas
+            clearEmotionCanvas() {
+                if (this.emotionCtx) {
+                    this.emotionCtx.clearRect(0, 0, this.emotionCanvas.width, this.emotionCanvas.height);
                 }
             }
             
-            drawEmotionFace(face, paulEkmanEmotion, confidence, emotionColor) {
+            // Update display when no face detected
+            updateNoFaceDisplay() {
+                const faceCountElement = document.getElementById('face-count');
+                const dominantEmotionElement = document.getElementById('dominant-emotion');
+                const emotionConfidenceElement = document.getElementById('emotion-confidence');
+                const emotionInfoElement = document.getElementById('emotion-info');
+                
+                if (faceCountElement) faceCountElement.textContent = '0';
+                if (dominantEmotionElement) {
+                    dominantEmotionElement.textContent = '-';
+                    dominantEmotionElement.style.color = '';
+                }
+                if (emotionConfidenceElement) emotionConfidenceElement.textContent = '0%';
+                if (emotionInfoElement) emotionInfoElement.textContent = 'Emotion: No face detected';
+            }
+            
+            drawEmotionFaceDetection(face, mappedEmotion, confidence) {
                 const ctx = this.emotionCtx;
                 const canvasWidth = this.emotionCanvas.width;
                 const canvasHeight = this.emotionCanvas.height;
                 const videoWidth = this.emotionVideo.videoWidth;
                 const videoHeight = this.emotionVideo.videoHeight;
                 
-                // CLEAR FIRST
+                // Clear canvas
                 ctx.clearRect(0, 0, canvasWidth, canvasHeight);
                 
-                // DRAW VIDEO FRAME FIRST
+                // Draw video frame
                 ctx.drawImage(this.emotionVideo, 0, 0, canvasWidth, canvasHeight);
                 
                 if (!face.box) return;
                 
-                // Calculate scaling
                 const scaleX = canvasWidth / videoWidth;
                 const scaleY = canvasHeight / videoHeight;
-                
                 const [x, y, width, height] = face.box;
                 
-                // SCALE THE BOX
                 const scaledX = x * scaleX;
                 const scaledY = y * scaleY;
                 const scaledWidth = width * scaleX;
                 const scaledHeight = height * scaleY;
+                
+                const emotionColor = this.interventionMonitor.getEmotionColor(mappedEmotion);
                 
                 // Draw face box
                 ctx.strokeStyle = emotionColor;
@@ -2579,7 +2525,7 @@ show(emotion) {
                 ctx.font = '12px Arial';
                 ctx.textAlign = 'right';
                 ctx.fillText(
-                    `${paulEkmanEmotion} ${Math.round(confidence * 100)}%`,
+                    `${mappedEmotion} ${Math.round(confidence * 100)}%`,
                     scaledX + scaledWidth - 5,
                     scaledY - 5
                 );
@@ -2598,46 +2544,22 @@ show(emotion) {
                 };
             }
 
-            updateEmotionDisplay(emotion, confidence, color) {
-                const confidencePercent = Math.round(confidence * 100);
-                
-                // Update elements
-                const dominantEmotionElement = document.getElementById('dominant-emotion');
-                const emotionConfidenceElement = document.getElementById('emotion-confidence');
-                const emotionInfoElement = document.getElementById('emotion-info');
-                
-                if (dominantEmotionElement) {
-                    dominantEmotionElement.textContent = emotion;
-                    dominantEmotionElement.style.color = color;
-                }
-                
-                if (emotionConfidenceElement) {
-                    emotionConfidenceElement.textContent = `${confidencePercent}%`;
-                }
-                
-                if (emotionInfoElement) {
-                    emotionInfoElement.textContent = `Emotion: ${emotion} (${confidencePercent}%)`;
-                }
-            }
-
             updateEmotionFPS() {
                 const now = performance.now();
-                this.emotionFrameCount++;
+                this.emotionSecondCount++;
                 
                 if (now >= this.emotionLastTimestamp + 1000) {
-                    this.emotionFPS = Math.round((this.emotionFrameCount * 1000) / (now - this.emotionLastTimestamp));
+                    this.emotionFPS = this.emotionSecondCount;
                     this.emotionLastTimestamp = now;
-                    this.emotionFrameCount = 0;
+                    this.emotionSecondCount = 0;
                     
-                    // Update FPS display
                     const fpsElement = document.getElementById('emotion-fps');
                     if (fpsElement) {
                         fpsElement.textContent = this.emotionFPS;
                     }
                 }
             }
-            
-            // Eye info display method
+
             updateEyeInfoDisplay(irisData) {
                 const irisInfoElement = document.getElementById('iris-info');
                 const focusStatusElement = document.getElementById('focus-status');
@@ -2648,7 +2570,6 @@ show(emotion) {
                     const confidence = Math.round(irisData.confidence * 100);
                     const eyeScore = this.calculateEyeScore();
                     
-                    // Update iris-info
                     irisInfoElement.innerHTML = `
                         Eye Score: <strong style="color: ${eyeScore.level === 'high' ? '#4CAF50' : 
                                                         eyeScore.level === 'medium' ? '#FFA500' : '#F44336'}">
@@ -2658,7 +2579,6 @@ show(emotion) {
                         Looking: ${eyeScore.direction}
                     `;
                     
-                    // Update focus-status
                     let statusClass = 'status-unknown';
                     let statusText = `Eye: ${eyeScore.score}%`;
                     
@@ -2683,7 +2603,6 @@ show(emotion) {
                     `;
                     
                 } else {
-                    // No good detection
                     irisInfoElement.textContent = 'Looking for eyes...';
                     focusStatusElement.innerHTML = `
                         <div class="status-dot status-unknown"></div>
@@ -2692,64 +2611,14 @@ show(emotion) {
                 }
             }
 
-            async detectEyeFrame() {
-                if (!this.isEyeTracking || !this.eyeHuman || !this.eyeVideo) {
-                    return;
-                }
-                
-                try {
-                    if (this.eyeVideo.readyState >= 2) {
-                        // Use eyeVideo for detection
-                        const result = await this.eyeHuman.detect(this.eyeVideo);
-                        
-                        if (result.face && result.face.length > 0) {
-                            const face = result.face[0];
-                            const irisData = this.extractIrisData(face);
-                            
-                            // Update display
-                            this.updateEyeInfoDisplay(irisData);
-                            
-                            // Update iris data
-                            this.updateIrisData(irisData.left, irisData.right, irisData.confidence);
-                            
-                            // Check for focus interventions (but only if intervention is not already active)
-                            const eyeScoreData = this.calculateEyeScore();
-                            if (this.interventionMonitor && !this.interventionMonitor.isBlockingGame()) {
-                                this.interventionMonitor.monitorFocus(
-                                    eyeScoreData.score,
-                                    eyeScoreData.level,
-                                    eyeScoreData.confidence,
-                                    Date.now()
-                                );
-                            }
-                            
-                        } else {
-                            // No face
-                            this.updateEyeInfoDisplay({confidence: 0});
-                            this.updateIrisData([0.5, 0.5], [0.5, 0.5], 0);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Eye detection error:', error);
-                }
-                
-                // Continue loop
-                if (this.isEyeTracking) {
-                    requestAnimationFrame(() => this.detectEyeFrame());
-                }
-            }
-
-            // Iris extraction
             extractIrisData(face) {
                 let leftIris = [0.5, 0.5];
                 let rightIris = [0.5, 0.5];
                 let confidence = 0.1;
                 
-                // Get video dimensions for normalization
-                const videoWidth = this.eyeVideo.videoWidth || 640;
-                const videoHeight = this.eyeVideo.videoHeight || 480;
+                const videoWidth = this.eyeVideo.videoWidth || 320;
+                const videoHeight = this.eyeVideo.videoHeight || 240;
                 
-                // Check for iris in face annotations
                 if (face.annotations && face.annotations.rightEyeIris && face.annotations.leftEyeIris) {
                     const leftPoints = face.annotations.leftEyeIris;
                     const rightPoints = face.annotations.rightEyeIris;
@@ -2785,7 +2654,6 @@ show(emotion) {
             }
 
             updateIrisData(leftIris, rightIris, confidence) {
-                // Ensure we have arrays
                 const left = Array.isArray(leftIris) ? leftIris : [0.5, 0.5];
                 const right = Array.isArray(rightIris) ? rightIris : [0.5, 0.5];
                 
@@ -2801,7 +2669,6 @@ show(emotion) {
                     confidence: confidence 
                 };
                 
-                // Calculate center point
                 this.irisData.center = {
                     x: (left[0] + right[0]) / 2,
                     y: (left[1] + right[1]) / 2,
@@ -2810,18 +2677,14 @@ show(emotion) {
                 
                 this.irisData.confidence = confidence;
                 
-                // Update displays
                 this.updateIrisDisplay();
                 this.calculateFocusMetrics();
             }
 
             updateIrisDisplay() {
                 const confidence = Math.round(this.irisData.confidence * 100);
-                
-                // Calculate eye score data
                 const eyeScoreData = this.calculateEyeScore();
                 
-                // Update main display
                 const irisConfidenceElement = document.getElementById('eye-iris-confidence');
                 if (irisConfidenceElement) {
                     irisConfidenceElement.textContent = `${confidence}%`;
@@ -2829,7 +2692,6 @@ show(emotion) {
                                                        confidence > 40 ? '#FFA500' : '#F44336';
                 }
                 
-                // Update eye score display
                 const eyeScoreElement = document.getElementById('eye-score');
                 if (eyeScoreElement) {
                     eyeScoreElement.textContent = `${eyeScoreData.score}%`;
@@ -2837,7 +2699,6 @@ show(emotion) {
                                                   eyeScoreData.level === 'medium' ? '#FFA500' : '#F44336';
                 }
                 
-                // Update alignment display
                 const alignmentScoreElement = document.getElementById('eye-alignment-score');
                 if (alignmentScoreElement) {
                     const alignment = Math.round(100 - eyeScoreData.normalizedDistance * 100);
@@ -2846,7 +2707,6 @@ show(emotion) {
                                                         alignment > 60 ? '#FFA500' : '#F44336';
                 }
                 
-                // Update direction display
                 const focusDirectionElement = document.getElementById('focus-direction');
                 if (focusDirectionElement) {
                     focusDirectionElement.textContent = eyeScoreData.direction;
@@ -2858,7 +2718,6 @@ show(emotion) {
                 if (this.irisData.confidence < 0.3) {
                     this.updateEyeScoreDisplay(0, 'unknown');
                     
-                    // Update displays
                     const eyeScoreElement = document.getElementById('eye-score');
                     const alignmentScoreElement = document.getElementById('eye-alignment-score');
                     const focusDirectionElement = document.getElementById('focus-direction');
@@ -2870,10 +2729,8 @@ show(emotion) {
                     return;
                 }
                 
-                // Calculate eye score
                 const eyeScoreData = this.calculateEyeScore();
                 
-                // Update displays
                 const eyeScoreElement = document.getElementById('eye-score');
                 const alignmentScoreElement = document.getElementById('eye-alignment-score');
                 const focusDirectionElement = document.getElementById('focus-direction');
@@ -2882,7 +2739,6 @@ show(emotion) {
                 if (alignmentScoreElement) alignmentScoreElement.textContent = `${Math.round(100 - eyeScoreData.normalizedDistance * 100)}%`;
                 if (focusDirectionElement) focusDirectionElement.textContent = eyeScoreData.direction;
                 
-                // Update eye score status
                 this.updateEyeScoreDisplay(eyeScoreData.score, eyeScoreData.level);
             }
 
@@ -2975,15 +2831,11 @@ show(emotion) {
         // INITIALIZATION
         // ============================================
 
-        // Initialize dual camera detection
         let dualCameraDetection = null;
 
-        // Initialize on load
         window.addEventListener('load', function() {
-            // Initialize side toggle
             initSideToggle();
             
-            // Initialize detection
             if (typeof Human !== 'undefined') {
                 dualCameraDetection = new DualCameraDetection();
             } else {
@@ -3009,29 +2861,44 @@ show(emotion) {
             document.head.appendChild(fontLink);
             
             // Listen for messages from parent
-            window.addEventListener('message', function(event) {
-                if (event.data.type === 'start-game-detection') {
-                    if (dualCameraDetection) {
-                        dualCameraDetection.autoStartBothDetectionsForGame();
-                    }
-                } else if (event.data.type === 'stop-game-detection') {
-                    if (dualCameraDetection) {
-                        dualCameraDetection.autoStopBothDetectionsAfterGame();
-                    }
-                } else if (event.data.type === 'open-camera-panel') {
-                    openCameraPanel();
-                } else if (event.data.type === 'close-camera-panel') {
-                    closeCameraPanel();
-                } else if (event.data.type === 'initialize-camera') {
-                    // Initialize camera when iframe is shown
-                    console.log('Initializing camera detection system');
-                } else if (event.data.type === 'fullscreen-intervention-started') {
-                    console.log('Full screen intervention started by parent:', event.data);
-                } else if (event.data.type === 'fullscreen-intervention-completed') {
-                    console.log('Full screen intervention completed by parent:', event.data);
-                }
-            });
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'start-game-detection') {
+        if (dualCameraDetection) {
+            dualCameraDetection.autoStartBothDetectionsForGame();
+        }
+    } else if (event.data.type === 'stop-game-detection') {
+        if (dualCameraDetection) {
+            dualCameraDetection.autoStopBothDetectionsAfterGame();
+        }
+    } else if (event.data.type === 'open-camera-panel') {
+        openCameraPanel();
+    } else if (event.data.type === 'close-camera-panel') {
+        closeCameraPanel();
+    } else if (event.data.type === 'initialize-camera') {
+        console.log('Initializing camera detection system');
+    } else if (event.data.type === 'INTERVENTION_ACKNOWLEDGED') {  // NEW
+        console.log('✅ Parent acknowledged intervention completion');
+        
+        // Make SURE intervention is marked as inactive
+        if (window.interventionMonitor && window.interventionMonitor.fullScreenIntervention) {
+            window.interventionMonitor.fullScreenIntervention.isActive = false;
+            window.interventionMonitor.fullScreenIntervention.currentIntervention = null;
+            window.interventionMonitor.enableMonitoring();
+            console.log('✅ Forced intervention state to inactive');
+        }
+    }
+
+    if (event.data.type === 'RESET_EMOTION_TRACKING') {
+        if (dualCameraDetection && dualCameraDetection.interventionMonitor) {
+            dualCameraDetection.interventionMonitor.state.emotionHistory = [];
+            dualCameraDetection.interventionMonitor.state.sameEmotionCount = 0;
+            dualCameraDetection.interventionMonitor.state.currentDetectedEmotion = 'neutral';
             
+            console.log('🔄 Emotion tracking reset after intervention');
+        }
+    }
+});
+
             // Notify parent that iframe is loaded
             if (window.parent !== window) {
                 window.parent.postMessage({ type: 'iframe-loaded' }, '*');

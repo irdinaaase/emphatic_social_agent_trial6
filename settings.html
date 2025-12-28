@@ -10,21 +10,35 @@
     
     <style>
         :root {
-            --mickey-red: #d84a54;
-            --mickey-yellow: #e9a946;
+            /* Default Mickey theme */
+            --mickey-red: #ffe3e2;
+            --mickey-yellow: #f19d3b;
             --mickey-black: #25221a;
             --mickey-white: #e9e7db;
             --mickey-blue: #8ac6d1;
             --mickey-pink: #ffb8c6;
             --mickey-green: #95e1d3;
-            --mickey-purple: #b8b8ff;
-            --mickey-bg: #fff5f5;
+            --mickey-purple: #ded8e4;
+            --mickey-bg: #010101;
+            
+            /* IRLEN Color Schemes */
+            --irlen-cream: #fffef0;
+            --irlen-blue: #e6f3ff;
+            --irlen-green: #f0fff0;
+            --irlen-pink: #fff0f5;
+            --irlen-gray: #f5f5f5;
+            --irlen-purple: #f5f0ff;
+            --irlen-yellow: #fffff0;
+            --irlen-rose: #fff0f0;
         }
 
+        /* DYSLEXIA FONT AS DEFAULT */
         body {
             margin: 0;
             padding: 20px;
-            font-family: 'Fredoka One', cursive;
+            font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+            letter-spacing: 0.1em;
+            line-height: 1.8;
             background: linear-gradient(135deg, var(--mickey-bg) 0%, #ffe6e6 100%);
             min-height: 100vh;
             background-image: 
@@ -33,19 +47,63 @@
             background-size: 40px 40px;
         }
 
-        body.dyslexia-mode {
-            font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
-            letter-spacing: 0.1em;
-            line-height: 1.8;
-            background: linear-gradient(135deg, #ffffcc 0%, #fff5cc 100%) !important;
+        body.standard-mode {
+            font-family: 'Fredoka One', cursive !important;
+            letter-spacing: normal;
+            line-height: normal;
+        }
+
+        /* IRLEN COLOR SCHEMES */
+        body.irlen-cream {
+            background: var(--irlen-cream) !important;
+            color: #333333;
+        }
+
+        body.irlen-blue {
+            background: var(--irlen-blue) !important;
+            color: #003366;
+        }
+
+        body.irlen-green {
+            background: var(--irlen-green) !important;
+            color: #006600;
+        }
+
+        body.irlen-pink {
+            background: var(--irlen-pink) !important;
+            color: #660033;
+        }
+
+        body.irlen-gray {
+            background: var(--irlen-gray) !important;
+            color: #333333;
+        }
+
+        body.irlen-purple {
+            background: var(--irlen-purple) !important;
+            color: #330066;
+        }
+
+        body.irlen-yellow {
+            background: var(--irlen-yellow) !important;
+            color: #663300;
+        }
+
+        body.irlen-rose {
+            background: var(--irlen-rose) !important;
+            color: #660000;
         }
 
         .fixed-header {
-            top: 35px;
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
             z-index: 9999;
             padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid currentColor;
         }
 
         .header-container {
@@ -56,34 +114,6 @@
             margin: 0 auto;
         }
 
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--mickey-white);
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .header-logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--mickey-yellow);
-            border-radius: 50%;
-            border: 3px solid var(--mickey-black);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--mickey-red);
-        }
-
         .header-nav {
             display: flex;
             gap: 10px;
@@ -91,11 +121,11 @@
 
         .nav-tab {
             padding: 12px 20px;
-            background: var(--mickey-yellow);
-            color: var(--mickey-black);
-            border: 3px solid var(--mickey-black);
+            background: rgba(255, 255, 255, 0.8);
+            color: inherit;
+            border: 2px solid currentColor;
             border-radius: 15px;
-            font-family: 'Fredoka One', cursive;
+            font-family: inherit;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
@@ -106,42 +136,41 @@
         }
 
         .nav-tab:hover {
-            background: var(--mickey-white);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 0 var(--mickey-black);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
         }
 
         .nav-tab.active {
-            background: var(--mickey-blue);
-            color: var(--mickey-white);
+            background: rgba(138, 198, 209, 0.8);
+            color: #333333;
         }
 
         .settings-content {
             padding: 30px;
-            background: var(--mickey-white);
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 25px;
-            border: 5px solid var(--mickey-black);
-            box-shadow: 0 10px 0 var(--mickey-black);
-            margin-top: 20px;
+            border: 5px solid currentColor;
+            box-shadow: 0 10px 0 currentColor;
+            margin-top: 80px;
             max-width: 800px;
-            margin: 20px auto;
+            margin: 80px auto 20px;
         }
 
         .setting-section {
-            background: var(--mickey-yellow);
+            background: rgba(233, 169, 70, 0.8);
             padding: 20px;
             border-radius: 15px;
-            border: 3px solid var(--mickey-black);
+            border: 3px solid currentColor;
             margin-bottom: 20px;
         }
 
         .setting-btn {
             padding: 12px 20px;
-            background: var(--mickey-red);
-            color: var(--mickey-white);
-            border: 3px solid var(--mickey-black);
+            background: #fffef0;
+            color: #95e1d3;
+            border: 3px solid currentColor;
             border-radius: 15px;
-            font-family: 'Fredoka One', cursive;
+            font-family: inherit;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
@@ -156,7 +185,45 @@
         .setting-btn:hover {
             background: var(--mickey-pink);
             transform: translateY(-3px);
-            box-shadow: 0 5px 0 var(--mickey-black);
+            box-shadow: 0 5px 0 currentColor;
+        }
+
+        /* IRLEN Color Selector in Settings */
+        .irlen-selector-settings {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .irlen-btn-settings {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #333333;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .irlen-btn-settings:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .irlen-btn-settings.active {
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 2px #333333;
+        }
+
+        .irlen-label {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 5px;
+            color: currentColor;
         }
 
         @keyframes fadeIn {
@@ -198,52 +265,140 @@
                 margin: 20px 10px;
                 padding: 20px;
             }
+            
+            .irlen-selector-settings {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: currentColor;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 2px solid currentColor;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            max-width: 300px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
         }
     </style>
 </head>
 <body>
     <header class="fixed-header">
         <div class="header-container">
-            
             <nav class="header-nav">
                 <a href="game-center.html" class="nav-tab">
-                    <i class="fas fa-gamepad"></i> Game Center
+                    <i class="fas fa-gamepad"></i>
                 </a>
                 <a href="profile.html" class="nav-tab">
-                    <i class="fas fa-user"></i> Profile
+                    <i class="fas fa-user"></i>
                 </a>
                 <a href="about.html" class="nav-tab">
-                    <i class="fas fa-info-circle"></i> About Us
+                    <i class="fas fa-info-circle"></i>
                 </a>
                 <a href="settings.html" class="nav-tab active">
-                    <i class="fas fa-cog"></i> Settings
+                    <i class="fas fa-cog"></i>
                 </a>
             </nav>
         </div>
     </header>
 
     <div class="settings-content">
-        <h2 style="color: var(--mickey-red); text-align: center; margin-bottom: 30px;">
+        <h2 style="color: currentColor; text-align: center; margin-bottom: 30px;">
             <i class="fas fa-cog"></i> Settings & Preferences
         </h2>
         
+        <!-- Accessibility Settings Section -->
+        <!-- In settings.html -->
         <div class="setting-section">
-            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <h3 style="color: currentColor; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-book-reader"></i> Accessibility Settings
             </h3>
-            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+            <p style="color: currentColor; font-family: inherit; margin-bottom: 15px;">
                 Toggle dyslexia-friendly font and spacing
             </p>
-            <button class="setting-btn" id="toggle-dyslexia">
-                <i class="fas fa-toggle-on"></i> Toggle Dyslexia Mode
-            </button>
+            
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <div style="font-size: 1.2rem; color: currentColor;">
+                    <i class="fas fa-font"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="color: currentColor; font-weight: bold;">Dyslexia-Friendly Mode</div>
+                    <div style="color: currentColor; font-size: 0.9rem; opacity: 0.8;">
+                    Uses OpenDyslexic font with increased letter spacing
+                    </div>
+                </div>
+                <button class="setting-btn" id="toggle-dyslexia" style="width: auto; padding: 10px 20px;">
+                    <span id="dyslexia-status">Standard Font Mode (ON)</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Visual Stress (Irlen) Settings Section -->
+        <div class="setting-section">
+            <h3 style="color: currentColor; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-palette"></i> Visual Stress Colors
+            </h3>
+            <p style="color: currentColor; font-family: inherit; margin-bottom: 15px;">
+                Choose a color scheme to reduce visual stress (Irlen Syndrome support)
+            </p>
+            
+            <div class="irlen-selector-settings">
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--mickey-bg);" data-scheme="default" title="Default">
+                        <i class="fas fa-mouse" style="color: white; font-size: 1.2rem;"></i>
+                    </div>
+                    <div class="irlen-label">Default</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-cream);" data-scheme="irlen-cream" title="Cream"></div>
+                    <div class="irlen-label">Cream</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-blue);" data-scheme="irlen-blue" title="Blue"></div>
+                    <div class="irlen-label">Blue</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-green);" data-scheme="irlen-green" title="Green"></div>
+                    <div class="irlen-label">Green</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-pink);" data-scheme="irlen-pink" title="Pink"></div>
+                    <div class="irlen-label">Pink</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-gray);" data-scheme="irlen-gray" title="Gray"></div>
+                    <div class="irlen-label">Gray</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-purple);" data-scheme="irlen-purple" title="Purple"></div>
+                    <div class="irlen-label">Purple</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-yellow);" data-scheme="irlen-yellow" title="Yellow"></div>
+                    <div class="irlen-label">Yellow</div>
+                </div>
+                <div>
+                    <div class="irlen-btn-settings" style="background: var(--irlen-rose);" data-scheme="irlen-rose" title="Rose"></div>
+                    <div class="irlen-label">Rose</div>
+                </div>
+            </div>
         </div>
         
         <div class="setting-section">
-            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <h3 style="color: currentColor; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-volume-up"></i> Sound Settings
             </h3>
-            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+            <p style="color: currentColor; font-family: inherit; margin-bottom: 15px;">
                 Enable or disable voice guidance and sound effects
             </p>
             <button class="setting-btn" id="toggle-sound">
@@ -252,59 +407,42 @@
         </div>
         
         <div class="setting-section">
-            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-paint-brush"></i> Theme Settings
-            </h3>
-            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
-                Choose your preferred color theme
-            </p>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="setting-btn" onclick="setTheme('mickey')" style="background: var(--mickey-red);">
-                    <i class="fas fa-mouse"></i> Mickey Theme
-                </button>
-                <button class="setting-btn" onclick="setTheme('simple')" style="background: var(--mickey-blue);">
-                    <i class="fas fa-palette"></i> Simple Theme
-                </button>
-            </div>
-        </div>
-        
-        <div class="setting-section">
-            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <h3 style="color: currentColor; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-user-edit"></i> Account Settings
             </h3>
-            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+            <p style="color: currentColor; font-family: inherit; margin-bottom: 15px;">
                 Manage your student profile
             </p>
-            <button class="setting-btn" onclick="changeStudentName()" style="background: var(--mickey-green);">
+            <button class="setting-btn" onclick="changeStudentName()">
                 <i class="fas fa-edit"></i> Change Student Name
             </button>
         </div>
         
         <div class="setting-section">
-            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <h3 style="color: currentColor; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-database"></i> Data Management
             </h3>
-            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+            <p style="color: currentColor; font-family: inherit; margin-bottom: 15px;">
                 Manage your saved progress and data
             </p>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="setting-btn" onclick="exportProgress()" style="background: var(--mickey-purple);">
+                <button class="setting-btn" onclick="exportProgress()">
                     <i class="fas fa-download"></i> Export Progress
                 </button>
-                <button class="setting-btn" onclick="resetProgress()" style="background: var(--mickey-red);">
+                <button class="setting-btn" onclick="resetProgress()">
                     <i class="fas fa-redo"></i> Reset Progress
                 </button>
             </div>
         </div>
         
         <div class="setting-section">
-            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <h3 style="color: currentColor; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </h3>
-            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+            <p style="color: currentColor; font-family: inherit; margin-bottom: 15px;">
                 Clear your data and return to welcome screen
             </p>
-            <button class="setting-btn" onclick="logout()" style="background: var(--mickey-black);">
+            <button class="setting-btn" onclick="logout()" style="background: var(--mickey-black); color: white;">
                 <i class="fas fa-sign-out-alt"></i> Logout & Clear Data
             </button>
         </div>
@@ -317,19 +455,37 @@
                 window.location.href = 'welcome.html';
             }
             
-            // Initialize dyslexia mode toggle
+            // Initialize dyslexia mode (default is dyslexia mode ON)
             const dyslexiaBtn = document.getElementById('toggle-dyslexia');
-            if (localStorage.getItem('dyslexiaMode') === 'true') {
-                document.body.classList.add('dyslexia-mode');
-                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-on"></i> Dyslexia Mode ON';
+            const dyslexiaMode = localStorage.getItem('dyslexiaMode');
+            
+            // Default is dyslexia mode (true), so we show "Standard Font Mode" button
+            if (dyslexiaMode === 'false') {
+                document.body.classList.add('standard-mode');
+                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-off"></i> Dyslexia Mode (OFF)';
+            } else {
+                // Dyslexia mode is ON by default
+                document.body.classList.remove('standard-mode');
+                localStorage.setItem('dyslexiaMode', 'true');
+                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-on"></i> Standard Font Mode (ON)';
             }
             
             dyslexiaBtn.addEventListener('click', function() {
-                document.body.classList.toggle('dyslexia-mode');
-                localStorage.setItem('dyslexiaMode', document.body.classList.contains('dyslexia-mode'));
-                this.innerHTML = `<i class="fas fa-toggle-${document.body.classList.contains('dyslexia-mode') ? 'on' : 'off'}"></i> Dyslexia Mode ${document.body.classList.contains('dyslexia-mode') ? 'ON' : 'OFF'}`;
-                alert(`Dyslexia mode ${document.body.classList.contains('dyslexia-mode') ? 'enabled' : 'disabled'}!`);
+                const isStandard = document.body.classList.toggle('standard-mode');
+                localStorage.setItem('dyslexiaMode', isStandard ? 'false' : 'true');
+                
+                const statusElement = document.getElementById('dyslexia-status');
+                if (isStandard) {
+                    statusElement.innerHTML = '<i class="fas fa-toggle-off"></i> Dyslexia Mode (OFF)';
+                    showSettingsNotification('Dyslexia-friendly fonts disabled. Using standard fonts.');
+                } else {
+                    statusElement.innerHTML = '<i class="fas fa-toggle-on"></i> Standard Font Mode (ON)';
+                    showSettingsNotification('Dyslexia-friendly fonts enabled!');
+                }
             });
+            
+            // Initialize Irlen color scheme selector
+            initializeIrlenSelector();
             
             // Initialize sound toggle
             const soundBtn = document.getElementById('toggle-sound');
@@ -344,9 +500,87 @@
             });
         });
 
-        function setTheme(theme) {
-            localStorage.setItem('theme', theme);
-            alert(`Theme set to ${theme === 'mickey' ? 'Mickey Mouse' : 'Simple'}! Refresh to see changes.`);
+        function initializeIrlenSelector() {
+            // Load Irlen color scheme
+            const irlenScheme = localStorage.getItem('irlenScheme') || 'default';
+            
+            // Apply scheme
+            applyIrlenScheme(irlenScheme);
+            
+            // Update active button
+            updateIrlenButton(irlenScheme);
+            
+            // Add click events to Irlen buttons
+            document.querySelectorAll('.irlen-btn-settings').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const scheme = this.getAttribute('data-scheme');
+                    selectIrlenScheme(scheme);
+                });
+            });
+        }
+
+        function selectIrlenScheme(scheme) {
+            applyIrlenScheme(scheme);
+            localStorage.setItem('irlenScheme', scheme);
+            updateIrlenButton(scheme);
+            
+            const schemeNames = {
+                'default': 'Default Mickey Theme',
+                'irlen-cream': 'Cream',
+                'irlen-blue': 'Blue',
+                'irlen-green': 'Green',
+                'irlen-pink': 'Pink',
+                'irlen-gray': 'Gray',
+                'irlen-purple': 'Purple',
+                'irlen-yellow': 'Yellow',
+                'irlen-rose': 'Rose'
+            };
+            
+            alert(`${schemeNames[scheme]} color scheme applied!`);
+        }
+
+        function applyIrlenScheme(scheme) {
+            // Remove all Irlen classes
+            document.body.classList.remove(
+                'irlen-cream', 'irlen-blue', 'irlen-green', 'irlen-pink',
+                'irlen-gray', 'irlen-purple', 'irlen-yellow', 'irlen-rose'
+            );
+            
+            // Add selected scheme
+            if (scheme !== 'default') {
+                document.body.classList.add(scheme);
+            }
+        }
+
+        function updateIrlenButton(activeScheme) {
+            document.querySelectorAll('.irlen-btn-settings').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-scheme') === activeScheme) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function showSettingsNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            notification.innerHTML = `
+                <strong style="display: block; margin-bottom: 5px;">
+                    ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'} 
+                    Settings Updated
+                </strong>
+                <div>${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
 
         function changeStudentName() {
@@ -362,7 +596,10 @@
                 studentName: localStorage.getItem('studentName'),
                 studentGrade: localStorage.getItem('studentGrade'),
                 points: localStorage.getItem('studentPoints') || 0,
-                lastLogin: new Date().toISOString()
+                lastLogin: new Date().toISOString(),
+                dyslexiaMode: localStorage.getItem('dyslexiaMode'),
+                irlenScheme: localStorage.getItem('irlenScheme'),
+                soundEnabled: localStorage.getItem('soundEnabled')
             };
             
             const dataStr = JSON.stringify(progress, null, 2);
