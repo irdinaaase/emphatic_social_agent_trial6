@@ -509,7 +509,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 99999 !important; /* Increased to highest possible */
+            z-index: 20000;
             display: none;
             align-items: center;
             justify-content: center;
@@ -517,12 +517,7 @@
         }
 
         #fullscreen-intervention-overlay.active {
-            display: flex !important;
-        }
-
-        /* Ensure iframe doesn't interfere */
-        #iframe-container, #collapsible-iframe {
-            z-index: 99998 !important;
+            display: flex;
         }
 
         #fullscreen-intervention-container {
@@ -591,13 +586,32 @@
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
         }
 
+        .intervention-title {
+            font-size: 3rem;
+            color: #e9a946;
+            margin-bottom: 20px;
+            font-family: 'Fredoka One', cursive;
+            text-shadow: 0 5px 15px rgba(233, 169, 70, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .intervention-message {
+            font-size: 1.8rem;
+            color: #95e1d3;
+            margin-bottom: 40px;
+            font-family: 'Comic Neue', cursive;
+            max-width: 800px;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+
         .intervention-options-container {
-            display: grid !important;
-            grid-template-columns: repeat(4, 1fr) !important;
-            gap: 25px !important;
-            width: 100% !important;
-            max-width: 1000px !important;
-            max-height: 100px !important;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            width: 90%;
+            max-width: 900px;
+            margin-top: 30px;
         }
 
         .intervention-option-fullscreen {
@@ -813,6 +827,14 @@
                 height: 150px;
             }
             
+            .intervention-title {
+                font-size: 2.2rem;
+            }
+            
+            .intervention-message {
+                font-size: 1.4rem;
+            }
+            
             .intervention-options-container {
                 grid-template-columns: 1fr;
                 gap: 15px;
@@ -996,6 +1018,12 @@
                 <img src="images/toodles.png" alt="Intervention Helper">
             </div>
             
+            <div class="intervention-title" id="intervention-title">I Need Your Attention!</div>
+            
+            <div class="intervention-message" id="intervention-message">
+                I notice you might need some help. Let's take a moment before we continue!
+            </div>
+            
             <div class="intervention-options-container" id="intervention-options-container">
                 <!-- Options will be inserted here -->
             </div>
@@ -1058,15 +1086,29 @@
                 this.currentUtterance.rate = 0.9;
                 this.currentUtterance.pitch = 1.2;
                 this.currentUtterance.volume = 1;
+                this.currentUtterance.lang = 'ms-MY'; // TUKAR KE BAHASA MALAYSIA
                 
                 // Try to get a friendly voice
                 const voices = speechSynthesis.getVoices();
-                const friendlyVoice = voices.find(voice => 
-                    voice.name.includes('Child') || 
-                    voice.name.includes('Kids') ||
-                    voice.lang.includes('en')
+                const malayVoice = voices.find(voice => 
+                    voice.lang.includes('ms') || 
+                    voice.lang.includes('MS') ||
+                    voice.name.toLowerCase().includes('malay')
                 );
                 
+                    if (malayVoice) {
+                        this.currentUtterance.voice = malayVoice;
+                    } else {
+                        // Fallback to any female voice
+                        const femaleVoice = voices.find(voice => 
+                            voice.name.includes('Female') || 
+                            voice.name.includes('Woman')
+                        );
+                        if (femaleVoice) {
+                            this.currentUtterance.voice = femaleVoice;
+                        }
+                    }
+
                 if (friendlyVoice) {
                     this.currentUtterance.voice = friendlyVoice;
                 }
@@ -1220,7 +1262,7 @@
                     if (window.dualCameraDetection && !window.dualCameraDetection.isEmotionRunning) {
                         showNotification(
                             "Auto-Activation",
-                            "Emotion detection activates automatically when you start a game! 🎮",
+                            "Pengesanan emosi aktif secara automatik apabila awak mulakan permainan! 🎮",
                             "info"
                         );
                     }
@@ -1246,7 +1288,7 @@
                     if (window.dualCameraDetection && !window.dualCameraDetection.isEyeTracking) {
                         showNotification(
                             "Auto-Activation",
-                            "Eye tracking activates automatically when you start a game! 👁️",
+                            "Penjejakan mata aktif secara automatik apabila awak mulakan permainan! 👁️",
                             "info"
                         );
                     }
@@ -1405,90 +1447,105 @@
                 // Initialize speech manager
                 this.speechManager = new SpeechSynthesisManager();
                 
-                this.interventionOptions = {
-                    anger: {
-                        title: "Feeling Frustrated?",
-                        message: "I notice you're feeling frustrated. Let's take a moment to calm down before continuing!",
-                        options: [
-                            { text: "Take breath", icon: "fa-wind", action: "breathe", color: "#95e1d3", response: "Great! Let's take three deep breaths together. In... and out... In... and out..." },
-                            { text: "Take break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a 30-second break. Stretch and relax!" },
-                            { text: "Do strecthing", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Excellent choice! Let's stretch our arms and shake out the frustration!" },
-                            { text: "Tell joke", icon: "fa-grin-squint", action: "joke", color: "#e9a946", response: "Why did the math book look sad? Because it had too many problems! 😄 Ready to continue?" }
-                        ]
-                    },
-                    disgust: {
-                        title: "Not Enjoying This?",
-                        message: "I see you're not enjoying this activity. Let's try something different!",
-                        options: [
-                            { text: "Try a different game", icon: "fa-random", action: "different", color: "#95e1d3", response: "Good idea! Let's switch to something you might enjoy more!" },
-                            { text: "Take break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Let's take a quick break and come back refreshed!" },
-                            { text: "Explain differently", icon: "fa-comment-alt", action: "explain", color: "#ffb8c6", response: "Let me explain this in a simpler way..." },
-                            { text: "Make easier", icon: "fa-thumbs-up", action: "easier", color: "#e9a946", response: "I'll make this easier for you! Let's start with the basics." }
-                        ]
-                    },
-                    fear: {
-                        title: "Feeling Nervous?",
-                        message: "It's okay to feel a bit nervous! Let's take this slowly and build confidence!",
-                        options: [
-                            { text: "Take it one step at a time", icon: "fa-tachometer-alt-slow", action: "slow", color: "#95e1d3", response: "Perfect! Let's break it down into smaller steps. No rush at all!" },
-                            { text: "Start basics", icon: "fa-undo", action: "basics", color: "#8ac6d1", response: "Great idea! Let's go back to what you already know and build from there!" },
-                            { text: "Take break", icon: "fa-spa", action: "calm", color: "#ffb8c6", response: "Let's take a calming moment. Breathe in... and out... You're doing great!" },
-                            { text: "Get encouragement", icon: "fa-heart", action: "encourage", color: "#e9a946", response: "You're doing much better than you think! I believe in you! Let's keep going!" }
-                        ]
-                    },
-                    sad: {
-                        title: "Feeling Down?",
-                        message: "I notice you're feeling a bit sad. Let's cheer you up!",
-                        options: [
-                            { text: "Listen song", icon: "fa-music", action: "music", color: "#95e1d3", response: "Music always helps! Imagine your favorite happy song playing right now! 🎵" },
-                            { text: "Take break", icon: "fa-gamepad", action: "funbreak", color: "#8ac6d1", response: "Let's take a fun break! Do a little dance or make a funny face!" },
-                            { text: "Hear story", icon: "fa-book", action: "story", color: "#ffb8c6", response: "Once, a cat tried to learn to type and ended up writing 'meow' on every page! 😸" },
-                            { text: "Get hug", icon: "fa-hands", action: "hug", color: "#e9a946", response: "Sending you a big virtual hug! 🤗 You're doing amazing!" }
-                        ]
-                    },
-                    distracted: {
-                        title: "Need to Refocus?",
-                        message: "I notice your attention drifting. Let's get you back on track!",
-                        options: [
-                            { text: "Do stretch", icon: "fa-running", action: "stretch", color: "#95e1d3", response: "Great! Stand up and stretch. Reach for the sky and wiggle your fingers!" },
-                            { text: "Take break", icon: "fa-hourglass-half", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a quick 1-minute break to reset your focus!" },
-                            { text: "Refocus", icon: "fa-eye", action: "refocus", color: "#ffb8c6", response: "Excellent! Blink three times, then focus on one thing in the room. Ready?" },
-                            { text: "Take breaths", icon: "fa-wind", action: "breathe", color: "#e9a946", response: "Breathe in... and out... In... and out... In... and out... Feel better?" }
-                        ]
-                    }
-                };
+            this.interventionOptions = {
+                anger: {
+                    title: "Rasa Marah?",
+                    message: "Saya perasan awak rasa marah. Mari kita ambil masa untuk tenangkan diri sebelum teruskan!",
+                    options: [
+                        { text: "Tarik nafas dalam", icon: "fa-wind", action: "breathe", color: "#95e1d3", response: "Bagus! Mari kita tarik tiga nafas dalam bersama-sama. Tarik... dan hembus... Tarik... dan hembus..." },
+                        { text: "Ambil rehat pendek", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Baik! Mari kita ambil rehat 30 saat. Regang dan relax!" },
+                        { text: "Regang 30 saat", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Pilihan yang baik! Mari kita regang tangan dan buang rasa marah!" },
+                        { text: "Cerita lawak", icon: "fa-grin-squint", action: "joke", color: "#e9a946", response: "Kenapa buku matematik nampak sedih? Sebab ada terlalu banyak masalah! 😄 Sedia untuk teruskan?" }
+                    ]
+                },
+                disgust: {
+                    title: "Tak Suka Ini?",
+                    message: "Saya nampak awak tak suka aktiviti ini. Mari cuba sesuatu yang berbeza!",
+                    options: [
+                        { text: "Cuba permainan lain", icon: "fa-random", action: "different", color: "#95e1d3", response: "Idea yang baik! Mari kita tukar kepada sesuatu awak mungkin lebih suka!" },
+                        { text: "Ambil rehat", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Mari kita ambil rehat cepat dan kembali segar!" },
+                        { text: "Terangkan cara lain", icon: "fa-comment-alt", action: "explain", color: "#ffb8c6", response: "Biar saya terangkan ini dengan cara yang lebih mudah..." },
+                        { text: "Buat lebih mudah", icon: "fa-thumbs-up", action: "easier", color: "#e9a946", response: "Saya akan buat ini lebih mudah untuk awak! Mari kita mulakan dengan asas." }
+                    ]
+                },
+                fear: {
+                    title: "Rasa Takut?",
+                    message: "Tak apa rasa sedikit takut! Mari kita ambil perlahan-lahan dan bina keyakinan!",
+                    options: [
+                        { text: "Ambil satu langkah", icon: "fa-tachometer-alt-slow", action: "slow", color: "#95e1d3", response: "Bagus! Mari kita pecahkan kepada langkah kecil. Tak perlu terburu-buru!" },
+                        { text: "Mulakan dari asas", icon: "fa-undo", action: "basics", color: "#8ac6d1", response: "Idea yang baik! Mari kita kembali kepada apa yang awak sudah tahu dan bina dari situ!" },
+                        { text: "Ambil rehat tenang", icon: "fa-spa", action: "calm", color: "#ffb8c6", response: "Mari kita ambil masa untuk tenang. Tarik nafas... dan hembus... Awak hebat!" },
+                        { text: "Dapatkan galakan", icon: "fa-heart", action: "encourage", color: "#e9a946", response: "Awak buat lebih baik dari apa yang awak fikir! Saya percaya dengan awak! Mari kita teruskan!" }
+                    ]
+                },
+                sad: {
+                    title: "Rasa Sedih?",
+                    message: "Saya perasan awak rasa sedih. Mari kita seronokkan awak!",
+                    options: [
+                        { text: "Dengar lagu gembira", icon: "fa-music", action: "music", color: "#95e1d3", response: "Muzik selalu membantu! Bayangkan lagu gembira kegemaran awak sedang dimainkan sekarang! 🎵" },
+                        { text: "Ambil rehat seronok", icon: "fa-gamepad", action: "funbreak", color: "#8ac6d1", response: "Mari kita ambil rehat seronok! Buat tarian kecil atau muka lawak!" },
+                        { text: "Dengar cerita lawak", icon: "fa-book", action: "story", color: "#ffb8c6", response: "Dulu, ada kucing cuba belajar taip dan akhirnya tulis 'meow' pada setiap halaman! 😸" },
+                        { text: "Dapatkan pelukan maya", icon: "fa-hands", action: "hug", color: "#e9a946", response: "Hantar pelukan maya besar untuk awak! 🤗 Awak memang hebat!" }
+                    ]
+                },
+                distracted: {
+                    title: "Perlu Fokus Semula?",
+                    message: "Saya perasan perhatian awak terganggu. Mari kita kembalikan tumpuan awak!",
+                    options: [
+                        { text: "Regang cepat", icon: "fa-running", action: "stretch", color: "#95e1d3", response: "Bagus! Bangun dan regang. Capai langit dan gerakkan jari!" },
+                        { text: "Ambil rehat 1 minit", icon: "fa-hourglass-half", action: "break", color: "#8ac6d1", response: "Baik! Mari kita ambil rehat cepat 1 minit untuk reset fokus awak!" },
+                        { text: "Kelip dan fokus", icon: "fa-eye", action: "refocus", color: "#ffb8c6", response: "Bagus! Kelip tiga kali, kemudian fokus pada satu benda dalam bilik. Sedia?" },
+                        { text: "Tarik 3 nafas dalam", icon: "fa-wind", action: "breathe", color: "#e9a946", response: "Tarik nafas... dan hembus... Tarik... dan hembus... Tarik... dan hembus... Rasa lebih baik?" }
+                    ]
+                }
+            };
+        }
+                        
+            // Show full screen intervention
+            show(emotion) {
+                if (this.isActive) return;
+                
+                console.log(`🚨 Showing FULL SCREEN intervention for: ${emotion}`);
+                this.isActive = true;
+                this.currentIntervention = emotion;
+                
+                const overlay = document.getElementById('fullscreen-intervention-overlay');
+                if (!overlay) return;
+                
+                // Get intervention data
+                const interventionData = this.interventionOptions[emotion] || this.interventionOptions.anger;
+                
+                // Update overlay content
+                document.getElementById('intervention-title').textContent = interventionData.title;
+                document.getElementById('intervention-message').textContent = interventionData.message;
+                
+                // Create options
+                this.createOptions(interventionData.options, emotion);
+                
+                // Show overlay
+                overlay.classList.add('active');
+                
+                // SPEAK THE INTERVENTION MESSAGE
+                this.speakInterventionMessage(interventionData.message, () => {
+                    console.log('✅ Finished speaking intervention message');
+                });
+                
+                // Block game events
+                this.blockGameInput();
+                
+                // Start timer
+                this.startTimer();
+                
+                // Notify parent window
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'fullscreen-intervention-started',
+                        emotion: emotion,
+                        timestamp: Date.now()
+                    }, '*');
+                }
             }
             
-            // Show full screen intervention
-show(emotion) {
-    if (this.isActive) return;
-    
-    console.log(`🚨 Showing FULL SCREEN intervention for: ${emotion}`);
-    this.isActive = true;
-    this.currentIntervention = emotion;
-    
-    // Get intervention data
-    const interventionData = this.interventionOptions[emotion] || this.interventionOptions.anger;
-    
-    // Send ALL intervention data to parent window
-    if (window.parent !== window) {
-        window.parent.postMessage({
-            type: 'SHOW_FULLSCREEN_INTERVENTION',
-            emotion: emotion,
-            title: interventionData.title,
-            message: interventionData.message,
-            options: interventionData.options,
-            timestamp: Date.now()
-        }, '*');
-    }
-    
-    // Block game events locally
-    this.blockGameInput();
-    
-    // Start timer
-    this.startTimer();
-}
-
             // Hide full screen intervention
             hide() {
                 if (!this.isActive) return;
@@ -1580,24 +1637,23 @@ show(emotion) {
                 this.speakOptionResponse(option.response, () => {
                     console.log('✅ Finished speaking option response');
                     
-                    // Notify parent that intervention is completed
-                    if (window.parent !== window) {
-                        window.parent.postMessage({
-                            type: 'INTERVENTION_COMPLETED',
-                            action: option.action,
-                            emotion: emotion,
-                            response: option.response,
-                            timestamp: Date.now()
-                        }, '*');
-                    }
-                    
                     // Hide the intervention after a delay
                     setTimeout(() => {
                         this.hide();
                     }, 1000);
                 });
+                
+                // Notify parent window about choice
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'intervention-option-selected',
+                        action: option.action,
+                        emotion: emotion,
+                        response: option.response,
+                        timestamp: Date.now()
+                    }, '*');
+                }
             }
-            
             
             // Start timer display
             startTimer() {

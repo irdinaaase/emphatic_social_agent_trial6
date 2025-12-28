@@ -38,7 +38,7 @@
             letter-spacing: 0.1em;
             line-height: 1.8;
             background: linear-gradient(135deg, #ffffcc 0%, #fff5cc 100%) !important;
-        }   
+        }
 
         .fixed-header {
             position: fixed;
@@ -325,20 +325,231 @@
             border-radius: 15px;
         }
 
-        /* Responsive adjustments for iframe */
-        @media (max-width: 768px) {
-            #collapsible-iframe {
-                width: 100% !important;
-                height: 400px !important;
-                bottom: 0 !important;
-                right: 0 !important;
-                border-radius: 0;
-                border: none;
-                border-top: 4px solid var(--mickey-black);
-            }
-            
+        /* ============================================
+           FULL SCREEN INTERVENTION WITH SPEAKING BOT
+           ============================================ */
+        #fullscreen-intervention-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(26, 26, 46, 0.95) !important;
+            z-index: 99999 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            animation: fadeIn 0.3s ease !important;
+            overflow: hidden !important;
         }
 
+        #fullscreen-intervention-overlay.active {
+            display: flex !important;
+        }
+
+        #fullscreen-intervention-container {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            padding: 40px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 40px !important;
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+
+        /* Bot speaker avatar */
+        .bot-speaker-avatar {
+            position: relative !important;
+            width: 180px !important;
+            height: 180px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .bot-speaker-circle {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative !important;
+            z-index: 2 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .speaking .bot-speaker-circle {
+            animation: speakingPulse 1.5s infinite alternate !important;
+        }
+
+        .bot-speaker-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
+        }
+
+        /* Speaker waves - CIRCLE WAVES BEHIND THE BOT */
+        .speaker-waves {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            display: none !important;
+        }
+
+        .speaking .speaker-waves {
+            display: block !important;
+        }
+
+        .speaker-wave {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            border: 2px solid rgba(149, 225, 211, 0.3) !important;
+            animation: waveExpand 1.5s infinite linear !important;
+        }
+
+        .speaker-wave:nth-child(1) {
+            animation-delay: 0s !important;
+        }
+
+        .speaker-wave:nth-child(2) {
+            animation-delay: 0.5s !important;
+        }
+
+        .speaker-wave:nth-child(3) {
+            animation-delay: 1s !important;
+        }
+
+        /* Intervention options */
+        .intervention-options-container {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 20px !important;
+            width: 900% !important;
+            max-width: 00px !important;
+            margin-top: 30px !important;
+            padding: 25px !important;
+            animation: slideUp 0.5s ease !important;
+        }
+
+        .intervention-option-fullscreen {
+            padding: 20px 15px !important;
+            background: var(--mickey-white) !important;
+            color: var(--mickey-black) !important;
+            border: 3px solid var(--mickey-black) !important;
+            border-radius: 15px !important;
+            font-family: 'Fredoka One', cursive !important;
+            cursor: pointer !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 10px !important;
+            transition: all 0.3s !important;
+            font-size: 1rem !important;
+            min-height: 100px !important;
+            box-shadow: 0 4px 0 var(--mickey-black) !important;
+        }
+
+        .intervention-option-fullscreen:hover {
+            transform: translateY(-5px) scale(1.05) !important;
+            box-shadow: 0 8px 0 var(--mickey-black), 0 5px 15px rgba(0,0,0,0.3) !important;
+        }
+
+        .intervention-option-fullscreen i {
+            font-size: 2.5rem !important;
+            margin-bottom: 10px !important;
+        }
+
+        .intervention-option-fullscreen span {
+            font-size: 1.1rem !important;
+            line-height: 1.2 !important;
+            text-align: center !important;
+        }
+
+        /* Close button */
+        .intervention-close-btn {
+            position: absolute !important;
+            top: 30px !important;
+            right: 30px !important;
+            width: 50px !important;
+            height: 50px !important;
+            background: #d84a54 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50% !important;
+            font-size: 28px !important;
+            cursor: pointer !important;
+            z-index: 100 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.3s !important;
+            opacity: 0.5 !important;
+        }
+
+        .intervention-close-btn.disabled {
+            background: #666 !important;
+            cursor: not-allowed !important;
+            opacity: 0.3 !important;
+        }
+
+        .intervention-close-btn.disabled:hover {
+            background: #666 !important;
+            transform: none !important;
+            opacity: 0.3 !important;
+        }
+
+        .intervention-timer {
+            position: absolute !important;
+            bottom: 30px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            color: #ffb8c6 !important;
+            font-size: 1.2rem !important;
+            font-family: 'Comic Neue', cursive !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            padding: 10px 25px !important;
+            border-radius: 25px !important;
+            border: 2px solid #ffb8c6 !important;
+        }
+
+        .intervention-blocked-message {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            color: #ff6b8b !important;
+            font-size: 2.5rem !important;
+            font-family: 'Fredoka One', cursive !important;
+            text-align: center !important;
+            animation: pulse-red 1.5s infinite !important;
+            z-index: 20002 !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            padding: 40px !important;
+            border-radius: 20px !important;
+            border: 4px solid #ff6b8b !important;
+            display: none !important;
+        }
+
+        .intervention-blocked-message.active {
+            display: block !important;
+        }
+
+        /* ANIMATIONS */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -350,27 +561,60 @@
             }
         }
 
+        @keyframes slideUp {
+            0% { 
+                transform: translate(-50%, -40%); 
+                opacity: 0; 
+            }
+            100% { 
+                transform: translate(-50%, -50%); 
+                opacity: 1; 
+            }
+        }
+
+        @keyframes speakingPulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 30px rgba(255, 107, 139, 0.7),
+                    0 0 60px rgba(255, 107, 139, 0.4);
+            }
+            100% { 
+                transform: scale(1.05);
+                box-shadow: 
+                    0 0 40px rgba(255, 107, 139, 0.9),
+                    0 0 80px rgba(255, 107, 139, 0.6);
+            }
+        }
+
+        @keyframes waveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 1;
+                border-width: 2px;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(255, 107, 139, 0.5);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.05);
+                box-shadow: 0 0 40px rgba(255, 107, 139, 0.8);
+            }
+        }
+
         @keyframes bounceIn {
             0% { transform: scale(0.5); opacity: 0; }
             70% { transform: scale(1.1); }
             100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes spinStar {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.2); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
-        @keyframes floatSuit {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.2;
-            }
-            50% {
-                transform: translateY(-10px) rotate(180deg);
-                opacity: 0.4;
-            }
         }
 
         @media (max-width: 1200px) {
@@ -416,13 +660,52 @@
             .game-options {
                 grid-template-columns: 1fr;
             }
+            
+            #collapsible-iframe {
+                width: 100% !important;
+                height: 400px !important;
+                bottom: 0 !important;
+                right: 0 !important;
+                border-radius: 0;
+                border: none;
+                border-top: 4px solid var(--mickey-black);
+            }
+            
+            /* Intervention responsive */
+            #fullscreen-intervention-container {
+                padding: 25px !important;
+                gap: 30px !important;
+            }
+            
+            .bot-speaker-avatar {
+                width: 150px !important;
+                height: 150px !important;
+            }
+            
+            .intervention-options-container {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+                padding: 20px !important;
+            }
+            
+            .intervention-option-fullscreen {
+                min-height: 90px !important;
+                padding: 15px 10px !important;
+            }
+            
+            .intervention-option-fullscreen i {
+                font-size: 2rem !important;
+            }
+            
+            .intervention-option-fullscreen span {
+                font-size: 1rem !important;
+            }
         }
     </style>
 </head>
 <body>
     <header class="fixed-header">
         <div class="header-container">
-            
             <nav class="header-nav">
                 <a href="game-center.html" class="nav-tab active">
                     <i class="fas fa-gamepad"></i>
@@ -450,7 +733,7 @@
                 <div class="card-logo">
                     <i class="fas fa-font"></i>
                 </div>
-                <h3>Cari Huruf</h3>
+                <h3>Mencari Huruf</h3>
             </div>
         
             <!-- GAME 2: WORD SPELLING -->
@@ -458,7 +741,7 @@
                 <div class="card-logo">
                     <i class="fas fa-spell-check"></i>
                 </div>
-                <h3>Eja Kata</h3>
+                <h3>Mengeja Kata</h3>
             </div>
 
             <!-- GAME 3: LETTER TRACING -->
@@ -466,7 +749,7 @@
                 <div class="card-logo">
                     <i class="fas fa-pen-nib"></i>
                 </div>
-                <h3>Tulis Huruf</h3>
+                <h3>Menulis Huruf</h3>
             </div>
         </div>
     </main>
@@ -506,16 +789,61 @@
         allow="camera; microphone">
     </iframe>
 
+    <!-- FULL SCREEN INTERVENTION WITH SPEAKING BOT -->
+    <div id="fullscreen-intervention-overlay">
+        <div id="fullscreen-intervention-container" class="speaking">
+            <!-- Bot speaker avatar with waves -->
+            <div class="bot-speaker-avatar">
+                <div class="bot-speaker-circle" id="bot-speaker-circle">
+                    <img src="images/toodles.png" alt="Speaking Bot" class="bot-speaker-img">
+                </div>
+                <!-- Speaker waves animation - CIRCLE WAVES BEHIND THE BOT -->
+                <div class="speaker-waves" id="speaker-waves">
+                    <div class="speaker-wave"></div>
+                    <div class="speaker-wave"></div>
+                    <div class="speaker-wave"></div>
+                </div>
+            </div>
+            
+            <!-- Options container -->
+            <div class="intervention-options-container" id="intervention-options-container">
+                <!-- Options will be inserted here -->
+            </div>
+            
+            <!-- Close button -->
+            <button class="intervention-close-btn" id="intervention-close-btn" disabled title="Complete intervention to continue">
+                <i class="fas fa-lock"></i>
+            </button>
+            
+            <!-- Timer -->
+            <div class="intervention-timer" id="intervention-timer">
+                Complete an option to continue
+            </div>
+            
+            <!-- Blocked Message -->
+            <div class="intervention-blocked-message" id="intervention-blocked-message">
+                <i class="fas fa-exclamation-triangle"></i><br>
+                You must complete the intervention<br>
+                to continue the game!
+            </div>
+        </div>
+    </div>
+
     <script>
         // ============================================
-        // GAME CENTER - COMPLETE JAVASCRIPT
+        // GAME CENTER - WITH PROPER SPEAKING BOT WAVES
         // ============================================
 
         // Game State Variables
         let currentGame = null;
         let currentActivityIndex = 0;
         let studentScore = 0;
-        let gameData = {
+        let gamePaused = false;
+        let interventionActive = false;
+        let speechManager = null;
+        let currentUtterance = null;
+        
+        const gameData = {
             letters: {
                 title: "Letter Explorer Game",
                 description: "Learn lowercase letters a-z with multisensory support!",
@@ -602,72 +930,414 @@
             }
         };
 
-        // Initialize on load
-        window.addEventListener('load', function() {
-            const savedName = localStorage.getItem('studentName');
-            if (!savedName) {
-                window.location.href = 'welcome.html';
+        // Intervention options data
+        const interventionOptions = {
+            anger: {
+                title: "Feeling Frustrated?",
+                message: "I notice you're feeling frustrated. Let's take a moment to calm down before continuing!",
+                options: [
+                    { text: "Take deep breaths", icon: "fa-wind", action: "breathe", color: "#95e1d3", response: "Great! Let's take three deep breaths together. In... and out... In... and out..." },
+                    { text: "Take a break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a 30-second break. Stretch and relax!" },
+                    { text: "Do stretching", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Excellent choice! Let's stretch our arms and shake out the frustration!" },
+                    { text: "Hear a joke", icon: "fa-grin-squint", action: "joke", color: "#e9a946", response: "Why did the math book look sad? Because it had too many problems! 😄 Ready to continue?" }
+                ]
+            },
+            disgust: {
+                title: "Not Enjoying This?",
+                message: "I see you're not enjoying this activity. Let's try something different!",
+                options: [
+                    { text: "Try different activity", icon: "fa-random", action: "different", color: "#95e1d3", response: "Good idea! Let's switch to something you might enjoy more!" },
+                    { text: "Take a break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Let's take a quick break and come back refreshed!" },
+                    { text: "Explain differently", icon: "fa-comment-alt", action: "explain", color: "#ffb8c6", response: "Let me explain this in a simpler way..." },
+                    { text: "Make it easier", icon: "fa-thumbs-up", action: "easier", color: "#e9a946", response: "I'll make this easier for you! Let's start with the basics." }
+                ]
+            },
+            fear: {
+                title: "Feeling Nervous?",
+                message: "It's okay to feel a bit nervous! Let's take this slowly and build confidence!",
+                options: [
+                    { text: "Take it step by step", icon: "fa-tachometer-alt-slow", action: "slow", color: "#95e1d3", response: "Perfect! Let's break it down into smaller steps. No rush at all!" },
+                    { text: "Start with basics", icon: "fa-undo", action: "basics", color: "#8ac6d1", response: "Great idea! Let's go back to what you already know and build from there!" },
+                    { text: "Take calming break", icon: "fa-spa", action: "calm", color: "#ffb8c6", response: "Let's take a calming moment. Breathe in... and out... You're doing great!" },
+                    { text: "Get encouragement", icon: "fa-heart", action: "encourage", color: "#e9a946", response: "You're doing much better than you think! I believe in you! Let's keep going!" }
+                ]
+            },
+            sad: {
+                title: "Feeling Down?",
+                message: "I notice you're feeling a bit sad. Let's cheer you up!",
+                options: [
+                    { text: "Listen to music", icon: "fa-music", action: "music", color: "#95e1d3", response: "Music always helps! Imagine your favorite happy song playing right now! 🎵" },
+                    { text: "Take fun break", icon: "fa-gamepad", action: "funbreak", color: "#8ac6d1", response: "Let's take a fun break! Do a little dance or make a funny face!" },
+                    { text: "Hear a story", icon: "fa-book", action: "story", color: "#ffb8c6", response: "Once, a cat tried to learn to type and ended up writing 'meow' on every page! 😸" },
+                    { text: "Get virtual hug", icon: "fa-hands", action: "hug", color: "#e9a946", response: "Sending you a big virtual hug! 🤗 You're doing amazing!" }
+                ]
+            },
+            distracted: {
+                title: "Need to Refocus?",
+                message: "I notice your attention drifting. Let's get you back on track!",
+                options: [
+                    { text: "Do stretch", icon: "fa-running", action: "stretch", color: "#95e1d3", response: "Great! Stand up and stretch. Reach for the sky and wiggle your fingers!" },
+                    { text: "Take quick break", icon: "fa-hourglass-half", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a quick 1-minute break to reset your focus!" },
+                    { text: "Refocus eyes", icon: "fa-eye", action: "refocus", color: "#ffb8c6", response: "Excellent! Blink three times, then focus on one thing in the room. Ready?" },
+                    { text: "Take deep breaths", icon: "fa-wind", action: "breathe", color: "#e9a946", response: "Breathe in... and out... In... and out... In... and out... Feel better?" }
+                ]
+            }
+        };
+
+        // ============================================
+        // SPEAKING BOT WAVES ANIMATION SYSTEM
+        // ============================================
+
+        function startSpeakingAnimation() {
+            const container = document.getElementById('fullscreen-intervention-container');
+            const waves = document.getElementById('speaker-waves');
+            
+            if (container) container.classList.add('speaking');
+            if (waves) waves.style.display = 'block';
+        }
+
+        function stopSpeakingAnimation() {
+            const container = document.getElementById('fullscreen-intervention-container');
+            const waves = document.getElementById('speaker-waves');
+            
+            if (container) container.classList.remove('speaking');
+            if (waves) waves.style.display = 'none';
+        }
+
+        // ============================================
+        // SPEECH SYNTHESIS SYSTEM
+        // ============================================
+
+        function speakText(text, onComplete = null) {
+            if (!('speechSynthesis' in window)) {
+                if (onComplete) setTimeout(onComplete, 2000);
                 return;
             }
             
-            // Load student progress
-            loadStudentProgress();
-            
-            // Initialize dyslexia mode if enabled
-            if (localStorage.getItem('dyslexiaMode') === 'true') {
-                document.body.classList.add('dyslexia-mode');
+            // Stop any current speech
+            if (currentUtterance) {
+                speechSynthesis.cancel();
             }
             
-            // Listen for messages from iframe
-            window.addEventListener('message', function(event) {
-                if (event.data.type === 'open-speaking-bot') {
-                    // Handle speaking bot request
-                    window.open('speaking-bot.html', '_blank', 'width=600,height=700');
-                } else if (event.data.type === 'iframe-loaded') {
-                    console.log('Camera controls iframe loaded successfully');
+            // Start speaking animation
+            startSpeakingAnimation();
+            
+            // Create utterance
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.rate = 0.9;
+            currentUtterance.pitch = 1.2;
+            currentUtterance.volume = 1;
+            
+            // Get friendly voice
+            const voices = speechSynthesis.getVoices();
+            const friendlyVoice = voices.find(voice => 
+                voice.name.includes('Child') || 
+                voice.name.includes('Kids') ||
+                voice.lang.includes('en')
+            );
+            
+            if (friendlyVoice) {
+                currentUtterance.voice = friendlyVoice;
+            }
+            
+            // Event handlers
+            currentUtterance.onstart = () => {
+                console.log('🎤 Speaking:', text);
+            };
+            
+            currentUtterance.onend = () => {
+                console.log('✅ Finished speaking');
+                stopSpeakingAnimation();
+                currentUtterance = null;
+                
+                if (onComplete) {
+                    setTimeout(onComplete, 500);
                 }
-            });
+            };
+            
+            currentUtterance.onerror = (event) => {
+                console.error('❌ Speech synthesis error:', event);
+                stopSpeakingAnimation();
+                currentUtterance = null;
+                
+                if (onComplete) {
+                    setTimeout(onComplete, 500);
+                }
+            };
+            
+            // Start speaking
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        // ============================================
+        // INTERVENTION HANDLING
+        // ============================================
+
+        // Listen for intervention messages from camera iframe
+        window.addEventListener('message', function(event) {
+            console.log('Message received from iframe:', event.data.type);
+            
+            if (event.data.type === 'SHOW_FULLSCREEN_INTERVENTION') {
+                console.log('🚨 SHOWING INTERVENTION IN PARENT');
+                showFullscreenIntervention(event.data);
+                
+            } else if (event.data.type === 'INTERVENTION_COMPLETED') {
+                console.log('✅ INTERVENTION COMPLETED');
+                hideFullscreenIntervention();
+                
+            } else if (event.data.type === 'TRIGGER_INTERVENTION') {
+                // Direct trigger from collapsible
+                console.log('🎯 DIRECT INTERVENTION TRIGGER FROM COLLAPSIBLE');
+                triggerInterventionManually(event.data.emotion);
+                
+            } else if (event.data.type === 'iframe-loaded') {
+                console.log('Camera controls iframe loaded successfully');
+                
+            } else if (event.data.type === 'start-game-detection') {
+                console.log('Start game detection message received');
+            }
         });
 
-        function loadStudentProgress() {
-            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
-            if (progress.points) {
-                studentScore = progress.points;
-            }
-        }
-
-        function saveStudentProgress() {
-            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
-            progress.points = studentScore;
-            progress.lastPlayed = new Date().toISOString();
-            localStorage.setItem('studentProgress', JSON.stringify(progress));
-        }
-
-        // Camera Panel Functions
-        function toggleCameraPanel() {
-            const iframe = document.getElementById('collapsible-iframe');
+        // Function to manually trigger intervention (for testing)
+        function triggerInterventionManually(emotion = 'anger') {
+            if (interventionActive) return;
             
-            if (iframe.style.display === 'none' || iframe.style.display === '') {
-                iframe.style.display = 'block';
+            const interventionData = interventionOptions[emotion] || interventionOptions.anger;
+            
+            showFullscreenIntervention({
+                emotion: emotion,
+                title: interventionData.title,
+                message: interventionData.message,
+                options: interventionData.options
+            });
+        }
+
+        function showFullscreenIntervention(data) {
+            if (interventionActive) return;
+            
+            interventionActive = true;
+            gamePaused = true;
+            
+            // Get intervention data
+            const interventionData = interventionOptions[data.emotion] || interventionOptions.anger;
+            
+            // Create options
+            const options = data.options || interventionData.options;
+            createInterventionOptions(options, data.emotion);
+            
+            // Show the intervention overlay
+            const overlay = document.getElementById('fullscreen-intervention-overlay');
+            overlay.classList.add('active');
+            
+            // Start with speaking animation
+            startSpeakingAnimation();
+            
+            // Disable all game interactions
+            disableAllGameInteractions();
+            
+            // Start timer
+            startInterventionTimer();
+            
+            // Speak intervention message
+            speakText(data.message || interventionData.message);
+            
+            // Log intervention
+            console.log(`🎮 Game Center: Intervention shown for ${data.emotion}`);
+        }
+
+        function hideFullscreenIntervention() {
+            if (!interventionActive) return;
+            
+            interventionActive = false;
+            gamePaused = false;
+            
+            // Stop any ongoing speech
+            if (currentUtterance) {
+                speechSynthesis.cancel();
+                currentUtterance = null;
+            }
+            
+            // Stop animations
+            stopSpeakingAnimation();
+            
+            // Hide the intervention overlay
+            const overlay = document.getElementById('fullscreen-intervention-overlay');
+            overlay.classList.remove('active');
+            
+            // Clear options
+            const optionsContainer = document.getElementById('intervention-options-container');
+            if (optionsContainer) {
+                optionsContainer.innerHTML = '';
+            }
+            
+            // Stop timer
+            stopInterventionTimer();
+            
+            // Re-enable all game interactions
+            enableAllGameInteractions();
+            
+            // Log intervention completion
+            console.log('🎮 Game Center: Intervention completed');
+        }
+
+        function createInterventionOptions(options, emotion) {
+            const container = document.getElementById('intervention-options-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'intervention-option-fullscreen';
+                optionElement.style.borderColor = option.color;
                 
-                // Initialize camera when shown
+                optionElement.innerHTML = `
+                    <i class="fas ${option.icon}" style="color: ${option.color};"></i>
+                    <span>${option.text}</span>
+                `;
+                
+                optionElement.addEventListener('click', () => {
+                    handleInterventionOptionClick(option, emotion);
+                });
+                
+                container.appendChild(optionElement);
+            });
+            
+            console.log(`✅ Created ${options.length} intervention options for ${emotion}`);
+        }
+
+        function handleInterventionOptionClick(option, emotion) {
+            console.log(`✅ Intervention option selected: ${option.action} for ${emotion}`);
+            
+            // Disable all options to prevent multiple clicks
+            const options = document.querySelectorAll('.intervention-option-fullscreen');
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.style.opacity = '0.6';
+            });
+            
+            // Highlight selected option
+            event.target.closest('.intervention-option-fullscreen').style.borderColor = '#95e1d3';
+            event.target.closest('.intervention-option-fullscreen').style.boxShadow = '0 0 30px #95e1d3';
+            
+            // Speak the option response
+            speakText(option.response, () => {
+                // Hide intervention after speech completes
                 setTimeout(() => {
-                    if (iframe.contentWindow) {
-                        // Send message to iframe to initialize
-                        iframe.contentWindow.postMessage({ type: 'initialize-camera' }, '*');
-                    }
+                    hideFullscreenIntervention();
                 }, 500);
-            } else {
-                iframe.style.display = 'none';
-                
-                // Send message to stop detection
-                if (iframe.contentWindow) {
-                    iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
-                }
+            });
+        }
+
+        function startInterventionTimer() {
+            const timerElement = document.getElementById('intervention-timer');
+            if (!timerElement) return;
+            
+            let seconds = 0;
+            window.interventionTimer = setInterval(() => {
+                seconds++;
+                timerElement.textContent = `Complete an option to continue (${seconds}s)`;
+            }, 1000);
+        }
+
+        function stopInterventionTimer() {
+            if (window.interventionTimer) {
+                clearInterval(window.interventionTimer);
+                window.interventionTimer = null;
+            }
+            
+            const timer = document.getElementById('intervention-timer');
+            if (timer) {
+                timer.textContent = 'Complete an option to continue';
+                timer.style.color = '#ffb8c6';
+                timer.style.borderColor = '#ffb8c6';
             }
         }
+
+        function disableAllGameInteractions() {
+            // Disable game container if visible
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer.style.display !== 'none') {
+                const gameButtons = document.querySelectorAll('.game-option, .nav-btn, .game-close');
+                gameButtons.forEach(button => {
+                    button.style.pointerEvents = 'none';
+                    button.style.opacity = '0.5';
+                });
+            }
+            
+            // Disable game cards
+            const gameCards = document.querySelectorAll('.module-card');
+            gameCards.forEach(card => {
+                card.style.pointerEvents = 'none';
+                card.style.opacity = '0.5';
+            });
+            
+            // Disable navigation tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                tab.style.pointerEvents = 'none';
+                tab.style.opacity = '0.5';
+            });
+            
+            // Disable camera iframe interaction
+            const iframe = document.getElementById('collapsible-iframe');
+            iframe.style.pointerEvents = 'none';
+            
+            // Disable close button
+            const closeBtn = document.getElementById('intervention-close-btn');
+            if (closeBtn) {
+                closeBtn.disabled = true;
+                closeBtn.classList.add('disabled');
+            }
+        }
+
+        function enableAllGameInteractions() {
+            // Enable game container if visible
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer.style.display !== 'none') {
+                const gameButtons = document.querySelectorAll('.game-option, .nav-btn, .game-close');
+                gameButtons.forEach(button => {
+                    button.style.pointerEvents = 'auto';
+                    button.style.opacity = '1';
+                });
+            }
+            
+            // Enable game cards
+            const gameCards = document.querySelectorAll('.module-card');
+            gameCards.forEach(card => {
+                card.style.pointerEvents = 'auto';
+                card.style.opacity = '1';
+            });
+            
+            // Enable navigation tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                tab.style.pointerEvents = 'auto';
+                tab.style.opacity = '1';
+            });
+            
+            // Enable camera iframe interaction
+            const iframe = document.getElementById('collapsible-iframe');
+            iframe.style.pointerEvents = 'auto';
+            
+            // Enable close button
+            const closeBtn = document.getElementById('intervention-close-btn');
+            if (closeBtn) {
+                closeBtn.disabled = false;
+                closeBtn.classList.remove('disabled');
+            }
+        }
+
+        // ============================================
+        // GAME FUNCTIONS
+        // ============================================
 
         function startGame(gameName) {
+            if (gamePaused) {
+                alert("Please complete the intervention first!");
+                return;
+            }
+            
             currentGame = gameName;
             currentActivityIndex = 0;
             
@@ -697,9 +1367,6 @@
             
             // Load first activity
             loadActivity(gameName, 0);
-            
-            // Speak game start message
-            speakText(`Starting ${game.title}! Let's have fun!`);
         }
 
         function loadActivity(gameName, activityIndex) {
@@ -749,9 +1416,6 @@
                 `;
             }
             
-            // Update progress bar
-            const progressPercent = ((activityIndex + 1) / game.activities.length) * 100;
-            
             // Update navigation buttons
             document.getElementById('prev-btn').disabled = activityIndex === 0;
             document.getElementById('next-btn').disabled = 
@@ -762,6 +1426,11 @@
         }
 
         function checkAnswer(selectedIndex, gameName) {
+            if (gamePaused) {
+                alert("Please complete the intervention first!");
+                return;
+            }
+            
             const game = gameData[gameName];
             const activity = game.activities[currentActivityIndex];
             
@@ -798,9 +1467,6 @@
                 studentScore += activity.points;
                 saveStudentProgress();
                 
-                // Speak encouragement
-                speakText("Great job! That's correct!");
-                
                 // Auto-advance after 2 seconds
                 setTimeout(() => {
                     if (currentActivityIndex < game.activities.length - 1) {
@@ -828,13 +1494,15 @@
                     </div>
                 `;
                 feedback.classList.add('show');
-                
-                // Speak encouragement
-                speakText("That's okay! Let's try another one!");
             }
         }
 
         function completeTracing(gameName) {
+            if (gamePaused) {
+                alert("Please complete the intervention first!");
+                return;
+            }
+            
             const game = gameData[gameName];
             const activity = game.activities[currentActivityIndex];
             
@@ -860,9 +1528,6 @@
             `;
             feedback.classList.add('show');
             
-            // Speak encouragement
-            speakText(`Great job tracing ${activity.letter}!`);
-            
             // Auto-advance after 2 seconds
             setTimeout(() => {
                 if (currentActivityIndex < game.activities.length - 1) {
@@ -874,6 +1539,11 @@
         }
 
         function previousActivity() {
+            if (gamePaused) {
+                alert("Please complete the intervention first!");
+                return;
+            }
+            
             if (currentActivityIndex > 0) {
                 currentActivityIndex--;
                 loadActivity(currentGame, currentActivityIndex);
@@ -881,6 +1551,11 @@
         }
 
         function nextActivity() {
+            if (gamePaused) {
+                alert("Please complete the intervention first!");
+                return;
+            }
+            
             const game = gameData[currentGame];
             if (currentActivityIndex < game.activities.length - 1) {
                 currentActivityIndex++;
@@ -922,9 +1597,6 @@
                     <i class="fas fa-check"></i> Great Job! Back to Games
                 </button>
             `;
-            
-            // Speak congratulations
-            speakText(`Congratulations! You completed ${game.title}!`);
         }
 
         function closeGame() {
@@ -944,63 +1616,102 @@
             currentActivityIndex = 0;
         }
 
-        function speakText(text) {
-            if ('speechSynthesis' in window && localStorage.getItem('soundEnabled') !== 'false') {
-                speechSynthesis.cancel();
+        function toggleCameraPanel() {
+            if (gamePaused) {
+                alert("Please complete the intervention first!");
+                return;
+            }
+            
+            const iframe = document.getElementById('collapsible-iframe');
+            
+            if (iframe.style.display === 'none' || iframe.style.display === '') {
+                iframe.style.display = 'block';
                 
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.9;
-                utterance.pitch = 1.2;
-                utterance.volume = 1;
+                // Initialize camera when shown
+                setTimeout(() => {
+                    if (iframe.contentWindow) {
+                        iframe.contentWindow.postMessage({ type: 'initialize-camera' }, '*');
+                    }
+                }, 500);
+            } else {
+                iframe.style.display = 'none';
                 
-                const voices = speechSynthesis.getVoices();
-                const childVoice = voices.find(voice => 
-                    voice.name.includes('Child') || 
-                    voice.name.includes('Kids') ||
-                    voice.lang.includes('en')
-                );
-                
-                if (childVoice) {
-                    utterance.voice = childVoice;
+                // Send message to stop detection
+                if (iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
                 }
-                
-                speechSynthesis.speak(utterance);
             }
         }
 
-        function showNotification(title, message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: var(--mickey-white);
-                color: var(--mickey-black);
-                padding: 15px 20px;
-                border-radius: 15px;
-                border: 3px solid var(--mickey-black);
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                z-index: 10000;
-                font-family: 'Comic Neue', cursive;
-                max-width: 300px;
-                animation: fadeIn 0.3s ease;
-            `;
-            
-            notification.innerHTML = `
-                <strong style="color: var(--mickey-red); display: block; margin-bottom: 5px;">${title}</strong>
-                <div>${message}</div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.3s ease';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+
+        function loadStudentProgress() {
+            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
+            if (progress.points) {
+                studentScore = progress.points;
+            }
         }
+
+        function saveStudentProgress() {
+            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
+            progress.points = studentScore;
+            progress.lastPlayed = new Date().toISOString();
+            localStorage.setItem('studentProgress', JSON.stringify(progress));
+        }
+
+        // ============================================
+        // TEST FUNCTION - MANUALLY TRIGGER INTERVENTION
+        // ============================================
+
+        function testIntervention(emotion = 'anger') {
+            triggerInterventionManually(emotion);
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        window.addEventListener('load', function() {
+            const savedName = localStorage.getItem('studentName');
+            if (!savedName) {
+                window.location.href = 'welcome.html';
+                return;
+            }
+            
+            // Load student progress
+            loadStudentProgress();
+            
+            // Initialize dyslexia mode if enabled
+            if (localStorage.getItem('dyslexiaMode') === 'true') {
+                document.body.classList.add('dyslexia-mode');
+            }
+            
+            // Initialize speech synthesis
+            if ('speechSynthesis' in window) {
+                // Warm up speech synthesis
+                speechSynthesis.getVoices();
+            }
+            
+            // Add test button for development
+            if (window.location.href.includes('localhost') || window.location.href.includes('127.0.0.1')) {
+                const testButton = document.createElement('button');
+                testButton.textContent = 'Test Intervention';
+                testButton.style.position = 'fixed';
+                testButton.style.bottom = '100px';
+                testButton.style.right = '20px';
+                testButton.style.zIndex = '100000';
+                testButton.style.padding = '10px';
+                testButton.style.background = '#ff6b8b';
+                testButton.style.color = 'white';
+                testButton.style.border = 'none';
+                testButton.style.borderRadius = '5px';
+                testButton.style.cursor = 'pointer';
+                testButton.onclick = () => testIntervention('anger');
+                document.body.appendChild(testButton);
+            }
+        });
     </script>
 </body>
 </html>

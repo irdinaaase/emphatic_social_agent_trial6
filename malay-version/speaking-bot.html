@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking Bot</title>
+    <style>
+        /* SPEAKING BOT STYLES */
+        :root {
+            --mickey-red: #d84a54;
+            --mickey-yellow: #e9a946;
+            --mickey-black: #25221a;
+            --mickey-white: #e9e7db;
+            --mickey-blue: #8ac6d1;
+            --mickey-pink: #ffb8c6;
+            --mickey-green: #95e1d3;
+            --mickey-purple: #b8b8ff;
+            --mickey-bg: #fff5f5;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka One', cursive;
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* INDEPENDENT SPEAKING BOT SYSTEM */
+        .speaking-bot-overlay {
+            display: block;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: rgba(26, 26, 46, 0.95);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .speaking-bot-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 160px;
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Bot speaker avatar */
+        .bot-speaker-avatar {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bot-speaker-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .speaking .bot-speaker-circle {
+            animation: speakingPulse 1.5s infinite alternate;
+        }
+
+        .bot-speaker-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Speaker waves */
+        .speaker-waves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .speaking .speaker-waves {
+            display: block;
+        }
+
+        .speaker-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(149, 225, 211, 0.3);
+            animation: waveExpand 1.5s infinite linear;
+        }
+
+        .speaker-wave:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .speaker-wave:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .speaker-wave:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        /* Bot speaker status */
+        .bot-speaker-status {
+            text-align: center;
+            color: white;
+            width: 100%;
+        }
+
+        .status-text {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-family: 'Comic Neue', cursive;
+            color: #95e1d3;
+            min-height: 30px;
+            transition: all 0.3s;
+        }
+
+        .speaking .status-text {
+            animation: textGlow 1s infinite alternate;
+        }
+
+        /* VOICE WAVE VISUALIZATION */
+        .voice-wave-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 30px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .voice-wave-bar {
+            width: 6px;
+            height: 10px;
+            background: linear-gradient(to top, #ff6b8b, #ffd166);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            animation: wavePulse 1.5s infinite ease-in-out;
+        }
+
+        .voice-wave-bar:nth-child(1) { animation-delay: 0s; }
+        .voice-wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .voice-wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .voice-wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .voice-wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        /* Speaking state adjustments */
+        .speaking .voice-wave-bar {
+            animation-play-state: running;
+        }
+
+        /* Non-speaking state */
+        :not(.speaking) .voice-wave-bar {
+            animation-play-state: paused;
+            height: 8px;
+            opacity: 0.3;
+        }
+
+        /* Continue button */
+        .bot-speaker-continue {
+            padding: 12px 25px;
+            background: rgba(255, 107, 139, 0.8);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .bot-speaker-continue.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .bot-speaker-continue:hover {
+            background: rgba(255, 107, 139, 1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        }
+
+        /* INTERVENTION OPTIONS */
+        #intervention-options-container {
+            position: absolute !important;
+            bottom: -180px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 90% !important;
+            max-width: 500px !important;
+            z-index: 10010 !important; 
+            animation: slideUp 0.5s ease !important;
+            background: rgba(26, 26, 46, 0.95) !important;
+            padding: 20px !important;
+            border-radius: 20px !important;
+            border: 3px solid var(--mickey-yellow) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        #intervention-options {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 15px !important;
+            width: 100% !important;
+        }
+
+        .intervention-option-btn {
+            padding: 15px 10px;
+            background: var(--mickey-white);
+            color: var(--mickey-black);
+            border: 3px solid var(--mickey-black);
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            min-height: 70px;
+            box-shadow: 0 4px 0 var(--mickey-black);
+        }
+
+        .intervention-option-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 0 var(--mickey-black), 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            0% { 
+                transform: translate(-50%, -40%); 
+                opacity: 0; 
+            }
+            100% { 
+                transform: translate(-50%, -50%); 
+                opacity: 1; 
+            }
+        }
+
+        @keyframes speakingPulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 30px rgba(255, 107, 139, 0.7),
+                    0 0 60px rgba(255, 107, 139, 0.4);
+            }
+            100% { 
+                transform: scale(1.05);
+                box-shadow: 
+                    0 0 40px rgba(255, 107, 139, 0.9),
+                    0 0 80px rgba(255, 107, 139, 0.6);
+            }
+        }
+
+        @keyframes waveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 1;
+                border-width: 2px;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px rgba(149, 225, 211, 0.5); }
+            100% { text-shadow: 0 0 10px rgba(149, 225, 211, 0.8); }
+        }
+
+        @keyframes wavePulse {
+            0%, 100% { 
+                height: 10px;
+                opacity: 0.5;
+                transform: scaleY(1);
+            }
+            50% { 
+                height: 25px;
+                opacity: 1;
+                transform: scaleY(1.3);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .speaking-bot-container {
+                padding: 20px;
+                gap: 100px;
+            }
+            
+            .bot-speaker-avatar {
+                width: 150px;
+                height: 150px;
+            }
+            
+            #intervention-options {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SPEAKING BOT OVERLAY -->
+    <div class="speaking-bot-overlay" id="speaking-bot-overlay">
+        <div class="speaking-bot-container" id="speaking-bot-container">
+            <!-- Bot speaker avatar -->
+            <div class="bot-speaker-avatar">
+                <div class="bot-speaker-circle" id="bot-speaker-circle">
+                    <img src="images/toodles.png" alt="Speaking Bot" class="bot-speaker-img">
+                </div>
+                <!-- Speaker waves animation -->
+                <div class="speaker-waves" id="speaker-waves">
+                    <div class="speaker-wave"></div>
+                    <div class="speaker-wave"></div>
+                    <div class="speaker-wave"></div>
+                </div>
+            </div>
+            
+            <!-- Bot speaker status -->
+            <div class="bot-speaker-status">
+                <div class="status-text" id="bot-speaker-status-text">Ready to help!</div>
+                
+                <!-- Voice wave visualization -->
+                <div class="voice-wave-container" id="voice-wave-container">
+                    <div class="voice-wave-bar"></div>
+                    <div class="voice-wave-bar"></div>
+                    <div class="voice-wave-bar"></div>
+                    <div class="voice-wave-bar"></div>
+                    <div class="voice-wave-bar"></div>
+                </div>
+            </div>
+            
+            <!-- Continue button -->
+            <button class="bot-speaker-continue" id="bot-speaker-continue">
+                <i class="fas fa-check"></i> Continue
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // INDEPENDENT SPEAKING BOT SYSTEM
+        // ============================================
+
+        // Bot speaking queue system
+        const botSpeakingQueue = {
+            messages: [],
+            isSpeaking: false,
+            currentUtterance: null,
+            currentCallback: null,
+            autoClose: true
+        };
+
+        // Paul Ekman's 7 Universal Emotions interventions
+        const botPhrases = {
+            welcome: [
+                "Selamat datang kembali! Mari kita teruskan pengembaraan kita! Saya teruja untuk membantu anda belajar hari ini!"
+            ],
+            
+            intervention: {
+                anger: {
+                    message: "Saya perasan awak rasa marah. Tarik nafas dalam-dalam. Bagaimana saya boleh bantu awak rasa lebih baik?",
+                    options: [
+                        { text: "Ambil rehat", icon: "fa-coffee", action: "break", color: "#ffb8c6" },
+                        { text: "Nafas dalam-dalam", icon: "fa-wind", action: "breathe", color: "#95e1d3" },
+                        { text: "Buat lebih mudah", icon: "fa-thumbs-up", action: "easier", color: "#8ac6d1" },
+                        { text: "Saya okay", icon: "fa-check", action: "continue", color: "#e9a946" }
+                    ]
+                },
+                disgust: {
+                    message: "Saya nampak awak rasa meluat. Mari cuba sesuatu yang berbeza!",
+                    options: [
+                        { text: "Cuba aktiviti lain", icon: "fa-random", action: "different", color: "#ffb8c6" },
+                        { text: "Ambil rehat pendek", icon: "fa-coffee", action: "break", color: "#95e1d3" },
+                        { text: "Terangkan secara berbeza", icon: "fa-comment-alt", action: "explain", color: "#8ac6d1" },
+                        { text: "Saya okay", icon: "fa-check", action: "continue", color: "#e9a946" }
+                    ]
+                },
+                fear: {
+                    message: "Tak apa rasa takut. Biar saya bantu awak rasa lebih selesa.",
+                    options: [
+                        { text: "Ambil masa", icon: "fa-tachometer-alt-slow", action: "slow", color: "#ffb8c6" },
+                        { text: "Mulakan dari asas", icon: "fa-undo", action: "basics", color: "#95e1d3" },
+                        { text: "Ambil rehat", icon: "fa-coffee", action: "break", color: "#8ac6d1" },
+                        { text: "Saya okay", icon: "fa-check", action: "continue", color: "#e9a946" }
+                    ]
+                },
+                happy: {
+                    message: "Seronok nampak awak gembira! Mari kita kekalkan tenaga positif ini!",
+                    options: [
+                        { text: "Teruskan main", icon: "fa-gamepad", action: "continue", color: "#95e1d3" },
+                        { text: "Cuba tahap seterusnya", icon: "fa-forward", action: "next", color: "#8ac6d1" },
+                        { text: "Tunjukkan lebih banyak", icon: "fa-star", action: "more", color: "#ffb8c6" },
+                        { text: "Saya okay", icon: "fa-check", action: "continue", color: "#e9a946" }
+                    ]
+                },
+                sad: {
+                    message: "Saya perasan awak rasa sedih. Mari kita buat sesuatu untuk seronokkan awak!",
+                    options: [
+                        { text: "Cerita lawak", icon: "fa-grin-squint", action: "jokes", color: "#ffb8c6" },
+                        { text: "Ambil rehat", icon: "fa-coffee", action: "break", color: "#95e1d3" },
+                        { text: "Aktiviti berbeza", icon: "fa-random", action: "different", color: "#8ac6d1" },
+                        { text: "Saya okay", icon: "fa-check", action: "continue", color: "#e9a946" }
+                    ]
+                },
+                surprise: {
+                    message: "Awak nampak terkejut! Semuanya okay?",
+                    options: [
+                        { text: "Terangkan sekali lagi", icon: "fa-redo", action: "explain", color: "#ffb8c6" },
+                        { text: "Pergi satu langkah belakang", icon: "fa-step-backward", action: "back", color: "#95e1d3" },
+                        { text: "Ambil masa sebentar", icon: "fa-hourglass-half", action: "pause", color: "#8ac6d1" },
+                        { text: "Saya okay", icon: "fa-check", action: "continue", color: "#e9a946" }
+                    ]
+                },
+                distracted: {
+                    message: "Saya perasan perhatian awak terganggu. Apa yang boleh bantu awak fokus semula?",
+                    options: [
+                        { text: "Ambil rehat", icon: "fa-coffee", action: "break", color: "#ffb8c6" },
+                        { text: "Regangan cepat", icon: "fa-running", action: "stretch", color: "#95e1d3" },
+                        { text: "Tukar aktiviti", icon: "fa-random", action: "different", color: "#8ac6d1" },
+                        { text: "Saya okay", icon: "fa-check", action: "continue", color: "#e9a946" }
+                    ]
+                }
+            },
+            
+            greeting: [
+                "Ya! Apa yang boleh saya bantu?",
+                "Saya di sini! Apa yang awak mahu tahu?",
+                "Helo! Bagaimana saya boleh bantu hari ini?",
+                "Ada apa yang saya boleh tolong?"
+            ],
+            
+            encouragement: [
+                "Awak hebat! Teruskan usaha yang baik!",
+                "Wah! Saya sangat kagum dengan kemajuan awak!",
+                "Awak semakin baik setiap kali! Saya sangat bangga dengan awak!",
+                "Itu hebat! Awak memang berbakat dalam ni!"
+            ],
+            
+            correction: [
+                "Tak apa! Mari kita cuba sekali lagi bersama-sama.",
+                "Hampir dapat! Cuba sekali lagi.",
+                "Usaha yang baik! Sekarang biar saya tunjukkan cara yang betul.",
+                "Belum tepat, tapi awak semakin hampir!"
+            ],
+            
+            break: [
+                "Masa untuk rehat cepat! Mari kita regang dan kembali segar!",
+                "Kerja yang baik setakat ini! Bagaimana dengan rehat 30 saat?",
+                "Awak sudah bekerja keras! Mari kita ambil masa untuk berehat."
+            ],
+            
+            gameComplete: [
+                "Tahniah! Awak telah selesaikan permainan! Awak memang superstar!",
+                "Kerja yang menakjubkan! Awak telah selesaikan semua aktiviti!",
+                "Hooray! Awak berjaya! Saya sangat bangga dengan awak!"
+            ]
+        };
+                
+        // Initialize the speaking bot system
+        function initSpeakingBot() {
+            console.log("Initializing speaking bot system...");
+            
+            // Continue button
+            const continueBtn = document.getElementById('bot-speaker-continue');
+            if (continueBtn) {
+                continueBtn.addEventListener('click', hideSpeakingBot);
+            }
+            
+            // Escape key to close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('speaking-bot-overlay').style.display === 'block') {
+                    hideSpeakingBot();
+                }
+            });
+            
+            // Click outside to close (only when autoClose is false)
+            const overlay = document.getElementById('speaking-bot-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === this && !botSpeakingQueue.autoClose) {
+                        hideSpeakingBot();
+                    }
+                });
+            }
+            
+            // Listen for intervention messages
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'show-intervention') {
+                    console.log('Intervention requested:', event.data);
+                    
+                    // Show appropriate intervention
+                    const emotion = event.data.emotion || 'frustrated';
+                    
+                    // Use the existing intervention function
+                    speakIntervention(emotion);
+                    
+                    // Ensure overlay is visible
+                    const overlay = document.getElementById('speaking-bot-overlay');
+                    if (overlay) {
+                        overlay.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Check for pending interventions on load
+            const savedIntervention = sessionStorage.getItem('pendingIntervention');
+            if (savedIntervention) {
+                const intervention = JSON.parse(savedIntervention);
+                if (intervention.timestamp > Date.now() - 30000) { // Within last 30 seconds
+                    setTimeout(() => {
+                        speakIntervention(intervention.emotion || 'frustrated');
+                    }, 1000);
+                }
+                sessionStorage.removeItem('pendingIntervention');
+            }
+            
+            // Speak welcome message
+            setTimeout(() => {
+                speakWelcomeMessage();
+            }, 1000);
+            
+            console.log("✅ Speaking bot system initialized!");
+        }
+
+        // Show the speaking bot overlay
+        function showSpeakingBot(message, options = {}) {
+            const overlay = document.getElementById('speaking-bot-overlay');
+            const container = document.getElementById('speaking-bot-container');
+            const statusText = document.getElementById('bot-speaker-status-text');
+            const continueBtn = document.getElementById('bot-speaker-continue');
+            
+            // Set options
+            const settings = {
+                autoClose: options.autoClose !== undefined ? options.autoClose : true,
+                onComplete: options.onComplete || null,
+                type: options.type || 'info',
+                duration: options.duration || 3000,
+                showOptions: options.showOptions || false,
+                botOptions: options.options || [],
+                emotion: options.emotion || null
+            };
+            
+            botSpeakingQueue.autoClose = settings.autoClose;
+            botSpeakingQueue.currentCallback = settings.onComplete;
+            
+            // Show overlay
+            overlay.style.display = 'block';
+            container.classList.add('speaking');
+            
+            // Update status text
+            if (statusText) {
+                statusText.textContent = getStatusText(settings.type);
+            }
+            
+            // Hide continue button initially
+            continueBtn.classList.remove('show');
+            
+            // Show options immediately if specified
+            if (settings.showOptions && settings.botOptions.length > 0) {
+                createInterventionOptions(settings.botOptions, settings.emotion);
+            }
+            
+            // Start speaking
+            speakBotMessage(message, settings);
+        }
+
+        function createInterventionOptionsContainer() {
+            const botContainer = document.getElementById('speaking-bot-container');
+            if (!botContainer) return;
+            
+            // Remove any existing options container
+            const existingContainer = document.getElementById('intervention-options-container');
+            if (existingContainer) {
+                existingContainer.remove();
+            }
+            
+            // Create new container
+            const optionsContainer = document.createElement('div');
+            optionsContainer.id = 'intervention-options-container';
+            optionsContainer.style.cssText = `
+                position: absolute;
+                bottom: -180px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 500px;
+                z-index: 10010;
+                animation: slideUp 0.5s ease;
+                background: rgba(26, 26, 46, 0.95);
+                padding: 20px;
+                border-radius: 20px;
+                border: 3px solid #e9a946;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            `;
+            
+            // Create title for options
+            const title = document.createElement('div');
+            title.style.cssText = `
+                color: #e9a946;
+                font-family: 'Fredoka One', cursive;
+                font-size: 1.2rem;
+                text-align: center;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            `;
+            title.innerHTML = `<i class="fas fa-hand-point-up"></i> Choose an option:`;
+            
+            // Create inner container for options
+            const innerContainer = document.createElement('div');
+            innerContainer.id = 'intervention-options';
+            innerContainer.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                width: 100%;
+            `;
+            
+            optionsContainer.appendChild(title);
+            optionsContainer.appendChild(innerContainer);
+            botContainer.appendChild(optionsContainer);
+            
+            console.log("✅ Intervention options container created");
+        }
+
+        function createInterventionOptions(options, emotion) {
+            // FIRST: Create the container if it doesn't exist
+            if (!document.getElementById('intervention-options')) {
+                createInterventionOptionsContainer();
+            }
+            
+            let optionsContainer = document.getElementById('intervention-options');
+            if (!optionsContainer) {
+                console.error("❌ Options container not found! Creating one now...");
+                createInterventionOptionsContainer();
+                // Try again
+                optionsContainer = document.getElementById('intervention-options');
+                if (!optionsContainer) {
+                    console.error("❌ Failed to create options container!");
+                    return;
+                }
+            }
+            
+            // Clear any existing options
+            optionsContainer.innerHTML = '';
+            
+            // Create option buttons
+            options.forEach((option) => {
+                const optionBtn = document.createElement('button');
+                optionBtn.className = 'intervention-option-btn';
+                optionBtn.style.cssText = `
+                    padding: 15px 10px;
+                    background: ${option.color || '#e9e7db'};
+                    color: #25221a;
+                    border: 3px solid #25221a;
+                    border-radius: 15px;
+                    font-family: 'Fredoka One', cursive;
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    transition: all 0.3s;
+                    font-size: 0.9rem;
+                    min-height: 70px;
+                    box-shadow: 0 4px 0 #25221a;
+                `;
+                
+                optionBtn.innerHTML = `
+                    <i class="fas ${option.icon}" style="font-size: 1.5rem; margin-bottom: 5px;"></i>
+                    <span style="font-size: 0.85rem; line-height: 1.2; text-align: center;">${option.text}</span>
+                `;
+                
+                // Add hover effects
+                optionBtn.addEventListener('mouseenter', () => {
+                    optionBtn.style.transform = 'translateY(-5px) scale(1.05)';
+                    optionBtn.style.boxShadow = '0 8px 0 #25221a, 0 5px 15px rgba(0,0,0,0.3)';
+                });
+                
+                optionBtn.addEventListener('mouseleave', () => {
+                    optionBtn.style.transform = 'translateY(0) scale(1)';
+                    optionBtn.style.boxShadow = '0 4px 0 #25221a';
+                });
+                
+                // Add click handler
+                optionBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    console.log(`Option clicked: ${option.action} for emotion: ${emotion}`);
+                    handleInterventionChoice(option.action, emotion);
+                });
+                
+                optionsContainer.appendChild(optionBtn);
+            });
+            
+            console.log(`✅ Created ${options.length} intervention options for ${emotion}`);
+            
+            // Force a reflow to ensure visibility
+            setTimeout(() => {
+                const container = document.getElementById('intervention-options-container');
+                if (container) {
+                    container.style.opacity = '1';
+                }
+            }, 100);
+        }
+
+        // Global function to handle intervention choices
+        function handleInterventionChoice(choice, emotion) {
+            console.log(`User chose intervention: ${choice} for ${emotion}`);
+            
+            let responseMessage = "";
+            
+            // Map choices to specific actions based on Paul Ekman's emotions
+            switch(choice) {
+                case 'break':
+                    responseMessage = "Good idea! Let's take a quick 30-second break. Breathe in... and out...";
+                    break;
+                    
+                case 'easier':
+                    responseMessage = "I'll make this easier for you! Let's try a simpler version.";
+                    break;
+                    
+                case 'hint':
+                    responseMessage = "Here's a hint to help you... Try looking at it from a different angle!";
+                    break;
+                    
+                case 'continue':
+                    responseMessage = "Okay, let's continue! You've got this!";
+                    break;
+                    
+                case 'jokes':
+                    responseMessage = "Why did the math book look sad? Because it had too many problems! 😄";
+                    break;
+                    
+                case 'different':
+                    responseMessage = "Let's try a different approach! Variety is the spice of learning!";
+                    break;
+                    
+                case 'explain':
+                    responseMessage = "Let me explain this in a different way...";
+                    break;
+                    
+                case 'basics':
+                    responseMessage = "Let's start from the beginning and take it step by step!";
+                    break;
+                    
+                case 'stretch':
+                    responseMessage = "Great idea! Let's stretch for a moment. Reach for the sky!";
+                    break;
+                    
+                case 'breathe':
+                    responseMessage = "Let's take three deep breaths together. In... out... in... out...";
+                    break;
+                    
+                case 'slow':
+                    responseMessage = "Let's take it slow. No rush at all!";
+                    break;
+                    
+                case 'next':
+                    responseMessage = "Great! Let's try the next level!";
+                    break;
+                    
+                case 'more':
+                    responseMessage = "I love your enthusiasm! Here's more fun stuff!";
+                    break;
+                    
+                case 'back':
+                    responseMessage = "Let's go back one step and make sure we understand it.";
+                    break;
+                    
+                case 'pause':
+                    responseMessage = "Let's pause for a moment and think about this.";
+                    break;
+                    
+                default:
+                    responseMessage = `Great choice! Let's ${choice} together!`;
+            }
+            
+            // Remove options
+            const optionsContainer = document.getElementById('intervention-options');
+            if (optionsContainer) {
+                optionsContainer.remove();
+            }
+            
+            // Hide the bot overlay
+            hideSpeakingBot();
+            
+            // Speak the response
+            queueBotMessage(responseMessage, {
+                type: 'info',
+                autoClose: true,
+                duration: 2000
+            });
+            
+            // Notify parent window about the choice
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'intervention-choice',
+                    choice: choice,
+                    emotion: emotion,
+                    timestamp: Date.now()
+                }, '*');
+            }
+        }
+
+        // Hide the speaking bot
+        function hideSpeakingBot() {
+            const overlay = document.getElementById('speaking-bot-overlay');
+            const container = document.getElementById('speaking-bot-container');
+            const continueBtn = document.getElementById('bot-speaker-continue');
+            
+            // Stop any ongoing speech
+            stopBotSpeaking();
+            
+            // Remove options if they exist
+            const optionsContainer = document.getElementById('intervention-options');
+            if (optionsContainer) {
+                optionsContainer.remove();
+            }
+            
+            // Hide elements
+            overlay.style.display = 'none';
+            container.classList.remove('speaking');
+            continueBtn.classList.remove('show');
+            
+            // Clear queue if autoClose is true
+            if (botSpeakingQueue.autoClose) {
+                botSpeakingQueue.messages = [];
+            }
+            
+            // Process next in queue
+            processSpeakingQueue();
+        }
+
+        // Queue a message for the bot to speak
+        function queueBotMessage(message, options = {}) {
+            botSpeakingQueue.messages.push({
+                message: message,
+                options: options
+            });
+            
+            // Start processing if not already speaking
+            if (!botSpeakingQueue.isSpeaking) {
+                processSpeakingQueue();
+            }
+        }
+
+        // Process the speaking queue
+        function processSpeakingQueue() {
+            if (botSpeakingQueue.messages.length === 0 || botSpeakingQueue.isSpeaking) {
+                return;
+            }
+            
+            const nextItem = botSpeakingQueue.messages.shift();
+            showSpeakingBot(nextItem.message, nextItem.options);
+        }
+
+        // Core speaking function
+        function speakBotMessage(message, settings) {
+            // If voice synthesis is not available, just show the bot briefly
+            if (!('speechSynthesis' in window)) {
+                setTimeout(() => {
+                    completeSpeaking(settings);
+                }, 2000);
+                return;
+            }
+            
+            botSpeakingQueue.isSpeaking = true;
+            
+            // Create speech synthesis utterance
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.rate = 0.9;
+            utterance.pitch = 1.2;
+            utterance.volume = 1;
+            utterance.lang = 'ms-MY'; // TUKAR KE BAHASA MALAYSIA
+            
+            // Try to get a friendly voice
+            const voices = speechSynthesis.getVoices();
+            const malayVoice = voices.find(voice => 
+                voice.lang.includes('ms') || 
+                voice.lang.includes('MS') ||
+                voice.name.toLowerCase().includes('malay')
+            );
+    
+            if (malayVoice) {
+                utterance.voice = malayVoice;
+            } else {
+                // Fallback to friendly voice
+                const friendlyVoice = voices.find(voice => 
+                    voice.name.includes('Child') || 
+                    voice.name.includes('Kids')
+                );
+                if (friendlyVoice) {
+                    utterance.voice = friendlyVoice;
+                }
+            }
+
+            if (friendlyVoice) {
+                utterance.voice = friendlyVoice;
+            }
+            
+            // Event handlers
+            utterance.onstart = function() {
+                onSpeechStart(settings);
+            };
+            
+            utterance.onend = function() {
+                completeSpeaking(settings);
+            };
+            
+            utterance.onerror = function() {
+                completeSpeaking(settings);
+            };
+            
+            // Start speaking
+            botSpeakingQueue.currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
+            
+            // Animate volume bar
+            animateVoiceWaves();
+        }
+
+        // Function called when speech starts
+        function onSpeechStart(settings) {
+            const container = document.getElementById('speaking-bot-container');
+            const waves = document.getElementById('speaker-waves');
+            
+            if (container) container.classList.add('speaking');
+            if (waves) waves.style.display = 'block';
+        }
+
+        // Function called when speech completes
+        function completeSpeaking(settings) {
+            const continueBtn = document.getElementById('bot-speaker-continue');
+            
+            // Update UI
+            const container = document.getElementById('speaking-bot-container');
+            const waves = document.getElementById('speaker-waves');
+            const statusText = document.getElementById('bot-speaker-status-text');
+            
+            if (container) container.classList.remove('speaking');
+            if (waves) waves.style.display = 'none';
+            if (statusText) statusText.textContent = "Ready!";
+            
+            // Show continue button if autoClose is false AND no options are shown
+            const hasOptions = document.getElementById('intervention-options');
+            if (!botSpeakingQueue.autoClose && continueBtn && !hasOptions) {
+                continueBtn.classList.add('show');
+            }
+            
+            // Call callback if provided
+            if (botSpeakingQueue.currentCallback) {
+                botSpeakingQueue.currentCallback();
+                botSpeakingQueue.currentCallback = null;
+            }
+            
+            // Mark as not speaking
+            botSpeakingQueue.isSpeaking = false;
+            botSpeakingQueue.currentUtterance = null;
+            
+            // Auto hide if enabled and no options
+            if (botSpeakingQueue.autoClose && !hasOptions) {
+                setTimeout(() => {
+                    if (!botSpeakingQueue.isSpeaking) {
+                        hideSpeakingBot();
+                    }
+                }, 1000);
+            }
+            
+            // Process next in queue
+            setTimeout(processSpeakingQueue, 500);
+        }
+
+        // Stop current speaking
+        function stopBotSpeaking() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            
+            if (botSpeakingQueue.currentUtterance) {
+                speechSynthesis.cancel();
+                botSpeakingQueue.currentUtterance = null;
+            }
+            
+            botSpeakingQueue.isSpeaking = false;
+        }
+
+        // Animate volume bar during speech
+        function animateVoiceWaves() {
+            const voiceBars = document.querySelectorAll('.voice-wave-bar');
+            if (!voiceBars.length) return;
+            
+            let animationInterval = setInterval(() => {
+                if (!botSpeakingQueue.isSpeaking) {
+                    clearInterval(animationInterval);
+                    resetVoiceWaves();
+                    return;
+                }
+                
+                // Animate each bar with random heights
+                voiceBars.forEach((bar, index) => {
+                    const delay = index * 0.1;
+                    const height = 10 + Math.random() * 20;
+                    
+                    setTimeout(() => {
+                        bar.style.height = `${height}px`;
+                        bar.style.opacity = 0.5 + Math.random() * 0.5;
+                    }, delay * 100);
+                });
+                
+            }, 200);
+        }
+
+        // Reset voice waves to initial state
+        function resetVoiceWaves() {
+            const voiceBars = document.querySelectorAll('.voice-wave-bar');
+            voiceBars.forEach(bar => {
+                bar.style.height = '10px';
+                bar.style.opacity = '0.5';
+            });
+        }
+
+        // Get appropriate status text based on type
+        function getStatusText(type) {
+            switch(type) {
+                case 'welcome': return "Welcoming you...";
+                case 'greeting': return "How can I help?";
+                case 'intervention': return "Offering help...";
+                case 'encouragement': return "Cheering you on!";
+                case 'correction': return "Helping out...";
+                case 'break': return "Suggesting a break...";
+                case 'complete': return "Celebrating!";
+                default: return "Speaking...";
+            }
+        }
+
+        // Welcome message
+        function speakWelcomeMessage() {
+            const message = botPhrases.welcome[Math.floor(Math.random() * botPhrases.welcome.length)];
+            queueBotMessage(message, {
+                type: 'welcome',
+                autoClose: true
+            });
+        }
+
+        // Greeting message (when clicking the bot)
+        function speakBotGreeting() {
+            const message = botPhrases.greeting[Math.floor(Math.random() * botPhrases.greeting.length)];
+            queueBotMessage(message, {
+                type: 'greeting',
+                autoClose: false
+            });
+        }
+
+        // Intervention message (Paul Ekman's 7 emotions)
+        function speakIntervention(emotion = 'anger') {
+            // Helper to save intervention state
+            function saveInterventionState(emotion) {
+                sessionStorage.setItem('pendingIntervention', JSON.stringify({
+                    emotion: emotion,
+                    timestamp: Date.now()
+                }));
+            }
+            
+            // Save for persistence
+            saveInterventionState(emotion);
+            
+            const intervention = botPhrases.intervention[emotion] || botPhrases.intervention.anger;
+            const message = intervention.message;
+            
+            queueBotMessage(message, {
+                type: 'intervention',
+                autoClose: false,
+                showOptions: true,
+                options: intervention.options || [],
+                emotion: emotion
+            });
+        }
+
+        // Encouragement message
+        function speakEncouragement() {
+            const message = botPhrases.encouragement[Math.floor(Math.random() * botPhrases.encouragement.length)];
+            queueBotMessage(message, {
+                type: 'encouragement',
+                autoClose: true
+            });
+        }
+
+        // Game completion
+        function speakGameComplete() {
+            const message = botPhrases.gameComplete[Math.floor(Math.random() * botPhrases.gameComplete.length)];
+            queueBotMessage(message, {
+                type: 'complete',
+                autoClose: true
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            initSpeakingBot();
+            
+            // Add Font Awesome
+            const faLink = document.createElement('link');
+            faLink.rel = 'stylesheet';
+            faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+            document.head.appendChild(faLink);
+            
+            // Add fonts
+            const fontLink = document.createElement('link');
+            fontLink.href = 'https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap';
+            fontLink.rel = 'stylesheet';
+            document.head.appendChild(fontLink);
+        });
+
+        // Export functions
+        window.showSpeakingBot = showSpeakingBot;
+        window.queueBotMessage = queueBotMessage;
+        window.speakIntervention = speakIntervention;
+        window.speakEncouragement = speakEncouragement;
+        window.speakGameComplete = speakGameComplete;
+    </script>
+</body>
+</html>
