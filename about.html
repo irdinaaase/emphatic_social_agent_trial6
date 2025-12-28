@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mickey's Learning Hub - About Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@open-dyslexic/open-dyslexic@1.0.3/css/open-dyslexic.css">
+    
+    <style>
+        :root {
+            --mickey-red: #d84a54;
+            --mickey-yellow: #e9a946;
+            --mickey-black: #25221a;
+            --mickey-white: #e9e7db;
+            --mickey-blue: #8ac6d1;
+            --mickey-pink: #ffb8c6;
+            --mickey-green: #95e1d3;
+            --mickey-purple: #b8b8ff;
+            --mickey-bg: #fff5f5;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, var(--mickey-bg) 0%, #ffe6e6 100%);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 2px, transparent 2px),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.8) 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
+
+        body.dyslexia-mode {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+            letter-spacing: 0.1em;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #ffffcc 0%, #fff5cc 100%) !important;
+        }
+
+        .fixed-header {
+            top: 35px;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            padding: 15px 20px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--mickey-white);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--mickey-yellow);
+            border-radius: 50%;
+            border: 3px solid var(--mickey-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--mickey-red);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: var(--mickey-yellow);
+            color: var(--mickey-black);
+            border: 3px solid var(--mickey-black);
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: var(--mickey-white);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 0 var(--mickey-black);
+        }
+
+        .nav-tab.active {
+            background: var(--mickey-blue);
+            color: var(--mickey-white);
+        }
+
+        .about-content {
+            padding: 30px;
+            background: var(--mickey-white);
+            border-radius: 25px;
+            border: 5px solid var(--mickey-black);
+            box-shadow: 0 10px 0 var(--mickey-black);
+            margin-top: 20px;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 160px;
+            }
+            
+            .fixed-header {
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-tab {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .about-content {
+                margin: 20px 10px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="fixed-header">
+        <div class="header-container">
+            
+            <nav class="header-nav">
+                <a href="game-center.html" class="nav-tab">
+                    <i class="fas fa-gamepad"></i> Game Center
+                </a>
+                <a href="profile.html" class="nav-tab">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="about.html" class="nav-tab active">
+                    <i class="fas fa-info-circle"></i> About Us
+                </a>
+                <a href="settings.html" class="nav-tab">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="about-content">
+        <h2 style="color: var(--mickey-red); text-align: center; margin-bottom: 30px;">
+            <i class="fas fa-info-circle"></i> About Mickey's Learning Hub
+        </h2>
+        
+        <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+            <div style="font-size: 4rem; color: var(--mickey-red); margin-bottom: 20px;">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h3 style="color: var(--mickey-blue); margin-bottom: 20px;">Our Mission</h3>
+            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; font-size: 1.2rem; line-height: 1.6; margin-bottom: 30px;">
+                Welcome to Mickey's Enhanced Empathic Learning Hub! We're dedicated to creating a fun, engaging, and supportive learning environment for children of all abilities, with special focus on dyslexia support.
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px;">
+                <div style="background: var(--mickey-yellow); padding: 20px; border-radius: 15px; border: 3px solid var(--mickey-black);">
+                    <div style="font-size: 2.5rem; color: var(--mickey-red); margin-bottom: 15px;">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h4 style="color: var(--mickey-black); margin: 0 0 10px 0;">Fun Learning Games</h4>
+                    <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive;">
+                        Engaging games that make learning letters, words, and tracing exciting!
+                    </p>
+                </div>
+                
+                <div style="background: var(--mickey-pink); padding: 20px; border-radius: 15px; border: 3px solid var(--mickey-black);">
+                    <div style="font-size: 2.5rem; color: var(--mickey-red); margin-bottom: 15px;">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4 style="color: var(--mickey-black); margin: 0 0 10px 0;">Empathic Support</h4>
+                    <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive;">
+                        Mickey helps when you're frustrated and celebrates your successes!
+                    </p>
+                </div>
+                
+                <div style="background: var(--mickey-green); padding: 20px; border-radius: 15px; border: 3px solid var(--mickey-black);">
+                    <div style="font-size: 2.5rem; color: var(--mickey-red); margin-bottom: 15px;">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h4 style="color: var(--mickey-black); margin: 0 0 10px 0;">Dyslexia-Friendly</h4>
+                    <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive;">
+                        Special features to help children with dyslexia learn comfortably.
+                    </p>
+                </div>
+            </div>
+            
+            <div style="background: var(--mickey-blue); color: white; padding: 25px; border-radius: 20px; border: 4px solid var(--mickey-black); margin-top: 40px;">
+                <h3 style="color: var(--mickey-white); margin-top: 0;">
+                    <i class="fas fa-star"></i> Why Choose Our Platform?
+                </h3>
+                <ul style="text-align: left; color: var(--mickey-white); font-family: 'Comic Neue', cursive; font-size: 1.1rem; line-height: 1.6;">
+                    <li>✅ <strong>No Login Required:</strong> Just enter your name and start learning!</li>
+                    <li>✅ <strong>Progress Tracking:</strong> Your achievements are saved automatically</li>
+                    <li>✅ <strong>Safe & Secure:</strong> All data stays on your device</li>
+                    <li>✅ <strong>Completely Free:</strong> No subscriptions or hidden costs</li>
+                    <li>✅ <strong>Accessible:</strong> Works on computers, tablets, and phones</li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <button onclick="window.location.href='game-center.html'" style="padding: 15px 30px; background: var(--mickey-red); color: white; border: 4px solid var(--mickey-black); border-radius: 20px; font-family: 'Fredoka One', cursive; font-size: 1.2rem; cursor: pointer; display: inline-flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-rocket"></i> Start Learning Now!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const savedName = localStorage.getItem('studentName');
+            if (!savedName) {
+                window.location.href = 'welcome.html';
+            }
+        });
+    </script>
+</body>
+</html>

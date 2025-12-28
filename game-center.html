@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mickey's Learning Hub - Game Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@open-dyslexic/open-dyslexic@1.0.3/css/open-dyslexic.css">
+    
+    <style>
+        :root {
+            --mickey-red: #ffe3e2;
+            --mickey-yellow: #f19d3b;
+            --mickey-black: #25221a;
+            --mickey-white: #e9e7db;
+            --mickey-blue: #8ac6d1;
+            --mickey-pink: #ffb8c6;
+            --mickey-green: #95e1d3;
+            --mickey-purple: #ded8e4;
+            --mickey-bg: #010101;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, var(--mickey-bg) 0%, #ffe6e6 100%);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 2px, transparent 2px),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.8) 2px, transparent 2px);
+            background-size: 40px 40px;
+            padding-top: 70px;
+        }
+
+        body.dyslexia-mode {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+            letter-spacing: 0.1em;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #ffffcc 0%, #fff5cc 100%) !important;
+        }   
+
+        .fixed-header {
+            position: fixed;
+            top: 690px;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            padding: 15px 20px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: var(--mickey-yellow);
+            color: var(--mickey-black);
+            border: 3px solid var(--mickey-black);
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: var(--mickey-white);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 0 var(--mickey-black);
+        }
+
+        .nav-tab.active {
+            background: var(--mickey-blue);
+            color: var(--mickey-white);
+        }
+
+        .learning-hub {
+            position: relative;
+        }
+
+        .modules-grid {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 20px;
+            border: 3px dashed rgba(255, 255, 255, 0.3);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .module-card {
+            height: 460px;
+            position: relative;
+            background: var(--mickey-white);
+            border: 3px solid var(--mickey-black);
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-logo {
+            width: 170px;
+            height: 170px;
+            background: var(--mickey-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card-logo i {
+            font-size: 4rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .module-card h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            color: #f5a2b2;
+            letter-spacing: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Game Container Styles */
+        .game-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            overflow-y: auto;
+        }
+
+        .game-content {
+            background: var(--mickey-white);
+            border-radius: 30px;
+            border: 8px solid var(--mickey-black);
+            box-shadow: 0 15px 0 var(--mickey-black), 0 30px 50px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            position: relative;
+            animation: bounceIn 0.5s ease;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid var(--mickey-yellow);
+        }
+
+        .game-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--mickey-red);
+            color: var(--mickey-white);
+            border: 3px solid var(--mickey-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .game-close:hover {
+            background: var(--mickey-blue);
+            transform: rotate(90deg);
+        }
+
+        .game-question {
+            font-size: 1.5rem;
+            color: var(--mickey-black);
+            margin-bottom: 30px;
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .game-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .game-option {
+            padding: 20px;
+            background: var(--mickey-yellow);
+            border: 4px solid var(--mickey-black);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Comic Neue', cursive;
+            font-weight: 700;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .game-option:hover {
+            transform: translateY(-5px);
+            background: var(--mickey-red);
+            color: var(--mickey-white);
+        }
+
+        .game-option.correct {
+            background: var(--mickey-green);
+            color: white;
+            border-color: var(--mickey-green);
+        }
+
+        .game-option.wrong {
+            background: var(--mickey-red);
+            color: white;
+            border-color: var(--mickey-red);
+        }
+
+        .game-feedback {
+            padding: 20px;
+            background: var(--mickey-blue);
+            color: var(--mickey-white);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 3px solid var(--mickey-black);
+            display: none;
+        }
+
+        .game-feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .game-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 3px dashed var(--mickey-red);
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: var(--mickey-blue);
+            color: var(--mickey-white);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-family: 'Fredoka One', cursive;
+            border: 3px solid var(--mickey-black);
+        }
+
+        .nav-btn:hover {
+            background: var(--mickey-red);
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .game-counter {
+            font-family: 'Fredoka One', cursive;
+            color: var(--mickey-red);
+            font-size: 1.2rem;
+            background: var(--mickey-white);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 3px solid var(--mickey-black);
+        }
+
+        /* Camera Panel Iframe Styles */
+        #collapsible-iframe {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 600px;
+            border: none;
+            z-index: 10001;
+            display: none;
+            border-radius: 15px;
+        }
+
+        /* Responsive adjustments for iframe */
+        @media (max-width: 768px) {
+            #collapsible-iframe {
+                width: 100% !important;
+                height: 400px !important;
+                bottom: 0 !important;
+                right: 0 !important;
+                border-radius: 0;
+                border: none;
+                border-top: 4px solid var(--mickey-black);
+            }
+            
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes spinStar {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes floatSuit {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.2;
+            }
+            50% {
+                transform: translateY(-10px) rotate(180deg);
+                opacity: 0.4;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .modules-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 160px;
+            }
+            
+            .fixed-header {
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-tab {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin: 10px;
+            }
+            
+            .module-card {
+                height: 350px;
+            }
+            
+            .game-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="fixed-header">
+        <div class="header-container">
+            
+            <nav class="header-nav">
+                <a href="game-center.html" class="nav-tab active">
+                    <i class="fas fa-gamepad"></i>
+                </a>
+                <a href="profile.html" class="nav-tab">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="about.html" class="nav-tab">
+                    <i class="fas fa-info-circle"></i>
+                </a>
+                <a href="settings.html" class="nav-tab">
+                    <i class="fas fa-cog"></i>
+                </a>
+                <a href="#" class="nav-tab" onclick="toggleCameraPanel(); return false;">
+                    <i class="fas fa-camera"></i>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="learning-hub">
+        <div class="modules-grid">
+            <!-- GAME 1: LETTER INTRODUCTION -->
+            <div class="module-card" data-module="letters" onclick="startGame('letters')">
+                <div class="card-logo">
+                    <i class="fas fa-font"></i>
+                </div>
+                <h3>Cari Huruf</h3>
+            </div>
+        
+            <!-- GAME 2: WORD SPELLING -->
+            <div class="module-card" data-module="spelling" onclick="startGame('spelling')">
+                <div class="card-logo">
+                    <i class="fas fa-spell-check"></i>
+                </div>
+                <h3>Eja Kata</h3>
+            </div>
+
+            <!-- GAME 3: LETTER TRACING -->
+            <div class="module-card" data-module="tracing" onclick="startGame('tracing')">
+                <div class="card-logo">
+                    <i class="fas fa-pen-nib"></i>
+                </div>
+                <h3>Tulis Huruf</h3>
+            </div>
+        </div>
+    </main>
+
+    <!-- Game Container (Hidden by default) -->
+    <div class="game-container" id="game-container">
+        <div class="game-content" id="game-content">
+            <div class="game-close" onclick="closeGame()">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="game-header">
+                <h2 id="game-title">Game Title</h2>
+                <div class="game-counter" id="game-counter">Activity 1 of 3</div>
+            </div>
+            <div class="game-question" id="game-question">
+                Question will appear here...
+            </div>
+            <div class="game-options" id="game-options">
+                <!-- Options will be inserted here by JavaScript -->
+            </div>
+            <div class="game-feedback" id="game-feedback"></div>
+            <div class="game-navigation">
+                <button class="nav-btn" id="prev-btn" onclick="previousActivity()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="nav-btn" id="next-btn" onclick="nextActivity()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Controls Iframe -->
+    <iframe 
+        src="collapsible.html" 
+        id="collapsible-iframe"
+        allow="camera; microphone">
+    </iframe>
+
+    <script>
+        // ============================================
+        // GAME CENTER - COMPLETE JAVASCRIPT
+        // ============================================
+
+        // Game State Variables
+        let currentGame = null;
+        let currentActivityIndex = 0;
+        let studentScore = 0;
+        let gameData = {
+            letters: {
+                title: "Letter Explorer Game",
+                description: "Learn lowercase letters a-z with multisensory support!",
+                activities: [
+                    {
+                        question: "Touch and identify this letter:",
+                        letter: "a",
+                        options: ["a", "b", "c", "d"],
+                        correct: 0,
+                        explanation: "Great! This is lowercase 'a'. Feel its round shape!",
+                        points: 10
+                    },
+                    {
+                        question: "Which letter is different?",
+                        letters: ["b", "d", "p", "a"],
+                        options: ["b", "d", "p", "a"],
+                        correct: 3,
+                        explanation: "Correct! 'a' is not a mirror letter like b-d or p-q!",
+                        points: 10
+                    },
+                    {
+                        question: "What comes after 'c'?",
+                        sequence: ["a", "b", "c", "?"],
+                        options: ["d", "e", "f", "g"],
+                        correct: 0,
+                        explanation: "Correct! c → d. Feel the different shapes!",
+                        points: 10
+                    }
+                ]
+            },
+            spelling: {
+                title: "Word Builder Game",
+                description: "Spell and read words using phonics!",
+                activities: [
+                    {
+                        question: "Spell 'cat'",
+                        word: "cat",
+                        options: ["c-a-t", "c-o-t", "k-a-t", "c-a-d"],
+                        correct: 0,
+                        explanation: "Excellent! c-a-t spells 'cat'!",
+                        points: 15
+                    },
+                    {
+                        question: "Spell 'dog'",
+                        word: "dog",
+                        options: ["d-o-g", "d-a-g", "b-o-g", "d-o-o"],
+                        correct: 0,
+                        explanation: "Perfect! d-o-g = dog!",
+                        points: 15
+                    },
+                    {
+                        question: "Spell 'sun'",
+                        word: "sun",
+                        options: ["s-u-n", "s-o-n", "s-u-m", "c-u-n"],
+                        correct: 0,
+                        explanation: "Great! s-u-n = sun!",
+                        points: 15
+                    }
+                ]
+            },
+            tracing: {
+                title: "Letter Tracer",
+                description: "Trace letters with mouse or finger to build muscle memory",
+                activities: [
+                    {
+                        question: "Trace the letter A",
+                        letter: "A",
+                        hint: "Start at the top, go down left, back up, down right, and across",
+                        points: 15
+                    },
+                    {
+                        question: "Trace the letter B",
+                        letter: "B",
+                        hint: "Start at top, straight down, then two curves",
+                        points: 15
+                    },
+                    {
+                        question: "Trace the letter C",
+                        letter: "C",
+                        hint: "Make a big curve from top to bottom",
+                        points: 15
+                    }
+                ]
+            }
+        };
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            const savedName = localStorage.getItem('studentName');
+            if (!savedName) {
+                window.location.href = 'welcome.html';
+                return;
+            }
+            
+            // Load student progress
+            loadStudentProgress();
+            
+            // Initialize dyslexia mode if enabled
+            if (localStorage.getItem('dyslexiaMode') === 'true') {
+                document.body.classList.add('dyslexia-mode');
+            }
+            
+            // Listen for messages from iframe
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'open-speaking-bot') {
+                    // Handle speaking bot request
+                    window.open('speaking-bot.html', '_blank', 'width=600,height=700');
+                } else if (event.data.type === 'iframe-loaded') {
+                    console.log('Camera controls iframe loaded successfully');
+                }
+            });
+        });
+
+        function loadStudentProgress() {
+            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
+            if (progress.points) {
+                studentScore = progress.points;
+            }
+        }
+
+        function saveStudentProgress() {
+            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
+            progress.points = studentScore;
+            progress.lastPlayed = new Date().toISOString();
+            localStorage.setItem('studentProgress', JSON.stringify(progress));
+        }
+
+        // Camera Panel Functions
+        function toggleCameraPanel() {
+            const iframe = document.getElementById('collapsible-iframe');
+            
+            if (iframe.style.display === 'none' || iframe.style.display === '') {
+                iframe.style.display = 'block';
+                
+                // Initialize camera when shown
+                setTimeout(() => {
+                    if (iframe.contentWindow) {
+                        // Send message to iframe to initialize
+                        iframe.contentWindow.postMessage({ type: 'initialize-camera' }, '*');
+                    }
+                }, 500);
+            } else {
+                iframe.style.display = 'none';
+                
+                // Send message to stop detection
+                if (iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
+                }
+            }
+        }
+
+        function startGame(gameName) {
+            currentGame = gameName;
+            currentActivityIndex = 0;
+            
+            const game = gameData[gameName];
+            if (!game) {
+                alert('Game not found!');
+                return;
+            }
+            
+            // Show game container
+            document.getElementById('game-container').style.display = 'block';
+            
+            // Show camera panel automatically when game starts
+            const iframe = document.getElementById('collapsible-iframe');
+            
+            if (iframe.style.display === 'none' || iframe.style.display === '') {
+                iframe.style.display = 'block';
+            }
+            
+            // Send message to start detection
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'start-game-detection' }, '*');
+            }
+            
+            // Update game title
+            document.getElementById('game-title').textContent = game.title;
+            
+            // Load first activity
+            loadActivity(gameName, 0);
+            
+            // Speak game start message
+            speakText(`Starting ${game.title}! Let's have fun!`);
+        }
+
+        function loadActivity(gameName, activityIndex) {
+            const game = gameData[gameName];
+            const activity = game.activities[activityIndex];
+            
+            if (!activity) {
+                closeGame();
+                return;
+            }
+            
+            // Update counter
+            document.getElementById('game-counter').textContent = 
+                `Activity ${activityIndex + 1} of ${game.activities.length}`;
+            
+            // Update question
+            let questionHTML = activity.question;
+            if (activity.letter) {
+                questionHTML += `<div style="font-size: 5rem; color: var(--mickey-red); margin: 20px 0;">${activity.letter}</div>`;
+            }
+            document.getElementById('game-question').innerHTML = questionHTML;
+            
+            // Update options
+            const optionsContainer = document.getElementById('game-options');
+            optionsContainer.innerHTML = '';
+            
+            if (activity.options) {
+                activity.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'game-option';
+                    optionElement.textContent = option;
+                    optionElement.onclick = () => checkAnswer(index, gameName);
+                    optionsContainer.appendChild(optionElement);
+                });
+            } else if (gameName === 'tracing') {
+                // For tracing game, show a different interface
+                optionsContainer.innerHTML = `
+                    <div style="text-align: center; width: 100%;">
+                        <div style="font-size: 8rem; color: var(--mickey-red); margin: 20px 0;">${activity.letter}</div>
+                        <p style="color: var(--mickey-blue); font-family: 'Comic Neue', cursive;">
+                            <i class="fas fa-lightbulb"></i> ${activity.hint}
+                        </p>
+                        <button class="nav-btn" style="margin-top: 20px;" onclick="completeTracing('${gameName}')">
+                            <i class="fas fa-check"></i> I've traced it!
+                        </button>
+                    </div>
+                `;
+            }
+            
+            // Update progress bar
+            const progressPercent = ((activityIndex + 1) / game.activities.length) * 100;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = activityIndex === 0;
+            document.getElementById('next-btn').disabled = 
+                activityIndex === game.activities.length - 1;
+            
+            // Hide feedback
+            document.getElementById('game-feedback').classList.remove('show');
+        }
+
+        function checkAnswer(selectedIndex, gameName) {
+            const game = gameData[gameName];
+            const activity = game.activities[currentActivityIndex];
+            
+            // Get all option elements
+            const options = document.querySelectorAll('.game-option');
+            
+            // Remove previous classes
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+            
+            // Check if answer is correct
+            if (selectedIndex === activity.correct) {
+                // Correct answer
+                options[selectedIndex].classList.add('correct');
+                
+                // Show feedback
+                const feedback = document.getElementById('game-feedback');
+                feedback.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="fas fa-check-circle" style="color: var(--mickey-green); font-size: 2rem;"></i>
+                        <div>
+                            <strong style="color: var(--mickey-green);">Oh boy! Correct!</strong>
+                            <p style="margin: 5px 0; color: var(--mickey-white);">${activity.explanation}</p>
+                            <p style="margin: 5px 0; color: var(--mickey-yellow);">
+                                <i class="fas fa-star"></i> +${activity.points} Mickey Points!
+                            </p>
+                        </div>
+                    </div>
+                `;
+                feedback.classList.add('show');
+                
+                // Award points
+                studentScore += activity.points;
+                saveStudentProgress();
+                
+                // Speak encouragement
+                speakText("Great job! That's correct!");
+                
+                // Auto-advance after 2 seconds
+                setTimeout(() => {
+                    if (currentActivityIndex < game.activities.length - 1) {
+                        nextActivity();
+                    } else {
+                        completeGame(gameName);
+                    }
+                }, 2000);
+            } else {
+                // Wrong answer
+                options[selectedIndex].classList.add('wrong');
+                options[activity.correct].classList.add('correct');
+                
+                // Show feedback
+                const feedback = document.getElementById('game-feedback');
+                feedback.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="fas fa-times-circle" style="color: var(--mickey-red); font-size: 2rem;"></i>
+                        <div>
+                            <strong style="color: var(--mickey-red);">Let's try again!</strong>
+                            <p style="margin: 5px 0; color: var(--mickey-white);">
+                                The correct answer is: ${activity.options[activity.correct]}
+                            </p>
+                        </div>
+                    </div>
+                `;
+                feedback.classList.add('show');
+                
+                // Speak encouragement
+                speakText("That's okay! Let's try another one!");
+            }
+        }
+
+        function completeTracing(gameName) {
+            const game = gameData[gameName];
+            const activity = game.activities[currentActivityIndex];
+            
+            // Award points
+            studentScore += activity.points;
+            saveStudentProgress();
+            
+            // Show feedback
+            const feedback = document.getElementById('game-feedback');
+            feedback.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-check-circle" style="color: var(--mickey-green); font-size: 2rem;"></i>
+                    <div>
+                        <strong style="color: var(--mickey-green);">Excellent tracing!</strong>
+                        <p style="margin: 5px 0; color: var(--mickey-white);">
+                            You traced ${activity.letter} perfectly!
+                        </p>
+                        <p style="margin: 5px 0; color: var(--mickey-yellow);">
+                            <i class="fas fa-star"></i> +${activity.points} Mickey Points!
+                        </p>
+                    </div>
+                </div>
+            `;
+            feedback.classList.add('show');
+            
+            // Speak encouragement
+            speakText(`Great job tracing ${activity.letter}!`);
+            
+            // Auto-advance after 2 seconds
+            setTimeout(() => {
+                if (currentActivityIndex < game.activities.length - 1) {
+                    nextActivity();
+                } else {
+                    completeGame(gameName);
+                }
+            }, 2000);
+        }
+
+        function previousActivity() {
+            if (currentActivityIndex > 0) {
+                currentActivityIndex--;
+                loadActivity(currentGame, currentActivityIndex);
+            }
+        }
+
+        function nextActivity() {
+            const game = gameData[currentGame];
+            if (currentActivityIndex < game.activities.length - 1) {
+                currentActivityIndex++;
+                loadActivity(currentGame, currentActivityIndex);
+            } else {
+                completeGame(currentGame);
+            }
+        }
+
+        function completeGame(gameName) {
+            const game = gameData[gameName];
+            
+            // Show completion screen
+            document.getElementById('game-question').innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 6rem; color: var(--mickey-yellow); margin-bottom: 20px;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 style="color: var(--mickey-red);">Congratulations!</h3>
+                    <p style="color: var(--mickey-blue); font-family: 'Comic Neue', cursive; font-size: 1.3rem;">
+                        You've completed ${game.title}!
+                    </p>
+                    <div style="background: var(--mickey-yellow); padding: 20px; border-radius: 15px; 
+                                border: 4px solid var(--mickey-black); margin: 20px auto; max-width: 400px;">
+                        <h4 style="color: var(--mickey-black); margin: 0 0 10px 0;">
+                            <i class="fas fa-star"></i> Total Points Earned
+                        </h4>
+                        <p style="color: var(--mickey-red); font-size: 2rem; margin: 0;">
+                            ${studentScore} points
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            // Hide options and navigation
+            document.getElementById('game-options').innerHTML = '';
+            document.getElementById('game-navigation').innerHTML = `
+                <button class="nav-btn" onclick="closeGame()" style="margin: 0 auto;">
+                    <i class="fas fa-check"></i> Great Job! Back to Games
+                </button>
+            `;
+            
+            // Speak congratulations
+            speakText(`Congratulations! You completed ${game.title}!`);
+        }
+
+        function closeGame() {
+            document.getElementById('game-container').style.display = 'none';
+            
+            // Hide camera panel when game ends
+            const iframe = document.getElementById('collapsible-iframe');
+            
+            iframe.style.display = 'none';
+            
+            // Send message to stop detection
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
+            }
+            
+            currentGame = null;
+            currentActivityIndex = 0;
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window && localStorage.getItem('soundEnabled') !== 'false') {
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.2;
+                utterance.volume = 1;
+                
+                const voices = speechSynthesis.getVoices();
+                const childVoice = voices.find(voice => 
+                    voice.name.includes('Child') || 
+                    voice.name.includes('Kids') ||
+                    voice.lang.includes('en')
+                );
+                
+                if (childVoice) {
+                    utterance.voice = childVoice;
+                }
+                
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function showNotification(title, message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: var(--mickey-white);
+                color: var(--mickey-black);
+                padding: 15px 20px;
+                border-radius: 15px;
+                border: 3px solid var(--mickey-black);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-family: 'Comic Neue', cursive;
+                max-width: 300px;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <strong style="color: var(--mickey-red); display: block; margin-bottom: 5px;">${title}</strong>
+                <div>${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

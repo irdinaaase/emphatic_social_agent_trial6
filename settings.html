@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mickey's Learning Hub - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@open-dyslexic/open-dyslexic@1.0.3/css/open-dyslexic.css">
+    
+    <style>
+        :root {
+            --mickey-red: #d84a54;
+            --mickey-yellow: #e9a946;
+            --mickey-black: #25221a;
+            --mickey-white: #e9e7db;
+            --mickey-blue: #8ac6d1;
+            --mickey-pink: #ffb8c6;
+            --mickey-green: #95e1d3;
+            --mickey-purple: #b8b8ff;
+            --mickey-bg: #fff5f5;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, var(--mickey-bg) 0%, #ffe6e6 100%);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 2px, transparent 2px),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.8) 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
+
+        body.dyslexia-mode {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+            letter-spacing: 0.1em;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #ffffcc 0%, #fff5cc 100%) !important;
+        }
+
+        .fixed-header {
+            top: 35px;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            padding: 15px 20px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--mickey-white);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--mickey-yellow);
+            border-radius: 50%;
+            border: 3px solid var(--mickey-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--mickey-red);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: var(--mickey-yellow);
+            color: var(--mickey-black);
+            border: 3px solid var(--mickey-black);
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-tab:hover {
+            background: var(--mickey-white);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 0 var(--mickey-black);
+        }
+
+        .nav-tab.active {
+            background: var(--mickey-blue);
+            color: var(--mickey-white);
+        }
+
+        .settings-content {
+            padding: 30px;
+            background: var(--mickey-white);
+            border-radius: 25px;
+            border: 5px solid var(--mickey-black);
+            box-shadow: 0 10px 0 var(--mickey-black);
+            margin-top: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .setting-section {
+            background: var(--mickey-yellow);
+            padding: 20px;
+            border-radius: 15px;
+            border: 3px solid var(--mickey-black);
+            margin-bottom: 20px;
+        }
+
+        .setting-btn {
+            padding: 12px 20px;
+            background: var(--mickey-red);
+            color: var(--mickey-white);
+            border: 3px solid var(--mickey-black);
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .setting-btn:hover {
+            background: var(--mickey-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 0 var(--mickey-black);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 160px;
+            }
+            
+            .fixed-header {
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-tab {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .settings-content {
+                margin: 20px 10px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="fixed-header">
+        <div class="header-container">
+            
+            <nav class="header-nav">
+                <a href="game-center.html" class="nav-tab">
+                    <i class="fas fa-gamepad"></i> Game Center
+                </a>
+                <a href="profile.html" class="nav-tab">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="about.html" class="nav-tab">
+                    <i class="fas fa-info-circle"></i> About Us
+                </a>
+                <a href="settings.html" class="nav-tab active">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="settings-content">
+        <h2 style="color: var(--mickey-red); text-align: center; margin-bottom: 30px;">
+            <i class="fas fa-cog"></i> Settings & Preferences
+        </h2>
+        
+        <div class="setting-section">
+            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-book-reader"></i> Accessibility Settings
+            </h3>
+            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+                Toggle dyslexia-friendly font and spacing
+            </p>
+            <button class="setting-btn" id="toggle-dyslexia">
+                <i class="fas fa-toggle-on"></i> Toggle Dyslexia Mode
+            </button>
+        </div>
+        
+        <div class="setting-section">
+            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-volume-up"></i> Sound Settings
+            </h3>
+            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+                Enable or disable voice guidance and sound effects
+            </p>
+            <button class="setting-btn" id="toggle-sound">
+                <i class="fas fa-volume-up"></i> Toggle Sound
+            </button>
+        </div>
+        
+        <div class="setting-section">
+            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-paint-brush"></i> Theme Settings
+            </h3>
+            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+                Choose your preferred color theme
+            </p>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="setting-btn" onclick="setTheme('mickey')" style="background: var(--mickey-red);">
+                    <i class="fas fa-mouse"></i> Mickey Theme
+                </button>
+                <button class="setting-btn" onclick="setTheme('simple')" style="background: var(--mickey-blue);">
+                    <i class="fas fa-palette"></i> Simple Theme
+                </button>
+            </div>
+        </div>
+        
+        <div class="setting-section">
+            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-user-edit"></i> Account Settings
+            </h3>
+            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+                Manage your student profile
+            </p>
+            <button class="setting-btn" onclick="changeStudentName()" style="background: var(--mickey-green);">
+                <i class="fas fa-edit"></i> Change Student Name
+            </button>
+        </div>
+        
+        <div class="setting-section">
+            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-database"></i> Data Management
+            </h3>
+            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+                Manage your saved progress and data
+            </p>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="setting-btn" onclick="exportProgress()" style="background: var(--mickey-purple);">
+                    <i class="fas fa-download"></i> Export Progress
+                </button>
+                <button class="setting-btn" onclick="resetProgress()" style="background: var(--mickey-red);">
+                    <i class="fas fa-redo"></i> Reset Progress
+                </button>
+            </div>
+        </div>
+        
+        <div class="setting-section">
+            <h3 style="color: var(--mickey-black); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </h3>
+            <p style="color: var(--mickey-black); font-family: 'Comic Neue', cursive; margin-bottom: 15px;">
+                Clear your data and return to welcome screen
+            </p>
+            <button class="setting-btn" onclick="logout()" style="background: var(--mickey-black);">
+                <i class="fas fa-sign-out-alt"></i> Logout & Clear Data
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const savedName = localStorage.getItem('studentName');
+            if (!savedName) {
+                window.location.href = 'welcome.html';
+            }
+            
+            // Initialize dyslexia mode toggle
+            const dyslexiaBtn = document.getElementById('toggle-dyslexia');
+            if (localStorage.getItem('dyslexiaMode') === 'true') {
+                document.body.classList.add('dyslexia-mode');
+                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-on"></i> Dyslexia Mode ON';
+            }
+            
+            dyslexiaBtn.addEventListener('click', function() {
+                document.body.classList.toggle('dyslexia-mode');
+                localStorage.setItem('dyslexiaMode', document.body.classList.contains('dyslexia-mode'));
+                this.innerHTML = `<i class="fas fa-toggle-${document.body.classList.contains('dyslexia-mode') ? 'on' : 'off'}"></i> Dyslexia Mode ${document.body.classList.contains('dyslexia-mode') ? 'ON' : 'OFF'}`;
+                alert(`Dyslexia mode ${document.body.classList.contains('dyslexia-mode') ? 'enabled' : 'disabled'}!`);
+            });
+            
+            // Initialize sound toggle
+            const soundBtn = document.getElementById('toggle-sound');
+            const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+            soundBtn.innerHTML = `<i class="fas fa-volume-${soundEnabled ? 'up' : 'mute'}"></i> Sound ${soundEnabled ? 'ON' : 'OFF'}`;
+            
+            soundBtn.addEventListener('click', function() {
+                const newState = localStorage.getItem('soundEnabled') === 'false';
+                localStorage.setItem('soundEnabled', newState);
+                this.innerHTML = `<i class="fas fa-volume-${newState ? 'up' : 'mute'}"></i> Sound ${newState ? 'ON' : 'OFF'}`;
+                alert(`Sound ${newState ? 'enabled' : 'disabled'}!`);
+            });
+        });
+
+        function setTheme(theme) {
+            localStorage.setItem('theme', theme);
+            alert(`Theme set to ${theme === 'mickey' ? 'Mickey Mouse' : 'Simple'}! Refresh to see changes.`);
+        }
+
+        function changeStudentName() {
+            const newName = prompt("Enter your new name:", localStorage.getItem('studentName') || '');
+            if (newName && newName.trim()) {
+                localStorage.setItem('studentName', newName.trim());
+                alert(`Name changed to ${newName}!`);
+            }
+        }
+
+        function exportProgress() {
+            const progress = {
+                studentName: localStorage.getItem('studentName'),
+                studentGrade: localStorage.getItem('studentGrade'),
+                points: localStorage.getItem('studentPoints') || 0,
+                lastLogin: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(progress, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `mickey-progress-${new Date().toISOString().slice(0,10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            alert('Progress exported successfully!');
+        }
+
+        function resetProgress() {
+            if (confirm("Are you sure you want to reset your progress? All your points and game progress will be lost.")) {
+                localStorage.removeItem('studentPoints');
+                localStorage.removeItem('gameProgress');
+                alert('Progress reset successfully!');
+            }
+        }
+
+        function logout() {
+            if (confirm("This will clear ALL your data and return to the welcome screen. Are you sure?")) {
+                localStorage.clear();
+                window.location.href = 'welcome.html';
+            }
+        }
+    </script>
+</body>
+</html>

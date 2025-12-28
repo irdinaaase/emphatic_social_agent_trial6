@@ -1,0 +1,3101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Controls & Eye Tracker</title>
+    <style>
+        /* CAMERA COLLAPSIBLE WITH BUBBLES */
+        :root {
+            --mickey-red: #d84a54;
+            --mickey-yellow: #e9a946;
+            --mickey-black: #25221a;
+            --mickey-white: #e9e7db;
+            --mickey-blue: #8ac6d1;
+            --mickey-pink: #ffb8c6;
+            --mickey-green: #95e1d3;
+            --mickey-purple: #b8b8ff;
+            --mickey-bg: #fff5f5;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka One', cursive;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* SIDE COLLAPSIBLE BUBBLES */
+        .side-collapsible {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9997;
+        }
+
+        .side-toggle {
+            width: 60px;
+            height: 60px;
+            background: var(--mickey-red);
+            border-radius: 50%;
+            border: 4px solid var(--mickey-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        .side-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .side-toggle i {
+            color: var(--mickey-white);
+            font-size: 1.5rem;
+        }
+
+        /* Enhanced Side Bubbles System */
+        .side-bubbles {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            animation: slideUp 0.3s ease;
+            z-index: 9998;
+        }
+
+        .side-bubbles.show {
+            display: flex;
+        }
+
+        .side-bubble {
+            width: 60px;
+            height: 60px;
+            background: var(--mickey-yellow);
+            border-radius: 50%;
+            border: 4px solid var(--mickey-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .side-bubble:hover {
+            transform: scale(1.1) rotate(10deg);
+            background: var(--mickey-white);
+        }
+
+        .side-bubble i {
+            color: var(--mickey-red);
+            font-size: 1.5rem;
+        }
+
+        /* Bubble variants */
+        .side-bubble.emotion-camera {
+            background: var(--mickey-pink);
+        }
+
+        .side-bubble.emotion-camera i {
+            color: var(--mickey-white);
+        }
+
+        .side-bubble.eye-camera {
+            background: var(--mickey-blue);
+        }
+
+        .side-bubble.eye-camera i {
+            color: var(--mickey-white);
+        }
+
+        .side-bubble.speaking-bot {
+            background: var(--mickey-pink);
+            animation: pulse 2s infinite;
+        }
+
+        .side-bubble.speaking-bot i {
+            color: var(--mickey-white);
+        }
+
+        .side-bubble.active {
+            background: var(--mickey-green);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--mickey-green);
+            animation: pulse 2s infinite;
+        }
+
+        .side-bubble.active i {
+            color: var(--mickey-white);
+        }
+
+        /* Camera status indicators */
+        .camera-status-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 2px solid var(--mickey-white);
+            display: none;
+        }
+
+        .camera-status-dot.active {
+            background: var(--mickey-green);
+            box-shadow: 0 0 10px var(--mickey-green);
+            display: block;
+            animation: pulse-green 2s infinite;
+        }
+
+        .camera-status-dot.inactive {
+            background: var(--mickey-red);
+            display: block;
+        }
+
+        /* CAMERA COLLAPSIBLE CONTENT */
+        .collapsible-controls {
+            position: fixed;
+            top: 120px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 9999;
+        }
+
+        .collapsible-content {
+            display: none;
+            position: absolute;
+            top: -30px;
+            right: 0;
+            background: var(--mickey-white);
+            border-radius: 20px;
+            border: 4px solid var(--mickey-black);
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 9997;
+            width: 300px;
+            max-height: 80vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .camera-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .collapsible-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .collapsible-content::-webkit-scrollbar-track {
+            background: var(--mickey-yellow);
+            border-radius: 10px;
+        }
+
+        .collapsible-content::-webkit-scrollbar-thumb {
+            background: var(--mickey-red);
+            border-radius: 10px;
+            border: 2px solid var(--mickey-white);
+        }
+
+        .collapsible-content::-webkit-scrollbar-thumb:hover {
+            background: var(--mickey-pink);
+        }
+
+        .collapsible-content.active {
+            display: block;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .collapsible-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background: var(--mickey-red);
+            color: var(--mickey-white);
+            border: 3px solid var(--mickey-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 9998;
+            transition: all 0.3s;
+        }
+
+        .collapsible-close-btn:hover {
+            background: var(--mickey-blue);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* Enhanced detection interface */
+        .dual-screen-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .detection-screen {
+            background: var(--mickey-white);
+            border-radius: 15px;
+            border: 4px solid var(--mickey-black);
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .screen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .screen-title {
+            color: var(--mickey-red);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .screen-status {
+            background: var(--mickey-yellow);
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 2px solid var(--mickey-black);
+            font-size: 0.8rem;
+            color: var(--mickey-black);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .screen-status.active {
+            background: var(--mickey-green);
+            color: white;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: black;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .detection-video {
+            width: 100%;
+            height: 100%;
+            transform: scaleX(-1);
+            object-fit: cover;
+        }
+
+        .detection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .detection-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            background: var(--mickey-yellow);
+            padding: 8px;
+            border-radius: 8px;
+            border: 2px solid var(--mickey-black);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--mickey-red);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--mickey-black);
+        }
+
+        /* Focus and emotion indicators */
+        .focus-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-focusing {
+            background: #4CAF50;
+            box-shadow: 0 0 5px #4CAF50;
+        }
+
+        .status-distracted {
+            background: #f44336;
+            box-shadow: 0 0 5px #f44336;
+        }
+
+        .status-unknown {
+            background: #FFA500;
+            box-shadow: 0 0 5px #FFA500;
+        }
+
+        .iris-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 6px;
+            border-radius: 6px;
+            color: white;
+            font-size: 9px;
+            z-index: 10;
+            line-height: 1.2;
+        }
+
+        .emotion-info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 6px;
+            border-radius: 6px;
+            color: white;
+            font-size: 9px;
+            z-index: 10;
+            line-height: 1.2;
+        }
+
+        /* Detection status panel */
+        .detection-status-panel {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--mickey-yellow);
+            border-radius: 10px;
+            border: 3px solid var(--mickey-black);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+            color: var(--mickey-red);
+        }
+
+        .status-title {
+            color: var(--mickey-black);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .status-message {
+            color: var(--mickey-black);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* SPEAKING BOT OVERLAY STYLES */
+        #speaking-bot-overlay-main {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        #speaking-bot-overlay-main.show {
+            display: flex;
+        }
+
+        #speaking-bot-container-main {
+            width: 90%;
+            max-width: 500px;
+            height: 80vh;
+            background: #1a1a2e;
+            border-radius: 20px;
+            border: 4px solid #e9a946;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: scaleUp 0.3s ease;
+        }
+
+        #close-speaking-bot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: #d84a54;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        #close-speaking-bot:hover {
+            background: #ff6b8b;
+            transform: scale(1.1);
+        }
+
+        #speaking-bot-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* FULL SCREEN INTERVENTION OVERLAY */
+        #fullscreen-intervention-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 20000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        #fullscreen-intervention-overlay.active {
+            display: flex;
+        }
+
+        #fullscreen-intervention-container {
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .intervention-close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #d84a54;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 20001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            opacity: 0.5;
+        }
+
+        .intervention-close-btn:hover {
+            background: #ff6b8b;
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .intervention-close-btn.disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.3;
+        }
+
+        .intervention-close-btn.disabled:hover {
+            background: #666;
+            transform: none;
+            opacity: 0.3;
+        }
+
+        .intervention-avatar {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .intervention-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+        }
+
+        .intervention-title {
+            font-size: 3rem;
+            color: #e9a946;
+            margin-bottom: 20px;
+            font-family: 'Fredoka One', cursive;
+            text-shadow: 0 5px 15px rgba(233, 169, 70, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .intervention-message {
+            font-size: 1.8rem;
+            color: #95e1d3;
+            margin-bottom: 40px;
+            font-family: 'Comic Neue', cursive;
+            max-width: 800px;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+
+        .intervention-options-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            width: 90%;
+            max-width: 900px;
+            margin-top: 30px;
+        }
+
+        .intervention-option-fullscreen {
+            padding: 25px 20px;
+            background: rgba(233, 233, 233, 0.1);
+            border: 3px solid #e9a946;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            min-height: 160px;
+        }
+
+        .intervention-option-fullscreen:hover {
+            background: rgba(233, 233, 233, 0.2);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(233, 169, 70, 0.2);
+        }
+
+        .intervention-option-fullscreen i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .intervention-option-fullscreen span {
+            font-size: 1.3rem;
+            font-family: 'Fredoka One', cursive;
+            color: white;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .intervention-timer {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffb8c6;
+            font-size: 1.2rem;
+            font-family: 'Comic Neue', cursive;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: 2px solid #ffb8c6;
+        }
+
+        .intervention-blocked-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff6b8b;
+            font-size: 2.5rem;
+            font-family: 'Fredoka One', cursive;
+            text-align: center;
+            animation: pulse-red 1.5s infinite;
+            z-index: 20002;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            border: 4px solid #ff6b8b;
+            display: none;
+        }
+
+        .intervention-blocked-message.active {
+            display: block;
+        }
+
+        /* SPEAKING BOT VISUAL INDICATOR */
+        .speaking-indicator {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(149, 225, 211, 0.2);
+            padding: 15px 30px;
+            border-radius: 20px;
+            border: 3px solid #95e1d3;
+            color: #95e1d3;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            animation: float 2s ease-in-out infinite;
+            z-index: 20003;
+        }
+
+        .speaking-indicator i {
+            font-size: 1.5rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            0% { 
+                transform: translateY(20px); 
+                opacity: 0; 
+            }
+            100% { 
+                transform: translateY(0); 
+                opacity: 1; 
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(149, 225, 211, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(149, 225, 211, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(149, 225, 211, 0); }
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(233, 169, 70, 0.7); }
+            to { text-shadow: 0 0 20px rgba(233, 169, 70, 0.9); }
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(255, 107, 139, 0.5);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.05);
+                box-shadow: 0 0 40px rgba(255, 107, 139, 0.8);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-50%, -50%) rotate(-2deg); }
+            20%, 40%, 60%, 80% { transform: translate(-50%, -50%) rotate(2deg); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .side-collapsible {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .collapsible-controls {
+                top: 100px;
+                right: 20px;
+            }
+            
+            .collapsible-content {
+                width: 280px;
+            }
+            
+            .dual-screen-container {
+                gap: 15px;
+            }
+            
+            .video-container {
+                height: 150px;
+            }
+            
+            #speaking-bot-container-main {
+                width: 95%;
+                height: 85vh;
+            }
+            
+            .intervention-avatar {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .intervention-title {
+                font-size: 2.2rem;
+            }
+            
+            .intervention-message {
+                font-size: 1.4rem;
+            }
+            
+            .intervention-options-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .intervention-option-fullscreen {
+                min-height: 120px;
+                padding: 20px 15px;
+            }
+            
+            .intervention-option-fullscreen i {
+                font-size: 2.5rem;
+            }
+            
+            .intervention-option-fullscreen span {
+                font-size: 1.1rem;
+            }
+            
+            .speaking-indicator {
+                font-size: 1rem;
+                padding: 10px 20px;
+                bottom: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDE BUBBLES -->
+    <div class="side-collapsible" id="side-collapsible">
+        <div class="side-toggle" id="side-toggle">
+            <i class="fas fa-plus"></i>
+        </div>
+        <div class="side-bubbles" id="side-bubbles">
+            <!-- Emotion Camera Bubble -->
+            <div class="side-bubble emotion-camera" id="side-emotion-camera" title="Emotion Detection">
+                <i class="fas fa-smile"></i>
+                <div class="camera-status-dot" id="emotion-status-dot"></div>
+            </div>
+            
+            <!-- Eye Tracking Camera Bubble -->
+            <div class="side-bubble eye-camera" id="side-eye-camera" title="Eye Tracking">
+                <i class="fas fa-eye"></i>
+                <div class="camera-status-dot" id="eye-status-dot"></div>
+            </div>
+            
+            <!-- Speaking Bot Bubble -->
+            <div class="side-bubble speaking-bot" id="side-speaking-bot" title="Click to talk">
+                <i class="fas fa-microphone"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAMERA COLLAPSIBLE CONTENT -->
+    <div class="collapsible-controls" id="collapsible-controls">
+        <div class="collapsible-content" id="camera-content">
+            <button class="collapsible-close-btn" id="close-camera-content" title="Close camera panel">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="camera-container">
+                <!-- Dual Detection Screens -->
+                <div class="dual-screen-container">
+                    <!-- Emotion Detection Screen -->
+                    <div class="detection-screen" id="emotion-screen">
+                        <div class="screen-header">
+                            <div class="screen-title">
+                                <i class="fas fa-smile"></i> Emotion Detection
+                            </div>
+                            <div class="screen-status" id="emotion-status">
+                                <i class="fas fa-circle"></i> AUTO-ONLY (In Game)
+                            </div>
+                        </div>
+                        
+                        <div class="video-container">
+                            <video id="emotion-video" class="detection-video" playsinline muted></video>
+                            <canvas id="emotion-overlay" class="detection-overlay"></canvas>
+                            <div class="emotion-info" id="emotion-info">
+                                Status: Waiting for game to start
+                            </div>
+                        </div>
+                        
+                        <div class="detection-stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="face-count">-</div>
+                                <div class="stat-label">Faces</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="dominant-emotion">-</div>
+                                <div class="stat-label">Emotion</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="emotion-confidence">-</div>
+                                <div class="stat-label">Confidence</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="emotion-fps">-</div>
+                                <div class="stat-label">FPS</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Eye Tracking Screen -->
+                    <div class="detection-screen" id="eye-screen">
+                        <div class="screen-header">
+                            <div class="screen-title">
+                                <i class="fas fa-eye"></i> Eye Tracking
+                            </div>
+                            <div class="screen-status" id="eye-status">
+                                <i class="fas fa-circle"></i> AUTO-ONLY (In Game)
+                            </div>
+                        </div>
+                        
+                        <div class="video-container">
+                            <video id="eye-video" class="detection-video" playsinline muted></video>
+                            <canvas id="eye-tracking-canvas" class="detection-overlay"></canvas>
+                            
+                            <div class="focus-status" id="focus-status">
+                                <div class="status-dot status-unknown"></div>
+                                <span>Eye: Waiting for game</span>
+                            </div>
+                            <div class="iris-info" id="iris-info">
+                                Status: Waiting for game to start
+                            </div>
+                        </div>
+                        
+                        <div class="detection-stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="eye-iris-confidence">-</div>
+                                <div class="stat-label">Iris Conf</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="focus-direction">-</div>
+                                <div class="stat-label">Direction</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="eye-score">-</div>
+                                <div class="stat-label">Eye Score</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="eye-alignment-score">-</div>
+                                <div class="stat-label">Alignment</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- INFO MESSAGE -->
+                <div class="detection-status-panel" id="detection-status" style="margin-top: 20px;">
+                    <div class="status-header">
+                        <div class="status-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="status-title">
+                            AUTO-ACTIVATION SYSTEM
+                        </div>
+                    </div>
+                    <div class="status-message">
+                        <br><br>
+                        <i class="fas fa-info-circle"></i> Start any game to begin monitoring.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SPEAKING BOT OVERLAY -->
+    <div id="speaking-bot-overlay-main">
+        <div id="speaking-bot-container-main">
+            <button id="close-speaking-bot">×</button>
+            <iframe id="speaking-bot-iframe" src="speaking-bot.html"></iframe>
+        </div>
+    </div>
+
+    <!-- FULL SCREEN INTERVENTION OVERLAY -->
+    <div id="fullscreen-intervention-overlay">
+        <div id="fullscreen-intervention-container">
+            <button class="intervention-close-btn" id="intervention-close-btn" disabled title="Complete intervention to continue">
+                <i class="fas fa-lock"></i>
+            </button>
+            
+            <div class="intervention-avatar">
+                <img src="images/toodles.png" alt="Intervention Helper">
+            </div>
+            
+            <div class="intervention-title" id="intervention-title">I Need Your Attention!</div>
+            
+            <div class="intervention-message" id="intervention-message">
+                I notice you might need some help. Let's take a moment before we continue!
+            </div>
+            
+            <div class="intervention-options-container" id="intervention-options-container">
+                <!-- Options will be inserted here -->
+            </div>
+            
+            <div class="intervention-timer" id="intervention-timer">
+                Complete an option to continue
+            </div>
+            
+            <div class="intervention-blocked-message" id="intervention-blocked-message">
+                <i class="fas fa-exclamation-triangle"></i><br>
+                You must complete the intervention<br>
+                to continue the game!
+            </div>
+        </div>
+    </div>
+
+    <!-- SPEAKING INDICATOR -->
+    <div class="speaking-indicator" id="speaking-indicator" style="display: none;">
+        <i class="fas fa-volume-up"></i>
+        <span id="speaking-text">Speaking...</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/human/dist/human.js"></script>
+    
+    <script>
+        // ============================================
+        // SPEECH SYNTHESIS SYSTEM
+        // ============================================
+
+        class SpeechSynthesisManager {
+            constructor() {
+                this.isSpeaking = false;
+                this.currentUtterance = null;
+                this.queue = [];
+                this.speakingIndicator = document.getElementById('speaking-indicator');
+                this.speakingText = document.getElementById('speaking-text');
+                
+                // Check if speech synthesis is available
+                this.speechAvailable = 'speechSynthesis' in window;
+                
+                if (!this.speechAvailable) {
+                    console.warn('Speech synthesis not available in this browser');
+                }
+            }
+            
+            // Speak text immediately
+            speak(text, onComplete = null) {
+                if (!this.speechAvailable || this.isSpeaking) {
+                    if (onComplete) onComplete();
+                    return;
+                }
+                
+                this.isSpeaking = true;
+                
+                // Show speaking indicator
+                this.showSpeakingIndicator(text);
+                
+                // Create utterance
+                this.currentUtterance = new SpeechSynthesisUtterance(text);
+                this.currentUtterance.rate = 0.9;
+                this.currentUtterance.pitch = 1.2;
+                this.currentUtterance.volume = 1;
+                
+                // Try to get a friendly voice
+                const voices = speechSynthesis.getVoices();
+                const friendlyVoice = voices.find(voice => 
+                    voice.name.includes('Child') || 
+                    voice.name.includes('Kids') ||
+                    voice.lang.includes('en')
+                );
+                
+                if (friendlyVoice) {
+                    this.currentUtterance.voice = friendlyVoice;
+                }
+                
+                // Set up event handlers
+                this.currentUtterance.onstart = () => {
+                    console.log('🎤 Speaking:', text);
+                };
+                
+                this.currentUtterance.onend = () => {
+                    console.log('✅ Finished speaking');
+                    this.isSpeaking = false;
+                    this.currentUtterance = null;
+                    this.hideSpeakingIndicator();
+                    
+                    if (onComplete) {
+                        setTimeout(onComplete, 500);
+                    }
+                    
+                    // Process next in queue
+                    this.processQueue();
+                };
+                
+                this.currentUtterance.onerror = (event) => {
+                    console.error('❌ Speech synthesis error:', event);
+                    this.isSpeaking = false;
+                    this.currentUtterance = null;
+                    this.hideSpeakingIndicator();
+                    
+                    if (onComplete) {
+                        setTimeout(onComplete, 500);
+                    }
+                    
+                    // Process next in queue
+                    this.processQueue();
+                };
+                
+                // Start speaking
+                speechSynthesis.speak(this.currentUtterance);
+            }
+            
+            // Queue text to speak
+            queueSpeak(text, onComplete = null) {
+                this.queue.push({ text, onComplete });
+                
+                if (!this.isSpeaking) {
+                    this.processQueue();
+                }
+            }
+            
+            // Process the speech queue
+            processQueue() {
+                if (this.queue.length === 0 || this.isSpeaking) {
+                    return;
+                }
+                
+                const nextItem = this.queue.shift();
+                this.speak(nextItem.text, nextItem.onComplete);
+            }
+            
+            // Show speaking indicator
+            showSpeakingIndicator(text) {
+                if (this.speakingIndicator && this.speakingText) {
+                    // Truncate long text for display
+                    const displayText = text.length > 50 ? text.substring(0, 47) + '...' : text;
+                    this.speakingText.textContent = displayText;
+                    this.speakingIndicator.style.display = 'flex';
+                }
+            }
+            
+            // Hide speaking indicator
+            hideSpeakingIndicator() {
+                if (this.speakingIndicator) {
+                    this.speakingIndicator.style.display = 'none';
+                }
+            }
+            
+            // Stop speaking
+            stop() {
+                if (this.isSpeaking && this.currentUtterance) {
+                    speechSynthesis.cancel();
+                    this.isSpeaking = false;
+                    this.currentUtterance = null;
+                    this.hideSpeakingIndicator();
+                }
+                
+                // Clear queue
+                this.queue = [];
+            }
+            
+            // Check if currently speaking
+            isCurrentlySpeaking() {
+                return this.isSpeaking;
+            }
+        }
+
+        // ============================================
+        // SIDE TOGGLE SYSTEM
+        // ============================================
+
+        function initSideToggle() {
+            const sideToggle = document.getElementById('side-toggle');
+            const sideBubbles = document.getElementById('side-bubbles');
+            
+            if (!sideToggle || !sideBubbles) {
+                console.warn("Side toggle elements not found, skipping initialization");
+                return;
+            }
+            
+            let sideOpen = false;
+            
+            sideToggle.addEventListener('click', function(event) {
+                event.stopPropagation();
+                sideOpen = !sideOpen;
+                
+                if (sideOpen) {
+                    sideBubbles.classList.add('show');
+                    sideToggle.innerHTML = '<i class="fas fa-times"></i>';
+                    sideToggle.style.background = '#8ac6d1';
+                } else {
+                    sideBubbles.classList.remove('show');
+                    sideToggle.innerHTML = '<i class="fas fa-plus"></i>';
+                    sideToggle.style.background = '#d84a54';
+                }
+            });
+            
+            // Initialize bubble handlers
+            initBubbleHandlers();
+            
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('#side-collapsible') && sideOpen) {
+                    sideBubbles.classList.remove('show');
+                    sideOpen = false;
+                    sideToggle.innerHTML = '<i class="fas fa-plus"></i>';
+                    sideToggle.style.background = '#d84a54';
+                }
+            });
+        }
+
+        function initBubbleHandlers() {
+            // Emotion camera bubble - VIEW ONLY, no activation
+            const emotionBubble = document.getElementById('side-emotion-camera');
+            if (emotionBubble) {
+                emotionBubble.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    
+                    // Just open camera panel to view status
+                    openCameraPanel();
+                    
+                    // Show info message if not active
+                    if (window.dualCameraDetection && !window.dualCameraDetection.isEmotionRunning) {
+                        showNotification(
+                            "Auto-Activation",
+                            "Emotion detection activates automatically when you start a game! 🎮",
+                            "info"
+                        );
+                    }
+                    
+                    closeSideBubbles();
+                });
+                
+                // Add disabled style
+                emotionBubble.style.cursor = 'pointer';
+                emotionBubble.title = 'View Emotion Detection Status (Auto-activated with games)';
+            }
+            
+            // Eye camera bubble - VIEW ONLY, no activation
+            const eyeBubble = document.getElementById('side-eye-camera');
+            if (eyeBubble) {
+                eyeBubble.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    
+                    // Just open camera panel to view status
+                    openCameraPanel();
+                    
+                    // Show info message if not active
+                    if (window.dualCameraDetection && !window.dualCameraDetection.isEyeTracking) {
+                        showNotification(
+                            "Auto-Activation",
+                            "Eye tracking activates automatically when you start a game! 👁️",
+                            "info"
+                        );
+                    }
+                    
+                    closeSideBubbles();
+                });
+                
+                // Add disabled style
+                eyeBubble.style.cursor = 'pointer';
+                eyeBubble.title = 'View Eye Tracking Status (Auto-activated with games)';
+            }
+            
+            // Speaking bot bubble
+            const speakingBotBubble = document.getElementById('side-speaking-bot');
+            if (speakingBotBubble) {
+                speakingBotBubble.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    
+                    // Show speaking bot overlay
+                    showSpeakingBotOverlay();
+                    
+                    closeSideBubbles();
+                });
+            }
+            
+            // Close camera content button
+            const closeCameraBtn = document.getElementById('close-camera-content');
+            if (closeCameraBtn) {
+                closeCameraBtn.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    closeCameraPanel();
+                });
+            }
+            
+            // Close speaking bot button
+            const closeSpeakingBotBtn = document.getElementById('close-speaking-bot');
+            if (closeSpeakingBotBtn) {
+                closeSpeakingBotBtn.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    hideSpeakingBotOverlay();
+                });
+            }
+            
+            // Close intervention button
+            const closeInterventionBtn = document.getElementById('intervention-close-btn');
+            if (closeInterventionBtn) {
+                closeInterventionBtn.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    // Show blocked message
+                    const blockedMsg = document.getElementById('intervention-blocked-message');
+                    if (blockedMsg) {
+                        blockedMsg.classList.add('active');
+                        setTimeout(() => {
+                            blockedMsg.classList.remove('active');
+                        }, 2000);
+                    }
+                });
+            }
+        }
+
+        // SPEAKING BOT OVERLAY FUNCTIONS
+        function showSpeakingBotOverlay() {
+            const overlay = document.getElementById('speaking-bot-overlay-main');
+            if (overlay) {
+                overlay.classList.add('show');
+                
+                // Reset iframe source to ensure fresh load
+                const iframe = document.getElementById('speaking-bot-iframe');
+                if (iframe) {
+                    iframe.src = iframe.src; // Reload iframe
+                }
+            }
+        }
+
+        function hideSpeakingBotOverlay() {
+            const overlay = document.getElementById('speaking-bot-overlay-main');
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+        }
+
+        function openCameraPanel() {
+            document.querySelectorAll('.collapsible-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            const cameraContent = document.getElementById('camera-content');
+            if (cameraContent) {
+                cameraContent.classList.add('active');
+            }
+        }
+
+        function closeCameraPanel() {
+            const cameraContent = document.getElementById('camera-content');
+            if (cameraContent) {
+                cameraContent.classList.remove('active');
+            }
+        }
+
+        function closeSideBubbles() {
+            const sideBubbles = document.getElementById('side-bubbles');
+            if (sideBubbles) {
+                sideBubbles.classList.remove('show');
+            }
+            
+            const sideToggle = document.getElementById('side-toggle');
+            if (sideToggle) {
+                sideToggle.innerHTML = '<i class="fas fa-plus"></i>';
+                sideToggle.style.background = '#d84a54';
+            }
+        }
+
+        function showNotification(title, message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 30px;
+                background: #e9e7db;
+                color: #25221a;
+                padding: 15px 20px;
+                border-radius: 15px;
+                border: 3px solid #25221a;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-family: 'Comic Neue', cursive;
+                max-width: 300px;
+                animation: slideInRight 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <strong style="color: #d84a54; display: block; margin-bottom: 5px;">${title}</strong>
+                <div>${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 5000);
+        }
+
+        // ============================================
+        // FULL SCREEN INTERVENTION SYSTEM
+        // ============================================
+
+        class FullScreenIntervention {
+            constructor() {
+                this.isActive = false;
+                this.currentIntervention = null;
+                this.blockGameEvents = true;
+                
+                // Initialize speech manager
+                this.speechManager = new SpeechSynthesisManager();
+                
+                this.interventionOptions = {
+                    anger: {
+                        title: "Feeling Frustrated?",
+                        message: "I notice you're feeling frustrated. Let's take a moment to calm down before continuing!",
+                        options: [
+                            { text: "Take breath", icon: "fa-wind", action: "breathe", color: "#95e1d3", response: "Great! Let's take three deep breaths together. In... and out... In... and out..." },
+                            { text: "Take break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a 30-second break. Stretch and relax!" },
+                            { text: "Do strecthing", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Excellent choice! Let's stretch our arms and shake out the frustration!" },
+                            { text: "Tell joke", icon: "fa-grin-squint", action: "joke", color: "#e9a946", response: "Why did the math book look sad? Because it had too many problems! 😄 Ready to continue?" }
+                        ]
+                    },
+                    disgust: {
+                        title: "Not Enjoying This?",
+                        message: "I see you're not enjoying this activity. Let's try something different!",
+                        options: [
+                            { text: "Try a different game", icon: "fa-random", action: "different", color: "#95e1d3", response: "Good idea! Let's switch to something you might enjoy more!" },
+                            { text: "Take break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Let's take a quick break and come back refreshed!" },
+                            { text: "Explain differently", icon: "fa-comment-alt", action: "explain", color: "#ffb8c6", response: "Let me explain this in a simpler way..." },
+                            { text: "Make easier", icon: "fa-thumbs-up", action: "easier", color: "#e9a946", response: "I'll make this easier for you! Let's start with the basics." }
+                        ]
+                    },
+                    fear: {
+                        title: "Feeling Nervous?",
+                        message: "It's okay to feel a bit nervous! Let's take this slowly and build confidence!",
+                        options: [
+                            { text: "Take it one step at a time", icon: "fa-tachometer-alt-slow", action: "slow", color: "#95e1d3", response: "Perfect! Let's break it down into smaller steps. No rush at all!" },
+                            { text: "Start basics", icon: "fa-undo", action: "basics", color: "#8ac6d1", response: "Great idea! Let's go back to what you already know and build from there!" },
+                            { text: "Take break", icon: "fa-spa", action: "calm", color: "#ffb8c6", response: "Let's take a calming moment. Breathe in... and out... You're doing great!" },
+                            { text: "Get encouragement", icon: "fa-heart", action: "encourage", color: "#e9a946", response: "You're doing much better than you think! I believe in you! Let's keep going!" }
+                        ]
+                    },
+                    sad: {
+                        title: "Feeling Down?",
+                        message: "I notice you're feeling a bit sad. Let's cheer you up!",
+                        options: [
+                            { text: "Listen song", icon: "fa-music", action: "music", color: "#95e1d3", response: "Music always helps! Imagine your favorite happy song playing right now! 🎵" },
+                            { text: "Take break", icon: "fa-gamepad", action: "funbreak", color: "#8ac6d1", response: "Let's take a fun break! Do a little dance or make a funny face!" },
+                            { text: "Hear story", icon: "fa-book", action: "story", color: "#ffb8c6", response: "Once, a cat tried to learn to type and ended up writing 'meow' on every page! 😸" },
+                            { text: "Get hug", icon: "fa-hands", action: "hug", color: "#e9a946", response: "Sending you a big virtual hug! 🤗 You're doing amazing!" }
+                        ]
+                    },
+                    distracted: {
+                        title: "Need to Refocus?",
+                        message: "I notice your attention drifting. Let's get you back on track!",
+                        options: [
+                            { text: "Do stretch", icon: "fa-running", action: "stretch", color: "#95e1d3", response: "Great! Stand up and stretch. Reach for the sky and wiggle your fingers!" },
+                            { text: "Take break", icon: "fa-hourglass-half", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a quick 1-minute break to reset your focus!" },
+                            { text: "Refocus", icon: "fa-eye", action: "refocus", color: "#ffb8c6", response: "Excellent! Blink three times, then focus on one thing in the room. Ready?" },
+                            { text: "Take breaths", icon: "fa-wind", action: "breathe", color: "#e9a946", response: "Breathe in... and out... In... and out... In... and out... Feel better?" }
+                        ]
+                    }
+                };
+            }
+            
+            // Show full screen intervention
+            show(emotion) {
+                if (this.isActive) return;
+                
+                console.log(`🚨 Showing FULL SCREEN intervention for: ${emotion}`);
+                this.isActive = true;
+                this.currentIntervention = emotion;
+                
+                const overlay = document.getElementById('fullscreen-intervention-overlay');
+                if (!overlay) return;
+                
+                // Get intervention data
+                const interventionData = this.interventionOptions[emotion] || this.interventionOptions.anger;
+                
+                // Update overlay content
+                document.getElementById('intervention-title').textContent = interventionData.title;
+                document.getElementById('intervention-message').textContent = interventionData.message;
+                
+                // Create options
+                this.createOptions(interventionData.options, emotion);
+                
+                // Show overlay
+                overlay.classList.add('active');
+                
+                // SPEAK THE INTERVENTION MESSAGE
+                this.speakInterventionMessage(interventionData.message, () => {
+                    console.log('✅ Finished speaking intervention message');
+                });
+                
+                // Block game events
+                this.blockGameInput();
+                
+                // Start timer
+                this.startTimer();
+                
+                // Notify parent window
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'fullscreen-intervention-started',
+                        emotion: emotion,
+                        timestamp: Date.now()
+                    }, '*');
+                }
+            }
+            
+            // Hide full screen intervention
+            hide() {
+                if (!this.isActive) return;
+                
+                console.log("✅ Hiding full screen intervention");
+                this.isActive = false;
+                this.currentIntervention = null;
+                
+                const overlay = document.getElementById('fullscreen-intervention-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                
+                // Clear options
+                const optionsContainer = document.getElementById('intervention-options-container');
+                if (optionsContainer) {
+                    optionsContainer.innerHTML = '';
+                }
+                
+                // Stop any ongoing speech
+                this.speechManager.stop();
+                
+                // Stop timer
+                this.stopTimer();
+                
+                // Unblock game events
+                this.unblockGameInput();
+                
+                // Notify parent window
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'fullscreen-intervention-completed',
+                        timestamp: Date.now()
+                    }, '*');
+                }
+            }
+            
+            // Speak intervention message
+            speakInterventionMessage(message, onComplete = null) {
+                this.speechManager.speak(message, onComplete);
+            }
+            
+            // Speak option response
+            speakOptionResponse(response, onComplete = null) {
+                this.speechManager.speak(response, onComplete);
+            }
+            
+            // Create intervention options
+            createOptions(options, emotion) {
+                const container = document.getElementById('intervention-options-container');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'intervention-option-fullscreen';
+                    optionElement.style.borderColor = option.color;
+                    
+                    optionElement.innerHTML = `
+                        <i class="fas ${option.icon}" style="color: ${option.color};"></i>
+                        <span>${option.text}</span>
+                    `;
+                    
+                    optionElement.addEventListener('click', () => {
+                        this.handleOptionClick(option, emotion);
+                    });
+                    
+                    container.appendChild(optionElement);
+                });
+            }
+            
+            // Handle option selection
+            handleOptionClick(option, emotion) {
+                console.log(`✅ Intervention option selected: ${option.action} for ${emotion}`);
+                
+                // Disable all options to prevent multiple clicks
+                const options = document.querySelectorAll('.intervention-option-fullscreen');
+                options.forEach(opt => {
+                    opt.style.pointerEvents = 'none';
+                    opt.style.opacity = '0.6';
+                });
+                
+                // Highlight selected option
+                event.target.closest('.intervention-option-fullscreen').style.borderColor = '#95e1d3';
+                event.target.closest('.intervention-option-fullscreen').style.boxShadow = '0 0 30px #95e1d3';
+                
+                // SPEAK THE OPTION RESPONSE
+                this.speakOptionResponse(option.response, () => {
+                    console.log('✅ Finished speaking option response');
+                    
+                    // Hide the intervention after a delay
+                    setTimeout(() => {
+                        this.hide();
+                    }, 1000);
+                });
+                
+                // Notify parent window about choice
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'intervention-option-selected',
+                        action: option.action,
+                        emotion: emotion,
+                        response: option.response,
+                        timestamp: Date.now()
+                    }, '*');
+                }
+            }
+            
+            // Start timer display
+            startTimer() {
+                const timerElement = document.getElementById('intervention-timer');
+                if (!timerElement) return;
+                
+                let seconds = 0;
+                this.timerInterval = setInterval(() => {
+                    seconds++;
+                    timerElement.textContent = `Complete an option to continue (${seconds}s)`;
+                }, 1000);
+            }
+            
+            // Stop timer
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+                
+                const timer = document.getElementById('intervention-timer');
+                if (timer) {
+                    timer.textContent = 'Complete an option to continue';
+                    timer.style.color = '#ffb8c6';
+                    timer.style.borderColor = '#ffb8c6';
+                }
+            }
+            
+            // Block game input
+            blockGameInput() {
+                // Disable close button
+                const closeBtn = document.getElementById('intervention-close-btn');
+                if (closeBtn) {
+                    closeBtn.disabled = true;
+                    closeBtn.classList.add('disabled');
+                }
+                
+                // Block keyboard events
+                document.addEventListener('keydown', this.blockKeyboardEvents, true);
+                
+                // Block mouse events
+                document.addEventListener('click', this.blockMouseEvents, true);
+                
+                // Prevent any game interaction
+                this.blockGameEvents = true;
+            }
+            
+            // Unblock game input
+            unblockGameInput() {
+                // Enable close button
+                const closeBtn = document.getElementById('intervention-close-btn');
+                if (closeBtn) {
+                    closeBtn.disabled = false;
+                    closeBtn.classList.remove('disabled');
+                }
+                
+                // Unblock keyboard events
+                document.removeEventListener('keydown', this.blockKeyboardEvents, true);
+                
+                // Unblock mouse events
+                document.removeEventListener('click', this.blockMouseEvents, true);
+                
+                this.blockGameEvents = false;
+            }
+            
+            // Block keyboard events
+            blockKeyboardEvents(event) {
+                // Allow only specific keys
+                const allowedKeys = ['Escape', 'Tab'];
+                if (!allowedKeys.includes(event.key)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    // Show blocked message
+                    const blockedMsg = document.getElementById('intervention-blocked-message');
+                    if (blockedMsg) {
+                        blockedMsg.classList.add('active');
+                        setTimeout(() => {
+                            blockedMsg.classList.remove('active');
+                        }, 1500);
+                    }
+                }
+            }
+            
+            // Block mouse events
+            blockMouseEvents(event) {
+                // Only block if clicking outside intervention
+                const overlay = document.getElementById('fullscreen-intervention-overlay');
+                const optionsContainer = document.getElementById('intervention-options-container');
+                
+                if (overlay && !optionsContainer.contains(event.target) && 
+                    event.target.id !== 'intervention-close-btn') {
+                    
+                    // Show blocked message
+                    const blockedMsg = document.getElementById('intervention-blocked-message');
+                    if (blockedMsg) {
+                        blockedMsg.style.top = event.clientY + 'px';
+                        blockedMsg.style.left = event.clientX + 'px';
+                        blockedMsg.style.transform = 'translate(-50%, -50%)';
+                        blockedMsg.classList.add('active');
+                        setTimeout(() => {
+                            blockedMsg.classList.remove('active');
+                        }, 1500);
+                    }
+                }
+            }
+            
+            // Check if intervention is active
+            isInterventionActive() {
+                return this.isActive;
+            }
+            
+            // Check if currently speaking
+            isCurrentlySpeaking() {
+                return this.speechManager.isCurrentlySpeaking();
+            }
+        }
+
+        // ============================================
+        // INTERVENTION MONITORING SYSTEM
+        // ============================================
+
+        class InterventionMonitor {
+            constructor() {
+                // Paul Ekman's 7 Universal Emotions
+                this.PAUL_EKMAN_EMOTIONS = [
+                    'anger',      // Red
+                    'disgust',    // Green
+                    'fear',       // Purple
+                    'happy',      // Yellow
+                    'sad',        // Blue
+                    'surprise',   // Orange
+                    'contempt'    // Gray
+                ];
+                
+                this.state = {
+                    emotionHistory: [],
+                    focusHistory: [],
+                    lastEmotionIntervention: 0,
+                    lastFocusIntervention: 0,
+                    negativeEmotionCount: 0,
+                    lowFocusCount: 0,
+                    EMOTION_THRESHOLD: 3,      // Need 3 consecutive negative emotions
+                    FOCUS_THRESHOLD: 5,        // Need 5 consecutive low focus readings
+                    COOLDOWN: 30000            // 30 seconds between interventions
+                };
+                
+                // Emotion colors for display
+                this.emotionColors = {
+                    'anger': '#d84a54',     // Red
+                    'disgust': '#95e1d3',   // Green
+                    'fear': '#b8b8ff',      // Purple
+                    'happy': '#e9a946',     // Yellow
+                    'sad': '#8ac6d1',       // Blue
+                    'surprise': '#ffb8c6',  // Pink
+                    'contempt': '#cccccc',  // Gray
+                    'neutral': '#ffffff'    // White
+                };
+                
+                // Which emotions trigger interventions
+                this.negativeEmotions = ['anger', 'disgust', 'fear', 'sad', 'contempt'];
+                
+                // Initialize full screen intervention system
+                this.fullScreenIntervention = new FullScreenIntervention();
+            }
+
+            // Map detected emotion to Paul Ekman's 7 emotions
+            mapToPaulEkman(emotion) {
+                const emotionMap = {
+                    'angry': 'anger',
+                    'disgust': 'disgust',
+                    'fear': 'fear',
+                    'happy': 'happy',
+                    'sad': 'sad',
+                    'surprise': 'surprise',
+                    'contempt': 'contempt',
+                    'neutral': 'neutral'
+                };
+                
+                return emotionMap[emotion] || 'neutral';
+            }
+
+            // Monitor emotion data from detection
+            monitorEmotion(emotion, confidence, timestamp) {
+                if (confidence < 0.6) return; // Not confident enough
+                
+                // Map to Paul Ekman's emotions
+                const mappedEmotion = this.mapToPaulEkman(emotion.toLowerCase());
+                
+                // Track emotion history
+                this.state.emotionHistory.push({
+                    emotion: mappedEmotion,
+                    confidence: confidence,
+                    timestamp: timestamp
+                });
+                
+                // Keep only recent history (last 10 seconds)
+                const recentCutoff = timestamp - 10000;
+                this.state.emotionHistory = this.state.emotionHistory.filter(
+                    e => e.timestamp > recentCutoff
+                );
+                
+                // Check for negative emotions
+                if (this.negativeEmotions.includes(mappedEmotion)) {
+                    this.state.negativeEmotionCount++;
+                    
+                    // Check if intervention is needed
+                    if (this.state.negativeEmotionCount >= this.state.EMOTION_THRESHOLD &&
+                        (timestamp - this.state.lastEmotionIntervention) > this.state.COOLDOWN) {
+                        
+                        // Trigger FULL SCREEN intervention
+                        this.fullScreenIntervention.show(mappedEmotion);
+                        this.state.lastEmotionIntervention = timestamp;
+                        this.state.negativeEmotionCount = 0;
+                    }
+                } else {
+                    // Reset if emotion is positive
+                    if (mappedEmotion === 'happy' || mappedEmotion === 'neutral') {
+                        this.state.negativeEmotionCount = 0;
+                    }
+                }
+                
+                return mappedEmotion;
+            }
+
+            // Monitor focus data from eye tracking
+            monitorFocus(eyeScore, level, confidence, timestamp) {
+                if (confidence < 0.3) return; // Not confident enough
+                
+                // Track focus history
+                this.state.focusHistory.push({
+                    score: eyeScore,
+                    level: level,
+                    confidence: confidence,
+                    timestamp: timestamp
+                });
+                
+                // Keep only recent history
+                const recentCutoff = timestamp - 15000;
+                this.state.focusHistory = this.state.focusHistory.filter(
+                    f => f.timestamp > recentCutoff
+                );
+                
+                // Check for low focus
+                if (level === 'low' && eyeScore < 30) {
+                    this.state.lowFocusCount++;
+                    
+                    // Check if intervention is needed
+                    if (this.state.lowFocusCount >= this.state.FOCUS_THRESHOLD &&
+                        (timestamp - this.state.lastFocusIntervention) > this.state.COOLDOWN) {
+                        
+                        // Trigger FULL SCREEN intervention
+                        this.fullScreenIntervention.show('distracted');
+                        this.state.lastFocusIntervention = timestamp;
+                        this.state.lowFocusCount = 0;
+                    }
+                } else if (level === 'high' || level === 'medium') {
+                    // Reset if focus is good
+                    this.state.lowFocusCount = 0;
+                }
+            }
+
+            // Get color for emotion display
+            getEmotionColor(emotion) {
+                return this.emotionColors[emotion] || '#ffffff';
+            }
+            
+            // Check if intervention is blocking
+            isBlockingGame() {
+                return this.fullScreenIntervention.isInterventionActive();
+            }
+        }
+
+        // ============================================
+        // ENHANCED DUAL CAMERA DETECTION SYSTEM
+        // ============================================
+
+        class DualCameraDetection {
+            constructor() {
+                // Initialize video elements FIRST
+                this.emotionVideo = document.getElementById('emotion-video');
+                this.eyeVideo = document.getElementById('eye-video');
+                
+                // Check if elements exist
+                if (!this.emotionVideo) {
+                    console.error('Emotion video element not found!');
+                    this.emotionVideo = document.createElement('video');
+                    this.emotionVideo.id = 'emotion-video';
+                    this.emotionVideo.className = 'detection-video';
+                    this.emotionVideo.playsinline = true;
+                    this.emotionVideo.muted = true;
+                    document.body.appendChild(this.emotionVideo);
+                }
+                
+                if (!this.eyeVideo) {
+                    console.error('Eye video element not found!');
+                    this.eyeVideo = document.createElement('video');
+                    this.eyeVideo.id = 'eye-video';
+                    this.eyeVideo.className = 'detection-video';
+                    this.eyeVideo.playsinline = true;
+                    this.eyeVideo.muted = true;
+                    document.body.appendChild(this.eyeVideo);
+                }
+                
+                // State management
+                this.isEmotionRunning = false;
+                this.isEyeTracking = false;
+                this.emotionFrameCount = 0;
+                this.emotionLastTimestamp = 0;
+                this.emotionFPS = 0;
+                this.lastInterventionTime = 0;
+                this.INTERVENTION_COOLDOWN = 30000;
+
+                // Canvas elements
+                this.emotionCanvas = document.getElementById('emotion-overlay');
+                this.eyeCanvas = document.getElementById('eye-tracking-canvas');
+                
+                if (this.emotionCanvas) {
+                    this.emotionCtx = this.emotionCanvas.getContext('2d');
+                }
+                
+                if (this.eyeCanvas) {
+                    this.eyeCtx = this.eyeCanvas.getContext('2d');
+                }
+
+                // Initialize intervention monitor
+                this.interventionMonitor = new InterventionMonitor();
+                
+                // Create separate video elements for processing only
+                this.irisVideo = document.createElement('video');
+                this.irisVideo.id = 'eye-processing-video';
+                this.irisVideo.autoplay = true;
+                this.irisVideo.playsinline = true;
+                this.irisVideo.muted = true;
+                this.irisVideo.style.display = 'none';
+                document.body.appendChild(this.irisVideo);
+                
+                // Human.js instances
+                this.emotionHuman = null;
+                this.eyeHuman = null;
+                
+                // Eye tracking data
+                this.irisData = {
+                    left: { x: 0, y: 0, confidence: 0 },
+                    right: { x: 0, y: 0, confidence: 0 },
+                    center: { x: 0, y: 0, confidence: 0 },
+                    confidence: 0
+                };
+                
+                // Emotion tracking (Paul Ekman's 7 emotions)
+                this.currentEmotion = 'neutral';
+                this.emotionConfidence = 0;
+                this.emotionHistory = [];
+                this.EMOTION_HISTORY_MAX = 10;
+
+                this.focusData = {
+                    overallFocus: 'unknown',
+                    focusScore: 0,
+                    interventionCooldown: 15000,
+                    lastFocusCheck: 0,
+                    eyeDistanceFromCenter: 0,
+                    cursorActivity: false,
+                    lastCursorMove: 0,
+                    cursorPosition: {x: 0, y: 0},
+                    checkInterval: null
+                };
+                
+                // Streams
+                this.emotionStream = null;
+                this.eyeStream = null;
+                this.eyeScoreHistory = [];
+                this.EYE_SCORE_HISTORY_MAX = 30;
+                
+                // Initialize
+                this.init();
+            }
+            
+            async init() {
+                try {
+                    // Initialize Human.js for emotion detection
+                    this.emotionHuman = new Human.default({
+                        modelBasePath: 'https://cdn.jsdelivr.net/npm/@vladmandic/human/models/',
+                        backend: 'webgl',
+                        face: { 
+                            enabled: true,
+                            detector: { 
+                                maxDetected: 1,
+                                rotation: true,
+                                return: true,
+                                modelPath: 'blazeface-back.json'
+                            },
+                            mesh: { 
+                                enabled: true,
+                                modelPath: 'facemesh.json'
+                            },
+                            iris: { enabled: false },
+                            emotion: { 
+                                enabled: true,
+                                modelPath: 'emotion.json'
+                            },
+                            description: { enabled: false },
+                            liveness: { enabled: false },
+                            antispoof: { enabled: false }
+                        },
+                        body: { enabled: false },
+                        hand: { enabled: false },
+                        object: { enabled: false },
+                        segmentation: { enabled: false },
+                        cacheSensitivity: 0,
+                        skipFrames: 0
+                    });
+                    
+                    // Initialize Human.js for eye tracking
+                    this.eyeHuman = new Human.default({
+                        modelBasePath: 'https://cdn.jsdelivr.net/npm/@vladmandic/human/models/',
+                        backend: 'webgl',
+                        face: { 
+                            enabled: true,
+                            detector: { 
+                                maxDetected: 1,
+                                rotation: true,
+                                return: true,
+                                modelPath: 'blazeface-back.json'
+                            },
+                            mesh: { 
+                                enabled: true,
+                                modelPath: 'facemesh.json'
+                            },
+                            iris: { 
+                                enabled: true,
+                                maxDetected: 2,
+                                minConfidence: 0.1
+                            },
+                            emotion: { enabled: false },
+                            description: { enabled: false },
+                            liveness: { enabled: false },
+                            antispoof: { enabled: false }
+                        },
+                        body: { enabled: false },
+                        hand: { enabled: false },
+                        object: { enabled: false },
+                        segmentation: { enabled: false },
+                        cacheSensitivity: 0,
+                        skipFrames: 0
+                    });
+                    
+                    await Promise.all([
+                        this.emotionHuman.load(),
+                        this.eyeHuman.load()
+                    ]);
+                    
+                    console.log('✅ Dual camera detection models loaded');
+                    
+                    // Set up canvas sizes
+                    this.resizeCanvases();
+                    window.addEventListener('resize', () => this.resizeCanvases());
+                    
+                    // Initialize UI
+                    this.initUI();
+                    
+                } catch (error) {
+                    console.error('Failed to initialize dual camera detection:', error);
+                    this.showError('Failed to load detection models. Please refresh the page.');
+                }
+            }
+
+            resizeCanvases() {
+                // Get container dimensions
+                const getContainerSize = (selector) => {
+                    const container = document.querySelector(selector);
+                    if (!container) return { width: 300, height: 180 };
+                    
+                    const rect = container.getBoundingClientRect();
+                    return {
+                        width: Math.floor(rect.width),
+                        height: Math.floor(rect.height)
+                    };
+                };
+                
+                const emotionSize = getContainerSize('.emotion-screen .video-container');
+                const eyeSize = getContainerSize('.eye-screen .video-container');
+                
+                // Resize emotion canvas
+                if (this.emotionCanvas) {
+                    this.emotionCanvas.width = emotionSize.width;
+                    this.emotionCanvas.height = emotionSize.height;
+                }
+                
+                // Resize eye canvas
+                if (this.eyeCanvas) {
+                    this.eyeCanvas.width = eyeSize.width;
+                    this.eyeCanvas.height = eyeSize.height;
+                }
+            }
+            
+            initUI() {
+                // Update initial status
+                this.updateStatusIndicators();
+                this.updateCameraBubbles();
+            }
+
+            updateCameraBubbles() {
+                const emotionBubble = document.getElementById('side-emotion-camera');
+                const eyeBubble = document.getElementById('side-eye-camera');
+                const emotionDot = document.getElementById('emotion-status-dot');
+                const eyeDot = document.getElementById('eye-status-dot');
+                
+                if (emotionBubble) {
+                    if (this.isEmotionRunning) {
+                        emotionBubble.classList.add('active');
+                        if (emotionDot) {
+                            emotionDot.className = 'camera-status-dot active';
+                        }
+                        emotionBubble.title = 'Emotion Detection (Active - Game)';
+                    } else {
+                        emotionBubble.classList.remove('active');
+                        if (emotionDot) {
+                            emotionDot.className = 'camera-status-dot inactive';
+                        }
+                        emotionBubble.title = 'Emotion Detection (Start Game to Activate)';
+                    }
+                }
+                
+                if (eyeBubble) {
+                    if (this.isEyeTracking) {
+                        eyeBubble.classList.add('active');
+                        if (eyeDot) {
+                            eyeDot.className = 'camera-status-dot active';
+                        }
+                        eyeBubble.title = 'Eye Tracking (Active - Game)';
+                    } else {
+                        eyeBubble.classList.remove('active');
+                        if (eyeDot) {
+                            eyeDot.className = 'camera-status-dot inactive';
+                        }
+                        eyeBubble.title = 'Eye Tracking (Start Game to Activate)';
+                    }
+                }
+            }
+
+            async autoStartBothDetectionsForGame() {
+                console.log("🎮 Starting BOTH detection systems for gameplay");
+                
+                try {
+                    // Update immediately
+                    const irisInfo = document.getElementById('iris-info');
+                    const focusStatus = document.getElementById('focus-status');
+                    
+                    if (irisInfo) irisInfo.textContent = 'Starting eye tracking...';
+                    if (focusStatus) {
+                        focusStatus.innerHTML = `
+                            <div class="status-dot status-unknown"></div>
+                            <span>Eye: Initializing...</span>
+                        `;
+                    }
+                    
+                    // Start detections
+                    await this.startEmotionDetection();
+                    await this.startEyeDetection();
+                    
+                    // Update again to show active
+                    if (irisInfo) irisInfo.textContent = 'Eye tracking active. Looking for eyes...';
+                    if (focusStatus) {
+                        focusStatus.innerHTML = `
+                            <div class="status-dot status-unknown"></div>
+                            <span>Eye: Detecting...</span>
+                        `;
+                    }
+                    
+                    // Update bubbles
+                    this.updateCameraBubbles();
+                    
+                    console.log("✅ Both detection systems started for gameplay");
+                    
+                } catch (error) {
+                    console.error("Failed to start detection systems:", error);
+                }
+            }
+            
+            async startEmotionDetection() {
+                // If already running, return
+                if (this.isEmotionRunning) return;
+                
+                try {
+                    // Get camera for emotion detection
+                    this.emotionStream = await navigator.mediaDevices.getUserMedia({
+                        video: { width: 640, height: 480 },
+                        audio: false
+                    });
+                    
+                    // Connect stream to video element
+                    this.emotionVideo.srcObject = this.emotionStream;
+                    
+                    // Wait for video to load
+                    await new Promise(resolve => {
+                        this.emotionVideo.onloadedmetadata = resolve;
+                    });
+                    
+                    // Play video
+                    await this.emotionVideo.play();
+                    
+                    this.isEmotionRunning = true;
+                    this.updateStatusIndicators();
+                    this.updateCameraBubbles();
+                    this.detectEmotionFrame();
+                    
+                } catch (error) {
+                    console.error('Emotion camera error:', error);
+                    throw error;
+                }
+            }
+            
+            async startEyeDetection() {
+                // If already running, return
+                if (this.isEyeTracking) return;
+                
+                try {
+                    // Make sure we have the video element
+                    if (!this.eyeVideo) {
+                        this.eyeVideo = document.getElementById('eye-video');
+                        if (!this.eyeVideo) {
+                            console.error('Eye video element not found!');
+                            throw new Error('Eye video element not found');
+                        }
+                    }
+                    
+                    // Get camera stream
+                    this.eyeStream = await navigator.mediaDevices.getUserMedia({
+                        video: { 
+                            width: { ideal: 640 },
+                            height: { ideal: 480 },
+                            facingMode: 'user',
+                            frameRate: { ideal: 30 }
+                        },
+                        audio: false
+                    });
+                    
+                    // Connect stream to video element
+                    this.eyeVideo.srcObject = this.eyeStream;
+                    
+                    // Wait for video to be ready
+                    await new Promise((resolve) => {
+                        const checkReady = () => {
+                            if (this.eyeVideo.readyState >= 2) {
+                                resolve();
+                            } else {
+                                this.eyeVideo.onloadeddata = resolve;
+                            }
+                        };
+                        checkReady();
+                    });
+                    
+                    // Play video
+                    await this.eyeVideo.play();
+                    
+                    this.isEyeTracking = true;
+                    this.updateStatusIndicators();
+                    this.updateCameraBubbles();
+                    
+                    // Start detection loop
+                    this.detectEyeFrame();
+                    
+                    console.log('✅ Eye tracking started');
+                    
+                } catch (error) {
+                    console.error('Eye camera error:', error);
+                    throw error;
+                }
+            }
+
+            calculateEyeScore() {
+                if (this.irisData.confidence < 0.3) {
+                    return { 
+                        score: 0, 
+                        level: 'unknown',
+                        distance: 1.0,
+                        direction: 'unknown'
+                    };
+                }
+                
+                // Get normalized iris center (0-1 coordinates)
+                const irisCenter = this.irisData.center;
+                
+                // Calculate distance from screen center (0.5, 0.5 in normalized coordinates)
+                const distanceX = irisCenter.x - 0.5;
+                const distanceY = irisCenter.y - 0.5;
+                const rawDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                
+                // Normalize distance to 0-1 scale (max possible distance from center is ~0.707)
+                const normalizedDistance = Math.min(1, rawDistance / 0.707);
+                
+                // Calculate eye score based on how close to center
+                const eyeScore = Math.round(100 * (1 - normalizedDistance));
+                
+                // Apply confidence penalty (lower confidence = lower max possible score)
+                const confidenceAdjustedScore = Math.round(eyeScore * this.irisData.confidence);
+                
+                // Determine direction
+                let direction = 'CENTER';
+                if (Math.abs(distanceX) > 0.1 || Math.abs(distanceY) > 0.1) {
+                    if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                        direction = distanceX > 0 ? 'RIGHT' : 'LEFT';
+                    } else {
+                        direction = distanceY > 0 ? 'DOWN' : 'UP';
+                    }
+                }
+                
+                // Determine level based on score
+                let level = 'low';
+                if (confidenceAdjustedScore >= 80) level = 'high';
+                else if (confidenceAdjustedScore >= 50) level = 'medium';
+                
+                return {
+                    score: confidenceAdjustedScore,
+                    level: level,
+                    distance: rawDistance,
+                    normalizedDistance: normalizedDistance,
+                    direction: direction,
+                    confidence: this.irisData.confidence,
+                    rawEyeScore: eyeScore
+                };
+            }
+
+            updateGameActiveUI() {
+                // Update emotion status
+                const emotionStatus = document.getElementById('emotion-status');
+                if (emotionStatus) {
+                    emotionStatus.innerHTML = '<i class="fas fa-circle" style="color: #95e1d3;"></i> ACTIVE (Game)';
+                    emotionStatus.className = 'screen-status active';
+                }
+                
+                // Update eye status
+                const eyeStatus = document.getElementById('eye-status');
+                if (eyeStatus) {
+                    eyeStatus.innerHTML = '<i class="fas fa-circle" style="color: #95e1d3;"></i> ACTIVE (Game)';
+                    eyeStatus.className = 'screen-status active';
+                }
+                
+                // Update camera bubbles
+                this.updateCameraBubbles();
+            }
+            
+            autoStopBothDetectionsAfterGame() {
+                console.log("🛑 Stopping BOTH detection systems after game");
+                
+                // Stop emotion detection
+                if (this.isEmotionRunning) {
+                    this.stopEmotionDetection();
+                }
+                
+                // Stop eye tracking
+                if (this.isEyeTracking) {
+                    this.stopEyeDetection();
+                }
+                
+                // Show info
+                this.showInfo("Game monitoring stopped.");
+                
+                // Reset UI to inactive state
+                this.updateInactiveUI();
+                
+                console.log("✅ Both detection systems stopped after game");
+            }
+            
+            updateInactiveUI() {
+                // Update emotion status
+                const emotionStatus = document.getElementById('emotion-status');
+                if (emotionStatus) {
+                    emotionStatus.innerHTML = '<i class="fas fa-circle" style="color: #ff6b8b;"></i> INACTIVE (Start Game)';
+                    emotionStatus.className = 'screen-status';
+                }
+                
+                // Update eye status
+                const eyeStatus = document.getElementById('eye-status');
+                if (eyeStatus) {
+                    eyeStatus.innerHTML = '<i class="fas fa-circle" style="color: #ff6b8b;"></i> INACTIVE (Start Game)';
+                    eyeStatus.className = 'screen-status';
+                }
+                
+                // Update camera bubbles
+                this.updateCameraBubbles();
+            }
+            
+            stopEmotionDetection() {
+                if (this.emotionStream) {
+                    this.emotionStream.getTracks().forEach(track => track.stop());
+                    this.emotionStream = null;
+                }
+                
+                if (this.emotionVideo) {
+                    this.emotionVideo.srcObject = null;
+                }
+                
+                this.isEmotionRunning = false;
+                
+                // Clear canvas
+                if (this.emotionCtx) {
+                    this.emotionCtx.clearRect(0, 0, this.emotionCanvas.width, this.emotionCanvas.height);
+                }
+                
+                // Reset displays
+                document.getElementById('face-count').textContent = '0';
+                document.getElementById('dominant-emotion').textContent = '-';
+                document.getElementById('emotion-confidence').textContent = '0%';
+                document.getElementById('emotion-info').textContent = 'Emotion: Waiting for game to start';
+                
+                // Update bubbles
+                this.updateCameraBubbles();
+                
+                console.log('🛑 Emotion detection stopped');
+            }
+            
+            stopEyeDetection() {
+                if (this.eyeStream) {
+                    this.eyeStream.getTracks().forEach(track => track.stop());
+                    this.eyeStream = null;
+                }
+                
+                if (this.eyeVideo) {
+                    this.eyeVideo.srcObject = null;
+                }
+                
+                this.isEyeTracking = false;
+                
+                // Clear canvas
+                if (this.eyeCtx) {
+                    this.eyeCtx.clearRect(0, 0, this.eyeCanvas.width, this.eyeCanvas.height);
+                }
+                
+                // Reset displays
+                const irisConfidenceElement = document.getElementById('eye-iris-confidence');
+                const focusDirectionElement = document.getElementById('focus-direction');
+                
+                if (irisConfidenceElement) irisConfidenceElement.textContent = '0%';
+                if (focusDirectionElement) focusDirectionElement.textContent = '-';
+                
+                // Update bubbles
+                this.updateCameraBubbles();
+                
+                console.log('🛑 Eye tracking stopped');
+            }
+            
+            updateStatusIndicators() {
+                const emotionStatus = document.getElementById('emotion-status');
+                const eyeStatus = document.getElementById('eye-status');
+                
+                if (emotionStatus) {
+                    emotionStatus.innerHTML = this.isEmotionRunning ? 
+                        '<i class="fas fa-circle" style="color: #95e1d3;"></i> ACTIVE (Game)' : 
+                        '<i class="fas fa-circle" style="color: #ff6b8b;"></i> INACTIVE (Start Game)';
+                    emotionStatus.className = this.isEmotionRunning ? 
+                        'screen-status active' : 'screen-status';
+                }
+                
+                if (eyeStatus) {
+                    eyeStatus.innerHTML = this.isEyeTracking ? 
+                        '<i class="fas fa-circle" style="color: #95e1d3;"></i> ACTIVE (Game)' : 
+                        '<i class="fas fa-circle" style="color: #ff6b8b;"></i> INACTIVE (Start Game)';
+                    eyeStatus.className = this.isEyeTracking ? 
+                        'screen-status active' : 'screen-status';
+                }
+            }
+
+            stopBothDetections() {
+                this.stopEmotionDetection();
+                this.stopEyeDetection();
+            }
+            
+            async detectEmotionFrame() {
+                if (!this.isEmotionRunning) return;
+                
+                try {
+                    // Update FPS
+                    this.updateEmotionFPS();
+                    
+                    // Run detection
+                    const result = await this.emotionHuman.detect(this.emotionVideo);
+                    
+                    // Clear and draw
+                    this.emotionCtx.clearRect(0, 0, this.emotionCanvas.width, this.emotionCanvas.height);
+                    
+                    // Draw video frame
+                    this.emotionCtx.drawImage(this.emotionVideo, 0, 0, 
+                        this.emotionCanvas.width, this.emotionCanvas.height);
+                    
+                    // Check for faces
+                    if (result.face && result.face.length > 0) {
+                        const face = result.face[0];
+                        const dominantEmotion = this.getDominantEmotion(face);
+                        
+                        // Map to Paul Ekman's emotions
+                        const paulEkmanEmotion = this.interventionMonitor.mapToPaulEkman(dominantEmotion.name);
+                        const emotionColor = this.interventionMonitor.getEmotionColor(paulEkmanEmotion);
+                        
+                        // Update face count if element exists
+                        const faceCountElement = document.getElementById('face-count');
+                        if (faceCountElement) {
+                            faceCountElement.textContent = result.face.length;
+                        }
+                        
+                        // Update emotion displays with Paul Ekman emotion
+                        this.updateEmotionDisplay(paulEkmanEmotion, dominantEmotion.confidence, emotionColor);
+                        
+                        // Draw face detection
+                        this.drawEmotionFace(face, paulEkmanEmotion, dominantEmotion.confidence, emotionColor);
+                        
+                        // Check for interventions (but only if intervention is not already active)
+                        if (this.interventionMonitor && !this.interventionMonitor.isBlockingGame()) {
+                            this.interventionMonitor.monitorEmotion(
+                                dominantEmotion.name,
+                                dominantEmotion.confidence,
+                                Date.now()
+                            );
+                        }
+                        
+                    } else {
+                        // No faces found
+                        const faceCountElement = document.getElementById('face-count');
+                        const dominantEmotionElement = document.getElementById('dominant-emotion');
+                        const emotionConfidenceElement = document.getElementById('emotion-confidence');
+                        const emotionInfoElement = document.getElementById('emotion-info');
+                        
+                        if (faceCountElement) faceCountElement.textContent = '0';
+                        if (dominantEmotionElement) {
+                            dominantEmotionElement.textContent = '-';
+                            dominantEmotionElement.style.color = '';
+                        }
+                        if (emotionConfidenceElement) emotionConfidenceElement.textContent = '0%';
+                        if (emotionInfoElement) emotionInfoElement.textContent = 'Emotion: No face detected';
+                    }
+                    
+                } catch (error) {
+                    console.log('Detection error:', error);
+                }
+                
+                // Loop
+                if (this.isEmotionRunning) {
+                    requestAnimationFrame(() => this.detectEmotionFrame());
+                }
+            }
+            
+            drawEmotionFace(face, paulEkmanEmotion, confidence, emotionColor) {
+                const ctx = this.emotionCtx;
+                const canvasWidth = this.emotionCanvas.width;
+                const canvasHeight = this.emotionCanvas.height;
+                const videoWidth = this.emotionVideo.videoWidth;
+                const videoHeight = this.emotionVideo.videoHeight;
+                
+                // CLEAR FIRST
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                
+                // DRAW VIDEO FRAME FIRST
+                ctx.drawImage(this.emotionVideo, 0, 0, canvasWidth, canvasHeight);
+                
+                if (!face.box) return;
+                
+                // Calculate scaling
+                const scaleX = canvasWidth / videoWidth;
+                const scaleY = canvasHeight / videoHeight;
+                
+                const [x, y, width, height] = face.box;
+                
+                // SCALE THE BOX
+                const scaledX = x * scaleX;
+                const scaledY = y * scaleY;
+                const scaledWidth = width * scaleX;
+                const scaledHeight = height * scaleY;
+                
+                // Draw face box
+                ctx.strokeStyle = emotionColor;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(scaledX, scaledY, scaledWidth, scaledHeight);
+                
+                // Draw emotion label
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(scaledX + scaledWidth - 120, scaledY - 20, 115, 18);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'right';
+                ctx.fillText(
+                    `${paulEkmanEmotion} ${Math.round(confidence * 100)}%`,
+                    scaledX + scaledWidth - 5,
+                    scaledY - 5
+                );
+                ctx.textAlign = 'left';
+            }
+
+            getDominantEmotion(face) {
+                if (!face.emotion || !Array.isArray(face.emotion) || face.emotion.length === 0) {
+                    return { name: 'neutral', confidence: 0.5 };
+                }
+                
+                const topEmotion = face.emotion[0];
+                return {
+                    name: topEmotion.emotion || 'neutral',
+                    confidence: topEmotion.score || 0.5
+                };
+            }
+
+            updateEmotionDisplay(emotion, confidence, color) {
+                const confidencePercent = Math.round(confidence * 100);
+                
+                // Update elements
+                const dominantEmotionElement = document.getElementById('dominant-emotion');
+                const emotionConfidenceElement = document.getElementById('emotion-confidence');
+                const emotionInfoElement = document.getElementById('emotion-info');
+                
+                if (dominantEmotionElement) {
+                    dominantEmotionElement.textContent = emotion;
+                    dominantEmotionElement.style.color = color;
+                }
+                
+                if (emotionConfidenceElement) {
+                    emotionConfidenceElement.textContent = `${confidencePercent}%`;
+                }
+                
+                if (emotionInfoElement) {
+                    emotionInfoElement.textContent = `Emotion: ${emotion} (${confidencePercent}%)`;
+                }
+            }
+
+            updateEmotionFPS() {
+                const now = performance.now();
+                this.emotionFrameCount++;
+                
+                if (now >= this.emotionLastTimestamp + 1000) {
+                    this.emotionFPS = Math.round((this.emotionFrameCount * 1000) / (now - this.emotionLastTimestamp));
+                    this.emotionLastTimestamp = now;
+                    this.emotionFrameCount = 0;
+                    
+                    // Update FPS display
+                    const fpsElement = document.getElementById('emotion-fps');
+                    if (fpsElement) {
+                        fpsElement.textContent = this.emotionFPS;
+                    }
+                }
+            }
+            
+            // Eye info display method
+            updateEyeInfoDisplay(irisData) {
+                const irisInfoElement = document.getElementById('iris-info');
+                const focusStatusElement = document.getElementById('focus-status');
+                
+                if (!irisInfoElement || !focusStatusElement) return;
+                
+                if (irisData.confidence > 0.3) {
+                    const confidence = Math.round(irisData.confidence * 100);
+                    const eyeScore = this.calculateEyeScore();
+                    
+                    // Update iris-info
+                    irisInfoElement.innerHTML = `
+                        Eye Score: <strong style="color: ${eyeScore.level === 'high' ? '#4CAF50' : 
+                                                        eyeScore.level === 'medium' ? '#FFA500' : '#F44336'}">
+                            ${eyeScore.score}%
+                        </strong> | 
+                        Confidence: ${confidence}%<br>
+                        Looking: ${eyeScore.direction}
+                    `;
+                    
+                    // Update focus-status
+                    let statusClass = 'status-unknown';
+                    let statusText = `Eye: ${eyeScore.score}%`;
+                    
+                    switch(eyeScore.level) {
+                        case 'high':
+                            statusClass = 'status-focusing';
+                            statusText = `Eye: FOCUSED ${eyeScore.score}% ✅`;
+                            break;
+                        case 'medium':
+                            statusClass = 'status-unknown';
+                            statusText = `Eye: OKAY ${eyeScore.score}% 🤔`;
+                            break;
+                        case 'low':
+                            statusClass = 'status-distracted';
+                            statusText = `Eye: LOW ${eyeScore.score}% ❌`;
+                            break;
+                    }
+                    
+                    focusStatusElement.innerHTML = `
+                        <div class="status-dot ${statusClass}"></div>
+                        <span>${statusText}</span>
+                    `;
+                    
+                } else {
+                    // No good detection
+                    irisInfoElement.textContent = 'Looking for eyes...';
+                    focusStatusElement.innerHTML = `
+                        <div class="status-dot status-unknown"></div>
+                        <span>Eye: Searching...</span>
+                    `;
+                }
+            }
+
+            async detectEyeFrame() {
+                if (!this.isEyeTracking || !this.eyeHuman || !this.eyeVideo) {
+                    return;
+                }
+                
+                try {
+                    if (this.eyeVideo.readyState >= 2) {
+                        // Use eyeVideo for detection
+                        const result = await this.eyeHuman.detect(this.eyeVideo);
+                        
+                        if (result.face && result.face.length > 0) {
+                            const face = result.face[0];
+                            const irisData = this.extractIrisData(face);
+                            
+                            // Update display
+                            this.updateEyeInfoDisplay(irisData);
+                            
+                            // Update iris data
+                            this.updateIrisData(irisData.left, irisData.right, irisData.confidence);
+                            
+                            // Check for focus interventions (but only if intervention is not already active)
+                            const eyeScoreData = this.calculateEyeScore();
+                            if (this.interventionMonitor && !this.interventionMonitor.isBlockingGame()) {
+                                this.interventionMonitor.monitorFocus(
+                                    eyeScoreData.score,
+                                    eyeScoreData.level,
+                                    eyeScoreData.confidence,
+                                    Date.now()
+                                );
+                            }
+                            
+                        } else {
+                            // No face
+                            this.updateEyeInfoDisplay({confidence: 0});
+                            this.updateIrisData([0.5, 0.5], [0.5, 0.5], 0);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Eye detection error:', error);
+                }
+                
+                // Continue loop
+                if (this.isEyeTracking) {
+                    requestAnimationFrame(() => this.detectEyeFrame());
+                }
+            }
+
+            // Iris extraction
+            extractIrisData(face) {
+                let leftIris = [0.5, 0.5];
+                let rightIris = [0.5, 0.5];
+                let confidence = 0.1;
+                
+                // Get video dimensions for normalization
+                const videoWidth = this.eyeVideo.videoWidth || 640;
+                const videoHeight = this.eyeVideo.videoHeight || 480;
+                
+                // Check for iris in face annotations
+                if (face.annotations && face.annotations.rightEyeIris && face.annotations.leftEyeIris) {
+                    const leftPoints = face.annotations.leftEyeIris;
+                    const rightPoints = face.annotations.rightEyeIris;
+                    
+                    if (leftPoints.length >= 5) {
+                        const avgX = leftPoints.reduce((sum, p) => sum + p[0], 0) / leftPoints.length;
+                        const avgY = leftPoints.reduce((sum, p) => sum + p[1], 0) / leftPoints.length;
+                        
+                        leftIris = [
+                            avgX / videoWidth,
+                            avgY / videoHeight
+                        ];
+                    }
+                    
+                    if (rightPoints.length >= 5) {
+                        const avgX = rightPoints.reduce((sum, p) => sum + p[0], 0) / rightPoints.length;
+                        const avgY = rightPoints.reduce((sum, p) => sum + p[1], 0) / rightPoints.length;
+                        
+                        rightIris = [
+                            avgX / videoWidth,
+                            avgY / videoHeight
+                        ];
+                    }
+                    
+                    confidence = face.score || 0.7;
+                }
+                
+                return { 
+                    left: leftIris, 
+                    right: rightIris, 
+                    confidence: Math.min(1, Math.max(0.1, confidence))
+                };
+            }
+
+            updateIrisData(leftIris, rightIris, confidence) {
+                // Ensure we have arrays
+                const left = Array.isArray(leftIris) ? leftIris : [0.5, 0.5];
+                const right = Array.isArray(rightIris) ? rightIris : [0.5, 0.5];
+                
+                this.irisData.left = { 
+                    x: left[0], 
+                    y: left[1], 
+                    confidence: confidence 
+                };
+                
+                this.irisData.right = { 
+                    x: right[0], 
+                    y: right[1], 
+                    confidence: confidence 
+                };
+                
+                // Calculate center point
+                this.irisData.center = {
+                    x: (left[0] + right[0]) / 2,
+                    y: (left[1] + right[1]) / 2,
+                    confidence: confidence
+                };
+                
+                this.irisData.confidence = confidence;
+                
+                // Update displays
+                this.updateIrisDisplay();
+                this.calculateFocusMetrics();
+            }
+
+            updateIrisDisplay() {
+                const confidence = Math.round(this.irisData.confidence * 100);
+                
+                // Calculate eye score data
+                const eyeScoreData = this.calculateEyeScore();
+                
+                // Update main display
+                const irisConfidenceElement = document.getElementById('eye-iris-confidence');
+                if (irisConfidenceElement) {
+                    irisConfidenceElement.textContent = `${confidence}%`;
+                    irisConfidenceElement.style.color = confidence > 70 ? '#4CAF50' : 
+                                                       confidence > 40 ? '#FFA500' : '#F44336';
+                }
+                
+                // Update eye score display
+                const eyeScoreElement = document.getElementById('eye-score');
+                if (eyeScoreElement) {
+                    eyeScoreElement.textContent = `${eyeScoreData.score}%`;
+                    eyeScoreElement.style.color = eyeScoreData.level === 'high' ? '#4CAF50' : 
+                                                  eyeScoreData.level === 'medium' ? '#FFA500' : '#F44336';
+                }
+                
+                // Update alignment display
+                const alignmentScoreElement = document.getElementById('eye-alignment-score');
+                if (alignmentScoreElement) {
+                    const alignment = Math.round(100 - eyeScoreData.normalizedDistance * 100);
+                    alignmentScoreElement.textContent = `${alignment}%`;
+                    alignmentScoreElement.style.color = alignment > 80 ? '#4CAF50' : 
+                                                        alignment > 60 ? '#FFA500' : '#F44336';
+                }
+                
+                // Update direction display
+                const focusDirectionElement = document.getElementById('focus-direction');
+                if (focusDirectionElement) {
+                    focusDirectionElement.textContent = eyeScoreData.direction;
+                    focusDirectionElement.style.color = eyeScoreData.direction === 'CENTER' ? '#4CAF50' : '#F44336';
+                }
+            }
+
+            calculateFocusMetrics() {
+                if (this.irisData.confidence < 0.3) {
+                    this.updateEyeScoreDisplay(0, 'unknown');
+                    
+                    // Update displays
+                    const eyeScoreElement = document.getElementById('eye-score');
+                    const alignmentScoreElement = document.getElementById('eye-alignment-score');
+                    const focusDirectionElement = document.getElementById('focus-direction');
+                    
+                    if (eyeScoreElement) eyeScoreElement.textContent = '0%';
+                    if (alignmentScoreElement) alignmentScoreElement.textContent = '0%';
+                    if (focusDirectionElement) focusDirectionElement.textContent = '-';
+                    
+                    return;
+                }
+                
+                // Calculate eye score
+                const eyeScoreData = this.calculateEyeScore();
+                
+                // Update displays
+                const eyeScoreElement = document.getElementById('eye-score');
+                const alignmentScoreElement = document.getElementById('eye-alignment-score');
+                const focusDirectionElement = document.getElementById('focus-direction');
+                
+                if (eyeScoreElement) eyeScoreElement.textContent = `${eyeScoreData.score}%`;
+                if (alignmentScoreElement) alignmentScoreElement.textContent = `${Math.round(100 - eyeScoreData.normalizedDistance * 100)}%`;
+                if (focusDirectionElement) focusDirectionElement.textContent = eyeScoreData.direction;
+                
+                // Update eye score status
+                this.updateEyeScoreDisplay(eyeScoreData.score, eyeScoreData.level);
+            }
+
+            updateEyeScoreDisplay(score, level = 'unknown') {
+                const focusStatus = document.getElementById('focus-status');
+                if (!focusStatus) return;
+                
+                let statusClass = 'status-unknown';
+                let statusText = 'Eye Score: -';
+                let emoji = '👁️';
+                
+                switch(level) {
+                    case 'high':
+                        statusClass = 'status-focusing';
+                        statusText = `Eye Score: ${score}% 👍`;
+                        emoji = '👁️✅';
+                        break;
+                    case 'medium':
+                        statusClass = 'status-unknown';
+                        statusText = `Eye Score: ${score}% 🤔`;
+                        emoji = '👁️⚠️';
+                        break;
+                    case 'low':
+                        statusClass = 'status-distracted';
+                        statusText = `Eye Score: ${score}% ❌`;
+                        emoji = '👁️❌';
+                        break;
+                    default:
+                        emoji = '👁️❓';
+                }
+                
+                focusStatus.innerHTML = `
+                    <div class="status-dot ${statusClass}"></div>
+                    <span>${emoji} ${statusText}</span>
+                `;
+            }
+
+            showSuccess(message) {
+                this.updateStatusPanel('success', message);
+            }
+            
+            showError(message) {
+                this.updateStatusPanel('error', message);
+            }
+            
+            showInfo(message) {
+                this.updateStatusPanel('info', message);
+            }
+            
+            updateStatusPanel(type, message) {
+                const statusPanel = document.getElementById('detection-status');
+                if (!statusPanel) return;
+                
+                let icon = 'fa-magic';
+                let title = 'ENHANCED EMOTION & EYE TRACKING';
+                let color = '#25221a';
+                
+                switch(type) {
+                    case 'success':
+                        icon = 'fa-check-circle';
+                        color = '#95e1d3';
+                        break;
+                    case 'error':
+                        icon = 'fa-exclamation-circle';
+                        color = '#d84a54';
+                        break;
+                    case 'info':
+                        icon = 'fa-info-circle';
+                        color = '#8ac6d1';
+                        break;
+                }
+                
+                statusPanel.innerHTML = `
+                    <div class="status-header">
+                        <div class="status-icon" style="color: ${color};">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="status-title">
+                            ${title}
+                        </div>
+                    </div>
+                    <div class="status-message">
+                        ${message}
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        // Initialize dual camera detection
+        let dualCameraDetection = null;
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            // Initialize side toggle
+            initSideToggle();
+            
+            // Initialize detection
+            if (typeof Human !== 'undefined') {
+                dualCameraDetection = new DualCameraDetection();
+            } else {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@vladmandic/human/dist/human.js';
+                script.onload = function() {
+                    dualCameraDetection = new DualCameraDetection();
+                    console.log('✅ Dual camera detection initialized with Human.js');
+                };
+                document.head.appendChild(script);
+            }
+            
+            // Add Font Awesome
+            const faLink = document.createElement('link');
+            faLink.rel = 'stylesheet';
+            faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+            document.head.appendChild(faLink);
+            
+            // Add fonts
+            const fontLink = document.createElement('link');
+            fontLink.href = 'https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap';
+            fontLink.rel = 'stylesheet';
+            document.head.appendChild(fontLink);
+            
+            // Listen for messages from parent
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'start-game-detection') {
+                    if (dualCameraDetection) {
+                        dualCameraDetection.autoStartBothDetectionsForGame();
+                    }
+                } else if (event.data.type === 'stop-game-detection') {
+                    if (dualCameraDetection) {
+                        dualCameraDetection.autoStopBothDetectionsAfterGame();
+                    }
+                } else if (event.data.type === 'open-camera-panel') {
+                    openCameraPanel();
+                } else if (event.data.type === 'close-camera-panel') {
+                    closeCameraPanel();
+                } else if (event.data.type === 'initialize-camera') {
+                    // Initialize camera when iframe is shown
+                    console.log('Initializing camera detection system');
+                } else if (event.data.type === 'fullscreen-intervention-started') {
+                    console.log('Full screen intervention started by parent:', event.data);
+                } else if (event.data.type === 'fullscreen-intervention-completed') {
+                    console.log('Full screen intervention completed by parent:', event.data);
+                }
+            });
+            
+            // Notify parent that iframe is loaded
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'iframe-loaded' }, '*');
+            }
+            
+            // Close speaking bot overlay when clicking outside container
+            const speakingBotOverlay = document.getElementById('speaking-bot-overlay-main');
+            if (speakingBotOverlay) {
+                speakingBotOverlay.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        hideSpeakingBotOverlay();
+                    }
+                });
+            }
+        });
+
+        // Export functions
+        window.dualCameraDetection = dualCameraDetection;
+        window.openCameraPanel = openCameraPanel;
+        window.closeCameraPanel = closeCameraPanel;
+        window.showSpeakingBotOverlay = showSpeakingBotOverlay;
+        window.hideSpeakingBotOverlay = hideSpeakingBotOverlay;
+    </script>
+</body>
+</html>

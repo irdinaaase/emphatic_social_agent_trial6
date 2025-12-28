@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mickey's Learning Hub - Welcome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@open-dyslexic/open-dyslexic@1.0.3/css/open-dyslexic.css">
+    
+    <style>
+        :root {
+            --mickey-red: #ffe3e2;
+            --mickey-yellow: #f19d3b;
+            --mickey-black: #25221a;
+            --mickey-white: #e9e7db;
+            --mickey-blue: #8ac6d1;
+            --mickey-pink: #ffb8c6;
+            --mickey-green: #95e1d3;
+            --mickey-purple: #ded8e4;
+            --mickey-bg: #010101;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('images/the road in mickey mouse wallpaper.jpg') center/cover no-repeat;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        body.dyslexia-mode {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+            letter-spacing: 0.1em;
+            line-height: 1.8;
+        }
+
+        .welcome-content {
+            background: rgba(255, 249, 240, 0.95);
+            border-radius: 30px;
+            border: 8px solid var(--mickey-black);
+            width: 100%;
+            max-width: 1000px;
+            max-height: 100vh;
+            overflow: hidden;
+            animation: bounceIn 0.8s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .welcome-body {
+            text-align: center;
+            flex: 1;
+            overflow-y: auto;
+            max-height: calc(90vh - 200px);
+            padding: 0 20px 20px 20px;
+        }
+
+        .forms-container {
+            margin-top: 20px;
+            padding-right: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container {
+            background: var(--mickey-white);
+            padding: 20px;
+            border-radius: 15px;
+            border: 3px solid var(--mickey-black);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .form-title {
+            color: var(--mickey-red);
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .form-field {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--mickey-black);
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .form-input {
+            width: 95%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 3px solid var(--mickey-black);
+            font-family: 'Comic Neue', cursive;
+            font-size: 1rem;
+            background: var(--mickey-white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--mickey-red);
+            box-shadow: 0 0 10px rgba(255, 107, 139, 0.3);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 3px solid var(--mickey-black);
+            font-family: 'Comic Neue', cursive;
+            font-size: 1rem;
+            background: var(--mickey-white);
+            cursor: pointer;
+        }
+
+        .form-submit-btn {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: var(--mickey-red);
+            color: var(--mickey-blue);
+            border: 4px solid var(--mickey-black);
+            border-radius: 20px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .form-submit-btn:hover {
+            background: var(--mickey-pink);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 0 var(--mickey-black);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .welcome-content {
+                width: 95%;
+                margin: 20px;
+                max-height: 95vh;
+            }
+                        
+            .welcome-body {
+                padding: 20px;
+                max-height: calc(95vh - 150px);
+            }
+            
+            .forms-container {
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-content">
+        <div class="welcome-body">
+            <div class="forms-container" id="forms-container">
+                <div id="name-form-container" class="form-container">
+                    
+                    <div class="form-field">
+                        <label class="form-label">
+                            <i class="fas fa-user"></i> Your Name
+                        </label>
+                        <input type="text" id="student-name" 
+                            placeholder="Type your name here" 
+                            class="form-input" autofocus>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label class="form-label">
+                            <i class="fas fa-graduation-cap"></i> Grade Level
+                        </label>
+                        <select id="student-grade" class="form-select">
+                            <option value="">Select grade level</option>
+                            <option value="kindergarten">Kindergarten</option>
+                            <option value="grade1">Grade 1</option>
+                            <option value="grade2">Grade 2</option>
+                            <option value="grade3">Grade 3</option>
+                            <option value="grade4">Grade 4</option>
+                            <option value="grade5">Grade 5</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <button class="form-submit-btn" onclick="startLearning()">
+                        <i class="fas fa-rocket"></i> Start Learning!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // WELCOME SCREEN FUNCTIONS
+        // ============================================
+
+        function startLearning() {
+            const studentName = document.getElementById('student-name').value.trim();
+            const studentGrade = document.getElementById('student-grade').value;
+            
+            if (!studentName) {
+                showNotification("Oops!", "Please enter your name to start!", "error");
+                document.getElementById('student-name').focus();
+                return;
+            }
+            
+            if (!studentGrade) {
+                showNotification("Choose Grade", "Please select your grade level!", "error");
+                return;
+            }
+            
+            // Save student info
+            localStorage.setItem('studentName', studentName);
+            localStorage.setItem('studentGrade', studentGrade);
+            localStorage.setItem('studentRole', 'student');
+            
+            // Generate a simple user ID for tracking
+            const userId = 'student_' + Date.now();
+            localStorage.setItem('userId', userId);
+            
+            // Initialize progress tracking
+            initializeStudentProgress(studentName, studentGrade);
+            
+            // Redirect to game center
+            window.location.href = 'game-center.html';
+        }
+
+        function initializeStudentProgress(name, grade) {
+            // Initialize progress object if not exists
+            if (!localStorage.getItem('studentProgress')) {
+                const initialProgress = {
+                    name: name,
+                    grade: grade,
+                    points: 0,
+                    gamesPlayed: {},
+                    lastLogin: new Date().toISOString(),
+                    totalPlayTime: 0,
+                    achievements: []
+                };
+                localStorage.setItem('studentProgress', JSON.stringify(initialProgress));
+            } else {
+                // Update existing progress
+                const progress = JSON.parse(localStorage.getItem('studentProgress'));
+                progress.lastLogin = new Date().toISOString();
+                localStorage.setItem('studentProgress', JSON.stringify(progress));
+            }
+        }
+
+        function showNotification(title, message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--mickey-white);
+                color: var(--mickey-black);
+                padding: 15px 20px;
+                border-radius: 15px;
+                border: 3px solid var(--mickey-black);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-family: 'Comic Neue', cursive;
+                max-width: 300px;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <strong style="color: var(--mickey-red); display: block; margin-bottom: 5px;">${title}</strong>
+                <div>${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            const savedName = localStorage.getItem('studentName');
+            
+            if (savedName) {
+                // Auto-redirect to game center
+                window.location.href = 'game-center.html';
+            } else {
+                // Auto-focus on name field
+                setTimeout(() => {
+                    document.getElementById('student-name')?.focus();
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
