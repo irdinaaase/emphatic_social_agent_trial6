@@ -892,6 +892,176 @@
                 padding: 20px !important;
             }
         }
+        .speaker-button-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        #speaker-btn {
+            padding: 12px 25px;
+            background: var(--mickey-white);
+            color: #95e1d3;
+            border: 3px solid currentColor;
+            border-radius: 15px;
+            cursor: pointer;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        #speaker-btn:hover {
+            background: var(--mickey-blue);
+            transform: scale(1.05);
+        }
+
+        #speaker-btn:active {
+            transform: scale(0.95);
+        }
+
+        #speaker-btn.speaking {
+            background: var(--mickey-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(149, 225, 211, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(149, 225, 211, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(149, 225, 211, 0); }
+        }
+
+        /* Add speaker icon to options */
+        .game-option {
+            position: relative;
+            padding-right: 50px !important; /* Make room for the speaker icon */
+        }
+
+        .option-speaker {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            color: currentColor;
+        }
+
+        .option-speaker:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Module Card Speaker Button */
+.module-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.module-speaker {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    background: var(--mickey-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    border: 3px solid currentColor;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.module-speaker:hover {
+    background: var(--mickey-blue);
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.module-speaker i {
+    color: var(--mickey-black);
+    font-size: 1.2rem;
+}
+
+.module-speaker.speaking {
+    background: var(--mickey-green);
+    animation: pulse-module 1.5s infinite;
+}
+
+@keyframes pulse-module {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(149, 225, 211, 0.7);
+        transform: scale(1);
+    }
+    70% { 
+        box-shadow: 0 0 0 10px rgba(149, 225, 211, 0);
+        transform: scale(1.1);
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(149, 225, 211, 0);
+        transform: scale(1);
+    }
+}
+
+/* Module description */
+.module-description {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    border: 2px solid currentColor;
+    font-size: 0.9rem;
+    color: currentColor;
+    display: none;
+}
+
+.module-card:hover .module-description {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Update existing module card styles to accommodate speaker */
+.module-card h3 {
+    font-family: inherit;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    color: #f5a2b2;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 2;
+    padding-right: 40px; /* Make room for speaker */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .module-speaker {
+        width: 40px;
+        height: 40px;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .module-speaker i {
+        font-size: 1rem;
+    }
+    
+    .module-card h3 {
+        padding-right: 30px;
+        font-size: 1.5rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -904,9 +1074,6 @@
                 </a>
                 <a href="profile.html" class="nav-tab">
                     <i class="fas fa-user"></i>
-                </a>
-                <a href="about.html" class="nav-tab">
-                    <i class="fas fa-info-circle"></i>
                 </a>
                 <a href="settings.html" class="nav-tab">
                     <i class="fas fa-cog"></i>
@@ -926,6 +1093,13 @@
                     <i class="fas fa-font"></i>
                 </div>
                 <h3>Mencari Huruf</h3>
+                <!-- Add speaker button here -->
+                <div class="module-speaker" onclick="speakModuleDescription('letters'); event.stopPropagation();">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="module-description" style="display: none;">
+                    Learn lowercase letters a-z with multisensory support! Click to play letter matching games.
+                </div>
             </div>
         
             <!-- GAME 2: WORD SPELLING -->
@@ -934,6 +1108,13 @@
                     <i class="fas fa-spell-check"></i>
                 </div>
                 <h3>Mengeja Kata</h3>
+                <!-- Add speaker button here -->
+                <div class="module-speaker" onclick="speakModuleDescription('spelling'); event.stopPropagation();">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="module-description" style="display: none;">
+                    Spell and read words using phonics! Click to play word building games.
+                </div>
             </div>
 
             <!-- GAME 3: LETTER TRACING -->
@@ -942,6 +1123,13 @@
                     <i class="fas fa-pen-nib"></i>
                 </div>
                 <h3>Menulis Huruf</h3>
+                <!-- Add speaker button here -->
+                <div class="module-speaker" onclick="speakModuleDescription('tracing'); event.stopPropagation();">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="module-description" style="display: none;">
+                    Trace lowercase letters with mouse or finger to build muscle memory. Click to play tracing games.
+                </div>
             </div>
         </div>
     </main>
@@ -955,6 +1143,13 @@
             <div class="game-header">
                 <h2 id="game-title">Game Title</h2>
                 <div class="game-counter" id="game-counter">Activity 1 of 3</div>
+            </div>
+            <div class="speaker-button-container" style="text-align: center; margin: 15px 0;">
+                <button id="speaker-btn" class="nav-btn" 
+                        onclick="readQuestionAndOptions()"
+                        style="padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-volume-up"></i>
+                </button>
             </div>
             <div class="game-question" id="game-question">
                 Question will appear here...
@@ -1020,845 +1215,814 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // ============================================
-        // GAME CENTER - WITH DYSLEXIA FONT AS DEFAULT
-        // ============================================
-
-        // Initialize settings
-        function initializeSettings() {
-            // Load dyslexia mode (default is true/dyslexia mode)
-            const dyslexiaEnabled = localStorage.getItem('dyslexiaMode') !== 'false'; // Default to true if not set
-            
-            
-            // Load Irlen color scheme from localStorage
-            const irlenScheme = localStorage.getItem('irlenScheme') || 'default';
-            if (irlenScheme !== 'default') {
-                document.body.classList.add(irlenScheme);
-            }
+<script>
+    // Initialize settings
+    function initializeSettings() {
+        // Load dyslexia mode (default is true/dyslexia mode)
+        const dyslexiaEnabled = localStorage.getItem('dyslexiaMode') !== 'false';
+        
+        // Load Irlen color scheme from localStorage
+        const irlenScheme = localStorage.getItem('irlenScheme') || 'default';
+        if (irlenScheme !== 'default') {
+            document.body.classList.add(irlenScheme);
         }
+    }
 
-        function showNotification(title, message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: rgba(255, 255, 255, 0.95);
-                color: currentColor;
-                padding: 15px 20px;
-                border-radius: 15px;
-                border: 2px solid currentColor;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                z-index: 10000;
-                font-family: inherit;
-                max-width: 300px;
-                animation: fadeIn 0.3s ease;
-            `;
-            
-            notification.innerHTML = `
-                <strong style="display: block; margin-bottom: 5px;">${title}</strong>
-                <div>${message}</div>
-            `;
-            
-            document.body.appendChild(notification);
-            
+    function showNotification(title, message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: currentColor;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 2px solid currentColor;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            font-family: inherit;
+            max-width: 300px;
+            animation: fadeIn 0.3s ease;
+        `;
+        
+        notification.innerHTML = `
+            <strong style="display: block; margin-bottom: 5px;">${title}</strong>
+            <div>${message}</div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.3s ease';
             setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.3s ease';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
-        }
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
 
-        // ============================================
-        // GAME STATE VARIABLES
-        // ============================================
-        let currentGame = null;
-        let currentActivityIndex = 0;
-        let studentScore = 0;
-        let gamePaused = false;
-        let interventionActive = false;
-        let currentUtterance = null;
-        let gameStartTime = null;
-        let activityStartTimes = [];
-        let emotionHistory = [];
-        let focusHistory = [];
-        
-        // ============================================
-        // TRACING GAME VARIABLES
-        // ============================================
-        let tracingCanvas, tracingCtx;
-        let isDrawing = false;
-        let lastX = 0;
-        let lastY = 0;
-        let strokeColor = '#f19d3b'; // Mickey yellow
-        let strokeWidth = 8;
-        
-        const gameData = {
-            letters: {
-                title: "letter explore",
-                description: "Learn lowercase letters a-z with multisensory support!",
-                activities: [
-                    {
-                        question: "Find the matching letter:",
-                        letter: "a",
-                        options: ["a", "b", "c", "d"],
-                        correct: 0,
-                        explanation: "Great! This is lowercase 'a'. Feel its round shape!",
-                        points: 10
-                    },
-                    {
-                        question: "Which letter is different?",
-                        letters: ["b", "d", "p", "a"],
-                        options: ["b", "d", "p", "a"],
-                        correct: 3,
-                        explanation: "Correct! 'a' is not a mirror letter like b-d or p-q!",
-                        points: 10
-                    },
-                    {
-                        question: "What comes after 'c'?",
-                        sequence: ["a", "b", "c", "?"],
-                        options: ["d", "e", "f", "g"],
-                        correct: 0,
-                        explanation: "Correct! c → d. Feel the different shapes!",
-                        points: 10
-                    }
-                ]
-            },
-            spelling: {
-                title: "Word Builder Game",
-                description: "Spell and read words using phonics!",
-                activities: [
-                    {
-                        question: "Spell 'cat'",
-                        word: "cat",
-                        options: ["c-a-t", "c-o-t", "k-a-t", "c-a-d"],
-                        correct: 0,
-                        explanation: "Excellent! c-a-t spells 'cat'!",
-                        points: 15
-                    },
-                    {
-                        question: "Spell 'dog'",
-                        word: "dog",
-                        options: ["d-o-g", "d-a-g", "b-o-g", "d-o-o"],
-                        correct: 0,
-                        explanation: "Perfect! d-o-g = dog!",
-                        points: 15
-                    },
-                    {
-                        question: "Spell 'sun'",
-                        word: "sun",
-                        options: ["s-u-n", "s-o-n", "s-u-m", "c-u-n"],
-                        correct: 0,
-                        explanation: "Great! s-u-n = sun!",
-                        points: 15
-                    }
-                ]
-            },
-                tracing: {
-                    title: "Trace Letter",
-                    description: "Trace lowercase letters with mouse or finger to build muscle memory",
-                    activities: [
-                        {
-                            question: "Trace the letter a",
-                            letter: "a",
-                            hint: "Start at the top, make a circle, then add a short line down",
-                            points: 15
-                        },
-                        {
-                            question: "Trace the letter b",
-                            letter: "b",
-                            hint: "Start with a straight line down, then add a small circle",
-                            points: 15
-                        },
-                        {
-                            question: "Trace the letter c",
-                            letter: "c",
-                            hint: "Make a curved line like a crescent moon",
-                            points: 15
-                        },
-                        {
-                            question: "Trace the letter d",
-                            letter: "d",
-                            hint: "Start with a circle, then add a straight line up and down",
-                            points: 15
-                        },
-                        {
-                            question: "Trace the letter e",
-                            letter: "e",
-                            hint: "Make a horizontal line, then add a curved line",
-                            points: 15
-                        }
-                    ]
+    // ============================================
+    // GAME STATE VARIABLES
+    // ============================================
+    let currentGame = null;
+    let currentActivityIndex = 0;
+    let studentScore = 0;
+    let gamePaused = false;
+    let interventionActive = false;
+    let currentUtterance = null;
+    let gameStartTime = null;
+    let activityStartTimes = [];
+    let emotionHistory = [];
+    let focusHistory = [];
+    
+    // Text-to-speech variables
+    let isSpeaking = false;
+    let speechQueue = [];
+    let currentSpeechIndex = 0;
+    
+    // ============================================
+    // TRACING GAME VARIABLES
+    // ============================================
+    let tracingCanvas, tracingCtx;
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let strokeColor = '#f19d3b'; // Mickey yellow
+    let strokeWidth = 8;
+    
+    const gameData = {
+        letters: {
+            title: "letter explore",
+            displayTitle: "letter explore",
+            description: "Learn lowercase letters a-z with multisensory support!",
+            fullDescription: "Play letter matching games to learn lowercase letters from A to Z.",
+            activities: [
+                {
+                    question: "Find the matching letter:",
+                    letter: "a",
+                    options: ["a", "b", "c", "d"],
+                    correct: 0,
+                    explanation: "Great! This is lowercase 'a'. Feel its round shape!",
+                    points: 10
+                },
+                {
+                    question: "Which letter is different?",
+                    letters: ["b", "d", "p", "a"],
+                    options: ["b", "d", "p", "a"],
+                    correct: 3,
+                    explanation: "Correct! 'a' is not a mirror letter like b-d or p-q!",
+                    points: 10
+                },
+                {
+                    question: "What comes after 'c'?",
+                    sequence: ["a", "b", "c", "?"],
+                    options: ["d", "e", "f", "g"],
+                    correct: 0,
+                    explanation: "Correct! c → d. Feel the different shapes!",
+                    points: 10
                 }
+            ]
+        },
+        spelling: {
+            title: "Word Builder Game",
+            displayTitle: "Mengeja Kata",
+            description: "Spell and read words using phonics!",
+            fullDescription: "Build and spell simple words like cat, dog, and sun. Great for developing phonics skills and word recognition.",
+            activities: [
+                {
+                    question: "Spell 'cat'",
+                    word: "cat",
+                    options: ["c-a-t", "c-o-t", "k-a-t", "c-a-d"],
+                    correct: 0,
+                    explanation: "Excellent! c-a-t spells 'cat'!",
+                    points: 15
+                },
+                {
+                    question: "Spell 'dog'",
+                    word: "dog",
+                    options: ["d-o-g", "d-a-g", "b-o-g", "d-o-o"],
+                    correct: 0,
+                    explanation: "Perfect! d-o-g = dog!",
+                    points: 15
+                },
+                {
+                    question: "Spell 'sun'",
+                    word: "sun",
+                    options: ["s-u-n", "s-o-n", "s-u-m", "c-u-n"],
+                    correct: 0,
+                    explanation: "Great! s-u-n = sun!",
+                    points: 15
+                }
+            ]
+        },
+        tracing: {
+            title: "Trace Letter",
+            displayTitle: "Menulis Huruf",
+            description: "Trace lowercase letters with mouse or finger to build muscle memory",
+            fullDescription: "Practice writing letters by tracing them on screen. Build muscle memory and learn proper letter formation.",
+            activities: [
+                {
+                    question: "Trace the letter a",
+                    letter: "a",
+                    hint: "Start at the top, make a circle, then add a short line down",
+                    points: 15
+                },
+                {
+                    question: "Trace the letter b",
+                    letter: "b",
+                    hint: "Start with a straight line down, then add a small circle",
+                    points: 15
+                },
+                {
+                    question: "Trace the letter c",
+                    letter: "c",
+                    hint: "Make a curved line like a crescent moon",
+                    points: 15
+                },
+                {
+                    question: "Trace the letter d",
+                    letter: "d",
+                    hint: "Start with a circle, then add a straight line up and down",
+                    points: 15
+                },
+                {
+                    question: "Trace the letter e",
+                    letter: "e",
+                    hint: "Make a horizontal line, then add a curved line",
+                    points: 15
+                }
+            ]
+        }
+    };
+
+    // ============================================
+    // DATA RECORDING FUNCTIONS
+    // ============================================
+
+    function recordGameSession(gameName, timeTaken, emotion, focus, intervention, interventionTime, score) {
+        const analytics = JSON.parse(localStorage.getItem('studentAnalytics') || '{}');
+        
+        // Initialize analytics if empty
+        if (!analytics.gameSessions) analytics.gameSessions = [];
+        if (!analytics.games) analytics.games = {
+            letters: { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 },
+            spelling: { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 },
+            tracing: { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 }
         };
-
-        // ============================================
-        // DATA RECORDING FUNCTIONS
-        // ============================================
-
-        function recordGameSession(gameName, timeTaken, emotion, focus, intervention, interventionTime, score) {
-            const analytics = JSON.parse(localStorage.getItem('studentAnalytics') || '{}');
-            
-            // Initialize analytics if empty
-            if (!analytics.gameSessions) analytics.gameSessions = [];
-            if (!analytics.games) analytics.games = {
-                letters: { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 },
-                spelling: { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 },
-                tracing: { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 }
-            };
-            
-            // Create session record
-            const session = {
-                date: new Date().toISOString(),
-                game: gameName,
-                timeTaken: timeTaken,
-                emotion: emotion || 'neutral',
-                focus: focus || 'medium',
-                intervention: intervention || null,
-                interventionTime: interventionTime || 0,
-                score: score,
-                settings: {
-                    dyslexia: localStorage.getItem('dyslexiaMode') !== 'false', // Default true
-                    irlenScheme: localStorage.getItem('irlenScheme') || 'default'
-                }
-            };
-            
-            // Add to sessions
-            analytics.gameSessions.push(session);
-            
-            // Update game statistics
-            if (!analytics.games[gameName]) {
-                analytics.games[gameName] = { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 };
+        
+        // Create session record
+        const session = {
+            date: new Date().toISOString(),
+            game: gameName,
+            timeTaken: timeTaken,
+            emotion: emotion || 'neutral',
+            focus: focus || 'medium',
+            intervention: intervention || null,
+            interventionTime: interventionTime || 0,
+            score: score,
+            settings: {
+                dyslexia: localStorage.getItem('dyslexiaMode') !== 'false',
+                irlenScheme: localStorage.getItem('irlenScheme') || 'default'
             }
-            
-            analytics.games[gameName].played++;
-            if (score > 0) analytics.games[gameName].completed++;
-            
-            // Calculate progress
-            const game = analytics.games[gameName];
-            game.progress = Math.min(100, Math.round((game.completed / Math.max(game.played, 1)) * 100));
-            
-            // Update average emotion
-            if (emotion) {
-                game.avgEmotion = emotion;
-            }
-            
-            // Update success rate
-            game.successRate = Math.min(100, Math.round((score / 45) * 100)); // Max 45 points per game
-            
-            // Update overall statistics
-            analytics.gamesPlayed = Object.values(analytics.games).reduce((sum, g) => sum + g.played, 0);
-            analytics.activitiesCompleted = Object.values(analytics.games).reduce((sum, g) => sum + g.completed, 0);
-            
-            // Calculate total learning time
-            analytics.totalLearningTime = analytics.gameSessions.reduce((total, s) => total + (s.timeTaken || 0), 0);
-            analytics.totalLearningTime = Math.round(analytics.totalLearningTime / 60); // Convert to minutes
-            
-            // Calculate average time per question
-            if (analytics.activitiesCompleted > 0) {
-                analytics.avgTimePerQuestion = Math.round(
-                    (analytics.totalLearningTime * 60) / analytics.activitiesCompleted
-                );
-            }
-            
-            // Update points
-            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
-            analytics.points = progress.points || 0;
-            
-            // Update member since date
-            if (!analytics.memberSince) {
-                analytics.memberSince = new Date().toLocaleDateString();
-            }
-            
-            // Save updated analytics
-            localStorage.setItem('studentAnalytics', JSON.stringify(analytics));
-            
-            console.log(`📊 Game session recorded: ${gameName}, Score: ${score}, Time: ${timeTaken}s`);
-            
-            // Trigger update notification for profile page
-            localStorage.setItem('lastGameUpdate', Date.now().toString());
+        };
+        
+        // Add to sessions
+        analytics.gameSessions.push(session);
+        
+        // Update game statistics
+        if (!analytics.games[gameName]) {
+            analytics.games[gameName] = { played: 0, completed: 0, progress: 0, avgTime: 0, avgEmotion: 'neutral', successRate: 0 };
         }
-
-        function recordActivityCompletion(gameName, emotion, focus) {
-            const analytics = JSON.parse(localStorage.getItem('studentAnalytics') || '{}');
-            
-            // Initialize arrays if they don't exist
-            if (!analytics.emotionHistory) analytics.emotionHistory = [];
-            if (!analytics.focusHistory) analytics.focusHistory = [];
-            
-            // Record emotion
-            analytics.emotionHistory.push({
-                emotion: emotion,
-                timestamp: new Date().toISOString(),
-                game: gameName,
-                activity: currentActivityIndex + 1
-            });
-            
-            // Record focus
-            analytics.focusHistory.push({
-                level: focus,
-                timestamp: new Date().toISOString(),
-                game: gameName,
-                activity: currentActivityIndex + 1
-            });
-            
-            // Save to localStorage
-            localStorage.setItem('studentAnalytics', JSON.stringify(analytics));
+        
+        analytics.games[gameName].played++;
+        if (score > 0) analytics.games[gameName].completed++;
+        
+        // Calculate progress
+        const game = analytics.games[gameName];
+        game.progress = Math.min(100, Math.round((game.completed / Math.max(game.played, 1)) * 100));
+        
+        // Update average emotion
+        if (emotion) {
+            game.avgEmotion = emotion;
         }
-
-        function recordInterventionSelection(intervention, emotion, timeTaken) {
-            const analytics = JSON.parse(localStorage.getItem('studentAnalytics') || '{}');
-            
-            if (!analytics.interventionStats) analytics.interventionStats = {};
-            if (!analytics.interventionStats[intervention]) {
-                analytics.interventionStats[intervention] = { count: 0, avgTime: 0, emotion: '' };
-            }
-            
-            // Update intervention stats
-            const stats = analytics.interventionStats[intervention];
-            stats.count++;
-            stats.avgTime = (stats.avgTime * (stats.count - 1) + timeTaken) / stats.count;
-            stats.emotion = emotion || 'neutral';
-            
-            // Save to localStorage
-            localStorage.setItem('studentAnalytics', JSON.stringify(analytics));
-            
-            console.log(`📊 Intervention recorded: ${intervention} for ${emotion}, Time: ${timeTaken}s`);
+        
+        // Update success rate
+        game.successRate = Math.min(100, Math.round((score / 45) * 100));
+        
+        // Update overall statistics
+        analytics.gamesPlayed = Object.values(analytics.games).reduce((sum, g) => sum + g.played, 0);
+        analytics.activitiesCompleted = Object.values(analytics.games).reduce((sum, g) => sum + g.completed, 0);
+        
+        // Calculate total learning time
+        analytics.totalLearningTime = analytics.gameSessions.reduce((total, s) => total + (s.timeTaken || 0), 0);
+        analytics.totalLearningTime = Math.round(analytics.totalLearningTime / 60);
+        
+        // Calculate average time per question
+        if (analytics.activitiesCompleted > 0) {
+            analytics.avgTimePerQuestion = Math.round(
+                (analytics.totalLearningTime * 60) / analytics.activitiesCompleted
+            );
         }
-
-        // ============================================
-        // GAME FUNCTIONS
-        // ============================================
-
-        function startGame(gameName) {
-            if (gamePaused) {
-                alert("Please complete the intervention first!");
-                return;
-            }
-            
-            currentGame = gameName;
-            currentActivityIndex = 0;
-            studentScore = 0;
-            gameStartTime = Date.now();
-            activityStartTimes = [Date.now()];
-            emotionHistory = [];
-            focusHistory = [];
-            
-            const game = gameData[gameName];
-            if (!game) {
-                alert('Game not found!');
-                return;
-            }
-            
-            // Show game container
-            document.getElementById('game-container').style.display = 'block';
-            
-            // Show camera panel automatically when game starts
-            const iframe = document.getElementById('collapsible-iframe');
-            if (iframe.style.display === 'none' || iframe.style.display === '') {
-                iframe.style.display = 'block';
-            }
-            
-            // Send message to start detection
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ type: 'start-game-detection' }, '*');
-            }
-            
-            // Update game title
-            document.getElementById('game-title').textContent = game.title;
-            
-            // Load first activity
-            loadActivity(gameName, 0);
+        
+        // Update points
+        const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
+        analytics.points = progress.points || 0;
+        
+        // Update member since date
+        if (!analytics.memberSince) {
+            analytics.memberSince = new Date().toLocaleDateString();
         }
-
-function loadActivity(gameName, activityIndex) {
-    const game = gameData[gameName];
-    const activity = game.activities[activityIndex];
-    
-    if (!activity) {
-        closeGame();
-        return;
+        
+        // Save updated analytics
+        localStorage.setItem('studentAnalytics', JSON.stringify(analytics));
+        
+        console.log(`📊 Game session recorded: ${gameName}, Score: ${score}, Time: ${timeTaken}s`);
+        
+        localStorage.setItem('lastGameUpdate', Date.now().toString());
     }
-    
-    // Record activity start time
-    activityStartTimes[activityIndex] = Date.now();
-    
-    // Update counter
-    document.getElementById('game-counter').textContent = 
-        `Activity ${activityIndex + 1} of ${game.activities.length}`;
-    
-    // Update question - BUT FOR TRACING GAME, CLEAR THE QUESTION
-    if (gameName === 'tracing') {
-        // Clear the question for tracing game
-        document.getElementById('game-question').innerHTML = '';
-    } else {
-        // For other games, show question as usual
-        let questionHTML = activity.question;
-        if (activity.letter) {
-            questionHTML += `<div style="font-size: 5rem; color: currentColor; margin: 20px 0;">${activity.letter}</div>`;
-        }
-        document.getElementById('game-question').innerHTML = questionHTML;
-    }
-    
-    // Update options
-    const optionsContainer = document.getElementById('game-options');
-    optionsContainer.innerHTML = '';
-    
-    if (activity.options) {
-        activity.options.forEach((option, index) => {
-            const optionElement = document.createElement('div');
-            optionElement.className = 'game-option';
-            optionElement.textContent = option;
-            optionElement.onclick = () => checkAnswer(index, gameName);
-            optionsContainer.appendChild(optionElement);
+
+    function recordActivityCompletion(gameName, emotion, focus) {
+        const analytics = JSON.parse(localStorage.getItem('studentAnalytics') || '{}');
+        
+        if (!analytics.emotionHistory) analytics.emotionHistory = [];
+        if (!analytics.focusHistory) analytics.focusHistory = [];
+        
+        analytics.emotionHistory.push({
+            emotion: emotion,
+            timestamp: new Date().toISOString(),
+            game: gameName,
+            activity: currentActivityIndex + 1
         });
-    } else if (gameName === 'tracing') {
-        // For tracing game, show canvas for drawing - SIMPLIFIED LAYOUT
-        optionsContainer.innerHTML = `
-            <div style="display: flex; flex-direction: row; gap: 20px; align-items: center; justify-content: center;">
-                <!-- Only the Tracing Canvas -->
-                <div style="flex: 1; max-width: 800px;">
-                    <div style="background: white; border: 4px solid currentColor; 
-                                border-radius: 15px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                        
-                        <!-- Tracing Canvas -->
-                        <div style="position: relative;">
-                            <canvas id="tracing-canvas" width="700" height="500" 
-                                    style="display: block; margin: 0 auto; background: white; 
-                                        cursor: crosshair; border-radius: 8px; border: 2px solid #ddd;"></canvas>
+        
+        analytics.focusHistory.push({
+            level: focus,
+            timestamp: new Date().toISOString(),
+            game: gameName,
+            activity: currentActivityIndex + 1
+        });
+        
+        localStorage.setItem('studentAnalytics', JSON.stringify(analytics));
+    }
+
+    function recordInterventionSelection(intervention, emotion, timeTaken) {
+        const analytics = JSON.parse(localStorage.getItem('studentAnalytics') || '{}');
+        
+        if (!analytics.interventionStats) analytics.interventionStats = {};
+        if (!analytics.interventionStats[intervention]) {
+            analytics.interventionStats[intervention] = { count: 0, avgTime: 0, emotion: '' };
+        }
+        
+        const stats = analytics.interventionStats[intervention];
+        stats.count++;
+        stats.avgTime = (stats.avgTime * (stats.count - 1) + timeTaken) / stats.count;
+        stats.emotion = emotion || 'neutral';
+        
+        localStorage.setItem('studentAnalytics', JSON.stringify(analytics));
+        
+        console.log(`📊 Intervention recorded: ${intervention} for ${emotion}, Time: ${timeTaken}s`);
+    }
+
+    // ============================================
+    // TEXT-TO-SPEECH FUNCTIONS
+    // ============================================
+
+    function speakText(text, onComplete = null) {
+        if (!('speechSynthesis' in window)) {
+            if (onComplete) setTimeout(onComplete, 2000);
+            return;
+        }
+        
+        // Stop any current speech
+        if (currentUtterance) {
+            speechSynthesis.cancel();
+        }
+        
+        // Create utterance
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.rate = 0.9;
+        currentUtterance.pitch = 1.2;
+        currentUtterance.volume = 1;
+        
+        // Get friendly voice
+        const voices = speechSynthesis.getVoices();
+        const friendlyVoice = voices.find(voice => 
+            voice.name.includes('Child') || 
+            voice.name.includes('Kids') ||
+            voice.lang.includes('en')
+        );
+        
+        if (friendlyVoice) {
+            currentUtterance.voice = friendlyVoice;
+        }
+        
+        // Event handlers
+        currentUtterance.onstart = () => {
+            console.log('🎤 Speaking:', text);
+        };
+        
+        currentUtterance.onend = () => {
+            console.log('✅ Finished speaking');
+            currentUtterance = null;
+            
+            if (onComplete) {
+                setTimeout(onComplete, 500);
+            }
+        };
+        
+        currentUtterance.onerror = (event) => {
+            if (event.error !== 'interrupted') {
+                console.error('❌ Speech synthesis error:', event);
+            } else {
+                console.log('🔇 Speech was interrupted');
+            }
+            currentUtterance = null;
+            
+            if (onComplete) {
+                setTimeout(onComplete, 500);
+            }
+        };
+        
+        // Start speaking
+        speechSynthesis.speak(currentUtterance);
+    }
+
+    // ============================================
+    // MODULE CARD SPEAKER FUNCTIONS
+    // ============================================
+
+    function speakModuleDescription(gameType) {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        // Stop any ongoing speech
+        if (isSpeaking) {
+            stopAllSpeech();
+            return;
+        }
+        
+        const gameTitles = {
+            'letters': 'Mencari Huruf - Letter Explore',
+            'spelling': 'Mengeja Kata - Word Builder Game',
+            'tracing': 'Menulis Huruf - Trace Letter'
+        };
+        
+        const gameDescriptions = {
+            'letters': 'Learn lowercase letters a-z with multisensory support! Click to play letter matching games.',
+            'spelling': 'Spell and read words using phonics! Click to play word building games.',
+            'tracing': 'Trace lowercase letters with mouse or finger to build muscle memory. Click to play tracing games.'
+        };
+        
+        const speechText = `${gameTitles[gameType]}. ${gameDescriptions[gameType]}`;
+        
+        // Visual feedback
+        const speakerBtn = document.querySelector(`.module-card[data-module="${gameType}"] .module-speaker`);
+        if (speakerBtn) {
+            speakerBtn.classList.add('speaking');
+            speakerBtn.innerHTML = '<i class="fas fa-stop"></i>';
+        }
+        
+        isSpeaking = true;
+        
+        speakText(speechText, () => {
+            // Speech completed
+            isSpeaking = false;
+            
+            // Reset button
+            if (speakerBtn) {
+                speakerBtn.classList.remove('speaking');
+                speakerBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        });
+    }
+
+    function speakAllGames() {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        if (isSpeaking) {
+            stopAllSpeech();
+            return;
+        }
+        
+        const gameList = [
+            "Game 1: Mencari Huruf. Learn lowercase letters a-z with multisensory support!",
+            "Game 2: Mengeja Kata. Spell and read words using phonics!",
+            "Game 3: Menulis Huruf. Trace lowercase letters with mouse or finger to build muscle memory.",
+            "Click on any game to start playing."
+        ];
+        
+        const speechText = `Welcome to Mickey's Learning Hub! ${gameList.join(' ')}`;
+        
+        isSpeaking = true;
+        
+        speakText(speechText, () => {
+            isSpeaking = false;
+        });
+    }
+
+    // ============================================
+    // GAME QUESTION & OPTIONS SPEAKER FUNCTIONS
+    // ============================================
+
+    function readQuestionAndOptions() {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        if (isSpeaking) {
+            stopAllSpeech();
+            return;
+        }
+        
+        const questionElement = document.getElementById('game-question');
+        const optionsElements = document.querySelectorAll('.game-option');
+        
+        if (!questionElement || optionsElements.length === 0) {
+            speakText("No question or options available.");
+            return;
+        }
+        
+        // Get question text (strip HTML tags)
+        const questionText = stripHTML(questionElement.innerText || questionElement.textContent);
+        
+        // Get options text
+        const optionsText = [];
+        optionsElements.forEach((option, index) => {
+            const optionText = option.innerText || option.textContent;
+            const cleanOptionText = optionText.replace(/🔊$/, '').trim();
+            optionsText.push(`Option ${index + 1}: ${cleanOptionText}`);
+        });
+        
+        // Build the speech text
+        const speechText = [
+            `Question: ${questionText}`,
+            `Options: ${optionsText.join('. ')}`,
+            `Please select an option.`
+        ].join('. ');
+        
+        // Start speaking
+        speakWithVisualFeedback(speechText, 'main');
+    }
+
+    function readOption(optionIndex) {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        if (isSpeaking) {
+            stopAllSpeech();
+            return;
+        }
+        
+        const optionsElements = document.querySelectorAll('.game-option');
+        if (optionIndex >= 0 && optionIndex < optionsElements.length) {
+            const optionText = optionsElements[optionIndex].innerText || optionsElements[optionIndex].textContent;
+            const cleanOptionText = optionText.replace(/🔊$/, '').trim();
+            speakWithVisualFeedback(`Option ${optionIndex + 1}: ${cleanOptionText}`, `option-${optionIndex}`);
+        }
+    }
+
+    function speakWithVisualFeedback(text, elementId = 'main') {
+        // Update button state
+        const speakerBtn = document.getElementById('speaker-btn');
+        if (speakerBtn && elementId === 'main') {
+            speakerBtn.classList.add('speaking');
+            speakerBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Reading';
+        }
+        
+        // Highlight option if reading specific option
+        if (elementId.startsWith('option-')) {
+            const optionIndex = parseInt(elementId.split('-')[1]);
+            const optionElements = document.querySelectorAll('.game-option');
+            if (optionElements[optionIndex]) {
+                optionElements[optionIndex].style.boxShadow = '0 0 15px var(--mickey-blue)';
+                optionElements[optionIndex].style.transform = 'scale(1.02)';
+            }
+        }
+        
+        isSpeaking = true;
+        
+        speakText(text, () => {
+            // Speech completed
+            isSpeaking = false;
+            
+            // Reset button
+            if (speakerBtn && elementId === 'main') {
+                speakerBtn.classList.remove('speaking');
+                speakerBtn.innerHTML = '<i class="fas fa-volume-up"></i> Read Question & Options';
+            }
+            
+            // Reset option highlight
+            if (elementId.startsWith('option-')) {
+                const optionIndex = parseInt(elementId.split('-')[1]);
+                const optionElements = document.querySelectorAll('.game-option');
+                if (optionElements[optionIndex]) {
+                    optionElements[optionIndex].style.boxShadow = '';
+                    optionElements[optionIndex].style.transform = '';
+                }
+            }
+        });
+    }
+
+    function stopAllSpeech() {
+        if (currentUtterance) {
+            speechSynthesis.cancel();
+            currentUtterance = null;
+        }
+        
+        isSpeaking = false;
+        
+        // Reset main speaker button
+        const speakerBtn = document.getElementById('speaker-btn');
+        if (speakerBtn) {
+            speakerBtn.classList.remove('speaking');
+            speakerBtn.innerHTML = '<i class="fas fa-volume-up"></i> Read Question & Options';
+        }
+        
+        // Reset all module speaker buttons
+        const moduleSpeakers = document.querySelectorAll('.module-speaker');
+        moduleSpeakers.forEach(speaker => {
+            speaker.classList.remove('speaking');
+            speaker.innerHTML = '<i class="fas fa-volume-up"></i>';
+        });
+        
+        // Reset all option highlights
+        const optionElements = document.querySelectorAll('.game-option');
+        optionElements.forEach(option => {
+            option.style.boxShadow = '';
+            option.style.transform = '';
+        });
+    }
+
+    function stripHTML(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
+    }
+
+    // ============================================
+    // GAME FUNCTIONS
+    // ============================================
+
+    function startGame(gameName) {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        // Stop any ongoing speech from module cards
+        stopAllSpeech();
+        
+        currentGame = gameName;
+        currentActivityIndex = 0;
+        studentScore = 0;
+        gameStartTime = Date.now();
+        activityStartTimes = [Date.now()];
+        emotionHistory = [];
+        focusHistory = [];
+        
+        const game = gameData[gameName];
+        if (!game) {
+            alert('Game not found!');
+            return;
+        }
+        
+        // Show game container
+        document.getElementById('game-container').style.display = 'block';
+        
+        // Show speaker button
+        const speakerContainer = document.querySelector('.speaker-button-container');
+        if (speakerContainer) {
+            speakerContainer.style.display = 'block';
+        }
+        
+        // Show camera panel automatically when game starts
+        const iframe = document.getElementById('collapsible-iframe');
+        if (iframe.style.display === 'none' || iframe.style.display === '') {
+            iframe.style.display = 'block';
+        }
+        
+        // Send message to start detection
+        if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'start-game-detection' }, '*');
+        }
+        
+        // Update game title
+        document.getElementById('game-title').textContent = game.title;
+        
+        // Load first activity
+        loadActivity(gameName, 0);
+        
+        // Welcome message with game description
+        setTimeout(() => {
+            speakText(`Welcome to ${game.title}! ${game.fullDescription || game.description} Let's begin!`);
+        }, 500);
+    }
+
+    function loadActivity(gameName, activityIndex) {
+        const game = gameData[gameName];
+        const activity = game.activities[activityIndex];
+        
+        if (!activity) {
+            closeGame();
+            return;
+        }
+        
+        // Record activity start time
+        activityStartTimes[activityIndex] = Date.now();
+        
+        // Update counter
+        document.getElementById('game-counter').textContent = 
+            `Activity ${activityIndex + 1} of ${game.activities.length}`;
+        
+        // Update question
+        if (gameName === 'tracing') {
+            document.getElementById('game-question').innerHTML = '';
+        } else {
+            let questionHTML = activity.question;
+            if (activity.letter) {
+                questionHTML += `<div style="font-size: 5rem; color: currentColor; margin: 20px 0;">${activity.letter}</div>`;
+            }
+            document.getElementById('game-question').innerHTML = questionHTML;
+        }
+        
+        // Update options
+        const optionsContainer = document.getElementById('game-options');
+        optionsContainer.innerHTML = '';
+        
+        if (activity.options) {
+            activity.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'game-option';
+                optionElement.innerHTML = `
+                    ${option}
+                    <button class="option-speaker" onclick="readOption(${index}); event.stopPropagation();">
+                        <i class="fas fa-volume-up" style="font-size: 0.8rem;"></i>
+                    </button>
+                `;
+                optionElement.onclick = () => checkAnswer(index, gameName);
+                optionsContainer.appendChild(optionElement);
+            });
+        } else if (gameName === 'tracing') {
+            optionsContainer.innerHTML = `
+                <div style="display: flex; flex-direction: row; gap: 20px; align-items: center; justify-content: center;">
+                    <div style="flex: 1; max-width: 800px;">
+                        <div style="background: white; border: 4px solid currentColor; 
+                                    border-radius: 15px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                             
-                            <!-- Canvas Tools -->
-                            <div style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); 
-                                        padding: 10px; border-radius: 8px; border: 2px solid currentColor;">
-                                <div style="display: flex; gap: 5px; align-items: center;">
-                                    <div style="width: 25px; height: 25px; background: ${strokeColor}; 
-                                                border-radius: 50%; border: 2px solid white;"></div>
-                                    <span style="color: currentColor; font-size: 0.9rem;">Pen</span>
+                            <div style="position: relative;">
+                                <canvas id="tracing-canvas" width="700" height="500" 
+                                        style="display: block; margin: 0 auto; background: white; 
+                                            cursor: crosshair; border-radius: 8px; border: 2px solid #ddd;"></canvas>
+                                
+                                <div style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); 
+                                            padding: 10px; border-radius: 8px; border: 2px solid currentColor;">
+                                    <div style="display: flex; gap: 5px; align-items: center;">
+                                        <div style="width: 25px; height: 25px; background: ${strokeColor}; 
+                                                    border-radius: 50%; border: 2px solid white;"></div>
+                                        <span style="color: currentColor; font-size: 0.9rem;">Pen</span>
+                                    </div>
+                                </div>
+                                
+                                <div style="position: absolute; bottom: 10px; right: 10px; 
+                                            background: rgba(255,255,255,0.9); padding: 5px 10px; 
+                                            border-radius: 8px; border: 2px solid currentColor;">
+                                    <span style="color: currentColor; font-size: 0.8rem;">
+                                        700 × 500
+                                    </span>
                                 </div>
                             </div>
                             
-                            <!-- Canvas Size Indicator -->
-                            <div style="position: absolute; bottom: 10px; right: 10px; 
-                                        background: rgba(255,255,255,0.9); padding: 5px 10px; 
-                                        border-radius: 8px; border: 2px solid currentColor;">
-                                <span style="color: currentColor; font-size: 0.8rem;">
-                                    700 × 500
-                                </span>
+                            <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center;">
+                                <button class="nav-btn" onclick="clearTracingCanvas()" 
+                                        style="padding: 12px 25px;">
+                                    <i class="fas fa-eraser"></i> Clear Canvas
+                                </button>
+                                <button class="nav-btn" onclick="showTracingHint()" 
+                                        style="padding: 12px 25px; background: var(--mickey-purple);">
+                                    <i class="fas fa-volume-up"></i> Get Hint
+                                </button>
+                                <button class="nav-btn" onclick="completeTracing('${gameName}')" 
+                                        style="padding: 12px 25px; background: var(--mickey-green);">
+                                    <i class="fas fa-check"></i> I'm Done!
+                                </button>
+                            </div>
+                            
+                            <div style="margin-top: 15px; text-align: center;">
+                                <p style="color: currentColor; font-size: 0.9rem; margin: 0;">
+                                    <i class="fas fa-hand-point-up"></i> 
+                                    Draw on desktop with mouse or on mobile with your finger!
+                                </p>
                             </div>
                         </div>
-                        
-                        <!-- Control Buttons - Below the canvas -->
-                        <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center;">
-                            <button class="nav-btn" onclick="clearTracingCanvas()" 
-                                    style="padding: 12px 25px;">
-                                <i class="fas fa-eraser"></i> Clear Canvas
-                            </button>
-                            <button class="nav-btn" onclick="showTracingHint()" 
-                                    style="padding: 12px 25px; background: var(--mickey-purple);">
-                                <i class="fas fa-volume-up"></i> Get Hint
-                            </button>
-                            <button class="nav-btn" onclick="completeTracing('${gameName}')" 
-                                    style="padding: 12px 25px; background: var(--mickey-green);">
-                                <i class="fas fa-check"></i> I'm Done!
-                            </button>
-                        </div>
-                        
-                        <div style="margin-top: 15px; text-align: center;">
-                            <p style="color: currentColor; font-size: 0.9rem; margin: 0;">
-                                <i class="fas fa-hand-point-up"></i> 
-                                Draw on desktop with mouse or on mobile with your finger!
-                            </p>
-                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+            
+            // Initialize canvas for tracing
+            initializeTracingCanvas();
+        }
         
-        // Initialize canvas for tracing
-        initializeTracingCanvas();
+        // Update navigation buttons
+        document.getElementById('prev-btn').disabled = activityIndex === 0;
+        document.getElementById('next-btn').disabled = 
+            activityIndex === game.activities.length - 1;
+        
+        // Hide feedback
+        document.getElementById('game-feedback').classList.remove('show');
+        
+        // Auto-read the question for accessibility
+        setTimeout(() => readQuestionAndOptions(), 800);
     }
-    
-    // Update navigation buttons
-    document.getElementById('prev-btn').disabled = activityIndex === 0;
-    document.getElementById('next-btn').disabled = 
-        activityIndex === game.activities.length - 1;
-    
-    // Hide feedback
-    document.getElementById('game-feedback').classList.remove('show');
-}
-        function checkAnswer(selectedIndex, gameName) {
-            if (gamePaused) {
-                alert("Please complete the intervention first!");
-                return;
-            }
-            
-            const game = gameData[gameName];
-            const activity = game.activities[currentActivityIndex];
-            
-            // Calculate time taken for this activity
-            const activityTime = Date.now() - activityStartTimes[currentActivityIndex];
-            
-            // Get current emotion and focus from camera system
-            let currentEmotion = 'happy';
-            let currentFocus = 'medium';
-            
-            if (window.dualCameraDetection) {
-                currentEmotion = window.dualCameraDetection.currentEmotion || 'happy';
-                const eyeScore = window.dualCameraDetection.calculateEyeScore?.();
-                currentFocus = eyeScore?.level || 'medium';
-            }
-            
-            // Record emotion and focus for this activity
-            emotionHistory.push(currentEmotion);
-            focusHistory.push(currentFocus);
-            recordActivityCompletion(gameName, currentEmotion, currentFocus);
-            
-            // Get all option elements
-            const options = document.querySelectorAll('.game-option');
-            
-            // Remove previous classes
-            options.forEach(opt => {
-                opt.classList.remove('correct', 'wrong');
-            });
-            
-            // Check if answer is correct
-            if (selectedIndex === activity.correct) {
-                // Correct answer
-                options[selectedIndex].classList.add('correct');
-                
-                // Show feedback
-                const feedback = document.getElementById('game-feedback');
-                feedback.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <i class="fas fa-check-circle" style="color: var(--mickey-green); font-size: 2rem;"></i>
-                        <div>
-                            <strong style="color: var(--mickey-green);">Oh boy! Correct!</strong>
-                            <p style="margin: 5px 0; color: var(--mickey-white);">${activity.explanation}</p>
-                            <p style="margin: 5px 0; color: var(--mickey-yellow);">
-                                <i class="fas fa-star"></i> +${activity.points} Mickey Points!
-                            </p>
-                        </div>
-                    </div>
-                `;
-                feedback.classList.add('show');
-                
-                // Award points
-                studentScore += activity.points;
-                saveStudentProgress();
-                
-                // Auto-advance after 2 seconds
-                setTimeout(() => {
-                    if (currentActivityIndex < game.activities.length - 1) {
-                        nextActivity();
-                    } else {
-                        completeGame(gameName);
-                    }
-                }, 2000);
-            } else {
-                // Wrong answer
-                options[selectedIndex].classList.add('wrong');
-                options[activity.correct].classList.add('correct');
-                
-                // Show feedback
-                const feedback = document.getElementById('game-feedback');
-                feedback.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <i class="fas fa-times-circle" style="color: var(--mickey-red); font-size: 2rem;"></i>
-                        <div>
-                            <strong style="color: var(--mickey-red);">Let's try again!</strong>
-                            <p style="margin: 5px 0; color: var(--mickey-white);">
-                                The correct answer is: ${activity.options[activity.correct]}
-                            </p>
-                        </div>
-                    </div>
-                `;
-                feedback.classList.add('show');
-            }
+
+    function checkAnswer(selectedIndex, gameName) {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
         }
-
-        // ============================================
-        // TRACING GAME FUNCTIONS
-        // ============================================
-
-        function initializeTracingCanvas() {
-            tracingCanvas = document.getElementById('tracing-canvas');
-            if (!tracingCanvas) return;
-            
-            tracingCtx = tracingCanvas.getContext('2d');
-            
-            // Set canvas background
-            tracingCtx.fillStyle = 'white';
-            tracingCtx.fillRect(0, 0, tracingCanvas.width, tracingCanvas.height);
-            
-            // Draw faint letter outline for guidance
-            const activity = gameData[currentGame].activities[currentActivityIndex];
-            if (activity && activity.letter) {
-                drawFaintLetter(activity.letter);
-            }
-            
-            // Add event listeners for drawing
-            tracingCanvas.addEventListener('mousedown', startDrawing);
-            tracingCanvas.addEventListener('mousemove', draw);
-            tracingCanvas.addEventListener('mouseup', stopDrawing);
-            tracingCanvas.addEventListener('mouseout', stopDrawing);
-            
-            // Touch support for mobile devices
-            tracingCanvas.addEventListener('touchstart', handleTouchStart);
-            tracingCanvas.addEventListener('touchmove', handleTouchMove);
-            tracingCanvas.addEventListener('touchend', stopDrawing);
-            
-            // Add keyboard shortcuts
-            document.addEventListener('keydown', handleTracingShortcuts);
+        
+        // Stop any ongoing speech
+        stopAllSpeech();
+        
+        const game = gameData[gameName];
+        const activity = game.activities[currentActivityIndex];
+        
+        // Calculate time taken for this activity
+        const activityTime = Date.now() - activityStartTimes[currentActivityIndex];
+        
+        // Get current emotion and focus from camera system
+        let currentEmotion = 'happy';
+        let currentFocus = 'medium';
+        
+        if (window.dualCameraDetection) {
+            currentEmotion = window.dualCameraDetection.currentEmotion || 'happy';
+            const eyeScore = window.dualCameraDetection.calculateEyeScore?.();
+            currentFocus = eyeScore?.level || 'medium';
         }
-
-        function startDrawing(e) {
-            isDrawing = true;
-            [lastX, lastY] = getCoordinates(e);
-            
-            // Start drawing
-            tracingCtx.beginPath();
-            tracingCtx.moveTo(lastX, lastY);
-            tracingCtx.lineTo(lastX, lastY);
-            tracingCtx.stroke();
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            
-            e.preventDefault();
-            
-            const [x, y] = getCoordinates(e);
-            
-            tracingCtx.lineWidth = strokeWidth;
-            tracingCtx.lineCap = 'round';
-            tracingCtx.lineJoin = 'round';
-            tracingCtx.strokeStyle = strokeColor;
-            
-            tracingCtx.lineTo(x, y);
-            tracingCtx.stroke();
-            
-            [lastX, lastY] = [x, y];
-        }
-
-        function stopDrawing() {
-            if (isDrawing) {
-                tracingCtx.closePath();
-                isDrawing = false;
-            }
-        }
-
-        function handleTouchStart(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousedown', {
-                clientX: touch.clientX,
-                clientY: touch.clientY,
-                target: tracingCanvas
-            });
-            tracingCanvas.dispatchEvent(mouseEvent);
-        }
-
-        function handleTouchMove(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousemove', {
-                clientX: touch.clientX,
-                clientY: touch.clientY,
-                target: tracingCanvas
-            });
-            tracingCanvas.dispatchEvent(mouseEvent);
-        }
-
-        function getCoordinates(e) {
-            if (e.type.includes('touch')) {
-                const rect = tracingCanvas.getBoundingClientRect();
-                const touch = e.touches[0] || e.changedTouches[0];
-                return [
-                    touch.clientX - rect.left,
-                    touch.clientY - rect.top
-                ];
-            } else {
-                const rect = tracingCanvas.getBoundingClientRect();
-                return [
-                    e.clientX - rect.left,
-                    e.clientY - rect.top
-                ];
-            }
-        }
-
-        function drawFaintLetter(letter) {
-            if (!tracingCtx) return;
-            
-            tracingCtx.save();
-            tracingCtx.fillStyle = 'rgba(138, 198, 209, 0.2)'; // Light blue for guidance
-            tracingCtx.strokeStyle = 'rgba(138, 198, 209, 0.3)';
-            tracingCtx.lineWidth = 5;
-            
-            // Try to load a tracing font or use system font
-            tracingCtx.font = 'bold 280px "Comic Sans MS", sans-serif';
-            tracingCtx.textAlign = 'center';
-            tracingCtx.textBaseline = 'middle';
-            
-            // Check if standard mode is enabled
-            if (document.body.classList.contains('standard-mode')) {
-                tracingCtx.font = 'bold 280px "Fredoka One", cursive';
-            }
-            
-            // Draw stroke outline
-            tracingCtx.strokeText(letter, tracingCanvas.width / 2, tracingCanvas.height / 2);
-            
-            // Draw fill
-            tracingCtx.fillText(letter, tracingCanvas.width / 2, tracingCanvas.height / 2);
-            tracingCtx.restore();
-        }
-
-        function handleTracingShortcuts(e) {
-            if (!tracingCanvas) return;
-            
-            // Ctrl+Z or Cmd+Z to clear
-            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-                e.preventDefault();
-                clearTracingCanvas();
-            }
-            
-            // Escape key to clear
-            if (e.key === 'Escape') {
-                clearTracingCanvas();
-            }
-            
-            // Space bar to complete
-            if (e.key === ' ') {
-                e.preventDefault();
-                completeTracing(currentGame);
-            }
-            
-            // H key for hint
-            if (e.key === 'h' || e.key === 'H') {
-                e.preventDefault();
-                showTracingHint();
-            }
-        }
-
-        function clearTracingCanvas() {
-            if (!tracingCtx) return;
-            
-            // Clear canvas
-            tracingCtx.fillStyle = 'white';
-            tracingCtx.fillRect(0, 0, tracingCanvas.width, tracingCanvas.height);
-            
-            // Redraw only the faint letter
-            const activity = gameData[currentGame].activities[currentActivityIndex];
-            if (activity && activity.letter) {
-                drawFaintLetter(activity.letter);
-            }
-            
-            // Show feedback
-            const feedback = document.getElementById('game-feedback');
-            feedback.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <i class="fas fa-eraser" style="color: var(--mickey-yellow); font-size: 2rem;"></i>
-                    <div>
-                        <strong style="color: var(--mickey-yellow);">Canvas cleared!</strong>
-                        <p style="margin: 5px 0; color: var(--mickey-white);">
-                            Ready to try tracing ${activity.letter} again?
-                        </p>
-                    </div>
-                </div>
-            `;
-            feedback.classList.add('show');
-            
-            // Auto-hide feedback
-            setTimeout(() => {
-                feedback.classList.remove('show');
-            }, 2000);
-        }
-
-        function showTracingHint() {
-            const activity = gameData[currentGame].activities[currentActivityIndex];
-            if (!activity || !activity.hint) return;
-            
-            // Speak the hint using text-to-speech
-            const hintText = `Here's how to trace the letter ${activity.letter}. ${activity.hint}`;
-            speakText(hintText);
-            
-            // Show visual feedback
-            const feedback = document.getElementById('game-feedback');
-            feedback.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <i class="fas fa-volume-up" style="color: var(--mickey-purple); font-size: 2rem;"></i>
-                    <div>
-                        <strong style="color: var(--mickey-purple);">Hint for ${activity.letter}:</strong>
-                        <p style="margin: 5px 0; color: var(--mickey-white);">
-                            ${activity.hint}
-                        </p>
-                        <p style="margin: 5px 0; color: var(--mickey-yellow);">
-                            <i class="fas fa-headphones"></i> Listen carefully!
-                        </p>
-                    </div>
-                </div>
-            `;
-            feedback.classList.add('show');
-            
-            // Auto-hide feedback after 5 seconds
-            setTimeout(() => {
-                feedback.classList.remove('show');
-            }, 5000);
-        }
-
-        function completeTracing(gameName) {
-            if (gamePaused) {
-                alert("Please complete the intervention first!");
-                return;
-            }
-            
-            // Check if user has drawn something
-            const hasDrawn = checkIfCanvasHasDrawing();
-            
-            if (!hasDrawn) {
-                // Ask user to try tracing first
-                const feedback = document.getElementById('game-feedback');
-                feedback.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <i class="fas fa-pen-nib" style="color: var(--mickey-yellow); font-size: 2rem;"></i>
-                        <div>
-                            <strong style="color: var(--mickey-yellow);">Let's try tracing first!</strong>
-                            <p style="margin: 5px 0; color: var(--mickey-white);">
-                                Use your mouse or finger to trace the letter on the canvas. You can do it!
-                            </p>
-                        </div>
-                    </div>
-                `;
-                feedback.classList.add('show');
-                return;
-            }
-            
-            const game = gameData[gameName];
-            const activity = game.activities[currentActivityIndex];
-            
-            // Calculate time taken for this activity
-            const activityTime = Date.now() - activityStartTimes[currentActivityIndex];
-            
-            // Get current emotion and focus from camera system
-            let currentEmotion = 'happy';
-            let currentFocus = 'medium';
-            
-            if (window.dualCameraDetection) {
-                currentEmotion = window.dualCameraDetection.currentEmotion || 'happy';
-                const eyeScore = window.dualCameraDetection.calculateEyeScore?.();
-                currentFocus = eyeScore?.level || 'medium';
-            }
-            
-            // Record emotion and focus for this activity
-            emotionHistory.push(currentEmotion);
-            focusHistory.push(currentFocus);
-            recordActivityCompletion(gameName, currentEmotion, currentFocus);
-            
-            // Award points
-            studentScore += activity.points;
-            saveStudentProgress();
+        
+        // Record emotion and focus for this activity
+        emotionHistory.push(currentEmotion);
+        focusHistory.push(currentFocus);
+        recordActivityCompletion(gameName, currentEmotion, currentFocus);
+        
+        // Get all option elements
+        const options = document.querySelectorAll('.game-option');
+        
+        // Remove previous classes
+        options.forEach(opt => {
+            opt.classList.remove('correct', 'wrong');
+        });
+        
+        // Check if answer is correct
+        if (selectedIndex === activity.correct) {
+            // Correct answer
+            options[selectedIndex].classList.add('correct');
             
             // Show feedback
             const feedback = document.getElementById('game-feedback');
@@ -1866,10 +2030,8 @@ function loadActivity(gameName, activityIndex) {
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <i class="fas fa-check-circle" style="color: var(--mickey-green); font-size: 2rem;"></i>
                     <div>
-                        <strong style="color: var(--mickey-green);">Excellent tracing!</strong>
-                        <p style="margin: 5px 0; color: var(--mickey-white);">
-                            You traced "${activity.letter}" perfectly! Great muscle memory!
-                        </p>
+                        <strong style="color: var(--mickey-green);">Oh boy! Correct!</strong>
+                        <p style="margin: 5px 0; color: var(--mickey-white);">${activity.explanation}</p>
                         <p style="margin: 5px 0; color: var(--mickey-yellow);">
                             <i class="fas fa-star"></i> +${activity.points} Mickey Points!
                         </p>
@@ -1878,585 +2040,1240 @@ function loadActivity(gameName, activityIndex) {
             `;
             feedback.classList.add('show');
             
-            // Clean up canvas event listeners
-            if (tracingCanvas) {
-                tracingCanvas.removeEventListener('mousedown', startDrawing);
-                tracingCanvas.removeEventListener('mousemove', draw);
-                tracingCanvas.removeEventListener('mouseup', stopDrawing);
-                tracingCanvas.removeEventListener('mouseout', stopDrawing);
-                tracingCanvas.removeEventListener('touchstart', handleTouchStart);
-                tracingCanvas.removeEventListener('touchmove', handleTouchMove);
-                tracingCanvas.removeEventListener('touchend', stopDrawing);
-            }
+            // Award points
+            studentScore += activity.points;
+            saveStudentProgress();
             
-            // Auto-advance after 2 seconds
+            // Read the feedback
+            speakText(`Correct! ${activity.explanation}. You earned ${activity.points} points!`);
+            
+            // Auto-advance after 3 seconds
             setTimeout(() => {
                 if (currentActivityIndex < game.activities.length - 1) {
                     nextActivity();
                 } else {
                     completeGame(gameName);
                 }
-            }, 2000);
-        }
-
-        function checkIfCanvasHasDrawing() {
-            if (!tracingCanvas) return false;
+            }, 3000);
+        } else {
+            // Wrong answer
+            options[selectedIndex].classList.add('wrong');
+            options[activity.correct].classList.add('correct');
             
-            // Get image data from canvas
-            const imageData = tracingCtx.getImageData(0, 0, tracingCanvas.width, tracingCanvas.height);
-            const data = imageData.data;
-            
-            // Check if any pixel is not white (meaning something was drawn)
-            for (let i = 0; i < data.length; i += 4) {
-                // Check if pixel is not white (considering some transparency)
-                if (data[i] < 240 || data[i + 1] < 240 || data[i + 2] < 240) {
-                    return true;
-                }
-            }
-            
-            return false;
-        }
-
-        function previousActivity() {
-            if (gamePaused) {
-                alert("Please complete the intervention first!");
-                return;
-            }
-            
-            if (currentActivityIndex > 0) {
-                currentActivityIndex--;
-                loadActivity(currentGame, currentActivityIndex);
-            }
-        }
-
-        function nextActivity() {
-            if (gamePaused) {
-                alert("Please complete the intervention first!");
-                return;
-            }
-            
-            const game = gameData[currentGame];
-            if (currentActivityIndex < game.activities.length - 1) {
-                currentActivityIndex++;
-                loadActivity(currentGame, currentActivityIndex);
-            } else {
-                completeGame(currentGame);
-            }
-        }
-
-        function completeGame(gameName) {
-            const game = gameData[gameName];
-            
-            // Calculate total time taken
-            const totalTime = Math.round((Date.now() - gameStartTime) / 1000); // in seconds
-            
-            // Calculate average emotion and focus
-            const avgEmotion = calculateAverageEmotion();
-            const avgFocus = calculateAverageFocus();
-            
-            // Record the complete game session
-            recordGameSession(gameName, totalTime, avgEmotion, avgFocus, null, 0, studentScore);
-            
-            // Show completion screen
-            document.getElementById('game-question').innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 6rem; color: var(--mickey-yellow); margin-bottom: 20px;">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <h3 style="color: var(--mickey-red);">Congratulations!</h3>
-                    <p style="color: var(--mickey-blue); font-family: inherit; font-size: 1.3rem;">
-                        You've completed ${game.title}!
-                    </p>
-                    <div style="background: var(--mickey-yellow); padding: 20px; border-radius: 15px; 
-                                border: 4px solid currentColor; margin: 20px auto; max-width: 400px;">
-                        <h4 style="color: currentColor; margin: 0 0 10px 0;">
-                            <i class="fas fa-star"></i> Total Points Earned
-                        </h4>
-                        <p style="color: var(--mickey-red); font-size: 2rem; margin: 0;">
-                            ${studentScore} points
-                        </p>
-                        <p style="color: currentColor; margin: 10px 0 0 0; font-size: 0.9rem;">
-                            Time: ${Math.round(totalTime/60)} min ${totalTime%60} sec
+            // Show feedback
+            const feedback = document.getElementById('game-feedback');
+            feedback.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-times-circle" style="color: var(--mickey-red); font-size: 2rem;"></i>
+                    <div>
+                        <strong style="color: var(--mickey-red);">Let's try again!</strong>
+                        <p style="margin: 5px 0; color: var(--mickey-white);">
+                            The correct answer is: ${activity.options[activity.correct]}
                         </p>
                     </div>
                 </div>
             `;
+            feedback.classList.add('show');
             
-            // Hide options and navigation
-            document.getElementById('game-options').innerHTML = '';
-            document.getElementById('game-navigation').innerHTML = `
-                <button class="nav-btn" onclick="closeGame()" style="margin: 0 auto;">
-                    <i class="fas fa-check"></i> Great Job! Back to Games
-                </button>
+            // Read the feedback
+            speakText(`Let's try again! The correct answer is: ${activity.options[activity.correct]}.`);
+        }
+    }
+
+    // ============================================
+    // TRACING GAME FUNCTIONS
+    // ============================================
+
+    function initializeTracingCanvas() {
+        tracingCanvas = document.getElementById('tracing-canvas');
+        if (!tracingCanvas) return;
+        
+        tracingCtx = tracingCanvas.getContext('2d');
+        
+        // Set canvas background
+        tracingCtx.fillStyle = 'white';
+        tracingCtx.fillRect(0, 0, tracingCanvas.width, tracingCanvas.height);
+        
+        // Draw faint letter outline for guidance
+        const activity = gameData[currentGame].activities[currentActivityIndex];
+        if (activity && activity.letter) {
+            drawFaintLetter(activity.letter);
+        }
+        
+        // Add event listeners for drawing
+        tracingCanvas.addEventListener('mousedown', startDrawing);
+        tracingCanvas.addEventListener('mousemove', draw);
+        tracingCanvas.addEventListener('mouseup', stopDrawing);
+        tracingCanvas.addEventListener('mouseout', stopDrawing);
+        
+        // Touch support for mobile devices
+        tracingCanvas.addEventListener('touchstart', handleTouchStart);
+        tracingCanvas.addEventListener('touchmove', handleTouchMove);
+        tracingCanvas.addEventListener('touchend', stopDrawing);
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', handleTracingShortcuts);
+    }
+
+    function startDrawing(e) {
+        isDrawing = true;
+        [lastX, lastY] = getCoordinates(e);
+        
+        tracingCtx.beginPath();
+        tracingCtx.moveTo(lastX, lastY);
+        tracingCtx.lineTo(lastX, lastY);
+        tracingCtx.stroke();
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+        
+        e.preventDefault();
+        
+        const [x, y] = getCoordinates(e);
+        
+        tracingCtx.lineWidth = strokeWidth;
+        tracingCtx.lineCap = 'round';
+        tracingCtx.lineJoin = 'round';
+        tracingCtx.strokeStyle = strokeColor;
+        
+        tracingCtx.lineTo(x, y);
+        tracingCtx.stroke();
+        
+        [lastX, lastY] = [x, y];
+    }
+
+    function stopDrawing() {
+        if (isDrawing) {
+            tracingCtx.closePath();
+            isDrawing = false;
+        }
+    }
+
+    function handleTouchStart(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousedown', {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            target: tracingCanvas
+        });
+        tracingCanvas.dispatchEvent(mouseEvent);
+    }
+
+    function handleTouchMove(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousemove', {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            target: tracingCanvas
+        });
+        tracingCanvas.dispatchEvent(mouseEvent);
+    }
+
+    function getCoordinates(e) {
+        if (e.type.includes('touch')) {
+            const rect = tracingCanvas.getBoundingClientRect();
+            const touch = e.touches[0] || e.changedTouches[0];
+            return [
+                touch.clientX - rect.left,
+                touch.clientY - rect.top
+            ];
+        } else {
+            const rect = tracingCanvas.getBoundingClientRect();
+            return [
+                e.clientX - rect.left,
+                e.clientY - rect.top
+            ];
+        }
+    }
+
+    function drawFaintLetter(letter) {
+        if (!tracingCtx) return;
+        
+        tracingCtx.save();
+        tracingCtx.fillStyle = 'rgba(138, 198, 209, 0.2)';
+        tracingCtx.strokeStyle = 'rgba(138, 198, 209, 0.3)';
+        tracingCtx.lineWidth = 5;
+        
+        tracingCtx.font = 'bold 280px "Comic Sans MS", sans-serif';
+        tracingCtx.textAlign = 'center';
+        tracingCtx.textBaseline = 'middle';
+        
+        if (document.body.classList.contains('standard-mode')) {
+            tracingCtx.font = 'bold 280px "Fredoka One", cursive';
+        }
+        
+        tracingCtx.strokeText(letter, tracingCanvas.width / 2, tracingCanvas.height / 2);
+        tracingCtx.fillText(letter, tracingCanvas.width / 2, tracingCanvas.height / 2);
+        tracingCtx.restore();
+    }
+
+    function handleTracingShortcuts(e) {
+        if (!tracingCanvas) return;
+        
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+            e.preventDefault();
+            clearTracingCanvas();
+        }
+        
+        if (e.key === 'Escape') {
+            clearTracingCanvas();
+        }
+        
+        if (e.key === ' ') {
+            e.preventDefault();
+            completeTracing(currentGame);
+        }
+        
+        if (e.key === 'h' || e.key === 'H') {
+            e.preventDefault();
+            showTracingHint();
+        }
+    }
+
+    function clearTracingCanvas() {
+        if (!tracingCtx) return;
+        
+        tracingCtx.fillStyle = 'white';
+        tracingCtx.fillRect(0, 0, tracingCanvas.width, tracingCanvas.height);
+        
+        const activity = gameData[currentGame].activities[currentActivityIndex];
+        if (activity && activity.letter) {
+            drawFaintLetter(activity.letter);
+        }
+        
+        const feedback = document.getElementById('game-feedback');
+        feedback.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-eraser" style="color: var(--mickey-yellow); font-size: 2rem;"></i>
+                <div>
+                    <strong style="color: var(--mickey-yellow);">Canvas cleared!</strong>
+                    <p style="margin: 5px 0; color: var(--mickey-white);">
+                        Ready to try tracing ${activity.letter} again?
+                    </p>
+                </div>
+            </div>
+        `;
+        feedback.classList.add('show');
+        
+        // Speak the message
+        speakText(`Canvas cleared! Ready to try tracing ${activity.letter} again?`);
+        
+        setTimeout(() => {
+            feedback.classList.remove('show');
+        }, 2000);
+    }
+
+    function showTracingHint() {
+        const activity = gameData[currentGame].activities[currentActivityIndex];
+        if (!activity || !activity.hint) return;
+        
+        const hintText = `Here's how to trace the letter ${activity.letter}. ${activity.hint}`;
+        speakText(hintText);
+        
+        const feedback = document.getElementById('game-feedback');
+        feedback.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-volume-up" style="color: var(--mickey-purple); font-size: 2rem;"></i>
+                <div>
+                    <strong style="color: var(--mickey-purple);">Hint for ${activity.letter}:</strong>
+                    <p style="margin: 5px 0; color: var(--mickey-white);">
+                        ${activity.hint}
+                    </p>
+                    <p style="margin: 5px 0; color: var(--mickey-yellow);">
+                        <i class="fas fa-headphones"></i> Listen carefully!
+                    </p>
+                </div>
+            </div>
+        `;
+        feedback.classList.add('show');
+        
+        setTimeout(() => {
+            feedback.classList.remove('show');
+        }, 5000);
+    }
+
+    function completeTracing(gameName) {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        stopAllSpeech();
+        
+        const hasDrawn = checkIfCanvasHasDrawing();
+        
+        if (!hasDrawn) {
+            const feedback = document.getElementById('game-feedback');
+            feedback.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-pen-nib" style="color: var(--mickey-yellow); font-size: 2rem;"></i>
+                    <div>
+                        <strong style="color: var(--mickey-yellow);">Let's try tracing first!</strong>
+                        <p style="margin: 5px 0; color: var(--mickey-white);">
+                            Use your mouse or finger to trace the letter on the canvas. You can do it!
+                        </p>
+                    </div>
+                </div>
+            `;
+            feedback.classList.add('show');
+            
+            speakText("Let's try tracing first! Use your mouse or finger to trace the letter on the canvas. You can do it!");
+            return;
+        }
+        
+        const game = gameData[gameName];
+        const activity = game.activities[currentActivityIndex];
+        
+        const activityTime = Date.now() - activityStartTimes[currentActivityIndex];
+        
+        let currentEmotion = 'happy';
+        let currentFocus = 'medium';
+        
+        if (window.dualCameraDetection) {
+            currentEmotion = window.dualCameraDetection.currentEmotion || 'happy';
+            const eyeScore = window.dualCameraDetection.calculateEyeScore?.();
+            currentFocus = eyeScore?.level || 'medium';
+        }
+        
+        emotionHistory.push(currentEmotion);
+        focusHistory.push(currentFocus);
+        recordActivityCompletion(gameName, currentEmotion, currentFocus);
+        
+        studentScore += activity.points;
+        saveStudentProgress();
+        
+        const feedback = document.getElementById('game-feedback');
+        feedback.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-check-circle" style="color: var(--mickey-green); font-size: 2rem;"></i>
+                <div>
+                    <strong style="color: var(--mickey-green);">Excellent tracing!</strong>
+                    <p style="margin: 5px 0; color: var(--mickey-white);">
+                        You traced "${activity.letter}" perfectly! Great muscle memory!
+                    </p>
+                    <p style="margin: 5px 0; color: var(--mickey-yellow);">
+                        <i class="fas fa-star"></i> +${activity.points} Mickey Points!
+                    </p>
+                </div>
+            </div>
+        `;
+        feedback.classList.add('show');
+        
+        speakText(`Excellent tracing! You traced "${activity.letter}" perfectly! Great muscle memory! You earned ${activity.points} points!`);
+        
+        if (tracingCanvas) {
+            tracingCanvas.removeEventListener('mousedown', startDrawing);
+            tracingCanvas.removeEventListener('mousemove', draw);
+            tracingCanvas.removeEventListener('mouseup', stopDrawing);
+            tracingCanvas.removeEventListener('mouseout', stopDrawing);
+            tracingCanvas.removeEventListener('touchstart', handleTouchStart);
+            tracingCanvas.removeEventListener('touchmove', handleTouchMove);
+            tracingCanvas.removeEventListener('touchend', stopDrawing);
+        }
+        
+        setTimeout(() => {
+            if (currentActivityIndex < game.activities.length - 1) {
+                nextActivity();
+            } else {
+                completeGame(gameName);
+            }
+        }, 3000);
+    }
+
+    function checkIfCanvasHasDrawing() {
+        if (!tracingCanvas) return false;
+        
+        const imageData = tracingCtx.getImageData(0, 0, tracingCanvas.width, tracingCanvas.height);
+        const data = imageData.data;
+        
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i] < 240 || data[i + 1] < 240 || data[i + 2] < 240) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    function previousActivity() {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        stopAllSpeech();
+        
+        if (currentActivityIndex > 0) {
+            currentActivityIndex--;
+            loadActivity(currentGame, currentActivityIndex);
+        }
+    }
+
+    function nextActivity() {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        stopAllSpeech();
+        
+        const game = gameData[currentGame];
+        if (currentActivityIndex < game.activities.length - 1) {
+            currentActivityIndex++;
+            loadActivity(currentGame, currentActivityIndex);
+        } else {
+            completeGame(currentGame);
+        }
+    }
+
+    function completeGame(gameName) {
+        stopAllSpeech();
+        
+        const game = gameData[gameName];
+        
+        const totalTime = Math.round((Date.now() - gameStartTime) / 1000);
+        
+        const avgEmotion = calculateAverageEmotion();
+        const avgFocus = calculateAverageFocus();
+        
+        recordGameSession(gameName, totalTime, avgEmotion, avgFocus, null, 0, studentScore);
+        
+        document.getElementById('game-question').innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 6rem; color: var(--mickey-yellow); margin-bottom: 20px;">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3 style="color: var(--mickey-red);">Congratulations!</h3>
+                <p style="color: var(--mickey-blue); font-family: inherit; font-size: 1.3rem;">
+                    You've completed ${game.title}!
+                </p>
+                <div style="background: var(--mickey-yellow); padding: 20px; border-radius: 15px; 
+                            border: 4px solid currentColor; margin: 20px auto; max-width: 400px;">
+                    <h4 style="color: currentColor; margin: 0 0 10px 0;">
+                        <i class="fas fa-star"></i> Total Points Earned
+                    </h4>
+                    <p style="color: var(--mickey-red); font-size: 2rem; margin: 0;">
+                        ${studentScore} points
+                    </p>
+                    <p style="color: currentColor; margin: 10px 0 0 0; font-size: 0.9rem;">
+                        Time: ${Math.round(totalTime/60)} min ${totalTime%60} sec
+                    </p>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('game-options').innerHTML = '';
+        document.getElementById('game-navigation').innerHTML = `
+            <button class="nav-btn" onclick="closeGame()" style="margin: 0 auto;">
+                <i class="fas fa-check"></i> Great Job! Back to Games
+            </button>
+        `;
+        
+        const speakerContainer = document.querySelector('.speaker-button-container');
+        if (speakerContainer) {
+            speakerContainer.style.display = 'none';
+        }
+        
+        showNotification("Game Completed!", `You earned ${studentScore} points in ${Math.round(totalTime/60)} minutes!`, "success");
+        
+        setTimeout(() => {
+            speakText(`Congratulations! You've completed ${game.title}! You earned ${studentScore} points in ${Math.round(totalTime/60)} minutes! Great job!`);
+        }, 1000);
+    }
+
+    function calculateAverageEmotion() {
+        if (emotionHistory.length === 0) return 'neutral';
+        
+        const emotionCounts = {};
+        emotionHistory.forEach(emotion => {
+            emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+        });
+        
+        let maxCount = 0;
+        let avgEmotion = 'neutral';
+        
+        for (const [emotion, count] of Object.entries(emotionCounts)) {
+            if (count > maxCount) {
+                maxCount = count;
+                avgEmotion = emotion;
+            }
+        }
+        
+        return avgEmotion;
+    }
+
+    function calculateAverageFocus() {
+        if (focusHistory.length === 0) return 'medium';
+        
+        const focusLevels = {
+            'high': 3,
+            'medium': 2,
+            'low': 1,
+            'unknown': 1
+        };
+        
+        const totalScore = focusHistory.reduce((sum, focus) => sum + (focusLevels[focus] || 1), 0);
+        const avgScore = totalScore / focusHistory.length;
+        
+        if (avgScore >= 2.5) return 'high';
+        if (avgScore >= 1.5) return 'medium';
+        return 'low';
+    }
+
+    function closeGame() {
+        stopAllSpeech();
+        
+        document.getElementById('game-container').style.display = 'none';
+        
+        const iframe = document.getElementById('collapsible-iframe');
+        iframe.style.display = 'none';
+        
+        if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
+        }
+        
+        currentGame = null;
+        currentActivityIndex = 0;
+    }
+
+    // ============================================
+    // INTERVENTION HANDLING
+    // ============================================
+
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'SHOW_FULLSCREEN_INTERVENTION') {
+            showFullscreenIntervention(event.data);
+        } else if (event.data.type === 'INTERVENTION_FULLY_COMPLETED') {
+            hideFullscreenIntervention();
+        } else if (event.data.type === 'iframe-loaded') {
+            console.log('Camera controls iframe loaded successfully');
+        } else if (event.data.type === 'start-game-detection') {
+            console.log('Start game detection message received');
+        }
+    });
+
+    function showFullscreenIntervention(data) {
+        if (interventionActive) return;
+        
+        interventionActive = true;
+        gamePaused = true;
+        window.interventionStartTime = Date.now();
+        
+        const interventionOptions = {
+            anger: {
+                title: "Feeling Frustrated?",
+                message: "I notice you're feeling frustrated. Let's take a moment to calm down before continuing!",
+                options: [
+                    { text: "Take deep breaths", icon: "fa-wind", action: "breathe", color: "#95e1d3", response: "Great! Let's take three deep breaths together. In... and out... In... and out..." },
+                    { text: "Take a break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a 30-second break. Stretch and relax!" },
+                    { text: "Do stretching", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Excellent choice! Let's stretch our arms and shake out the frustration!" },
+                    { text: "Hear a joke", icon: "fa-grin-squint", action: "joke", color: "#e9a946", response: "Why did the math book look sad? Because it had too many problems! 😄 Ready to continue?" }
+                ]
+            },
+            disgust: {
+                title: "Not Enjoying This?",
+                message: "I see you're not enjoying this activity. Let's try something different!",
+                options: [
+                    { text: "Try different game", icon: "fa-random", action: "different", color: "#95e1d3", response: "Good idea! Let's switch to something you might enjoy more!" },
+                    { text: "Take a break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Let's take a quick break and come back refreshed!" },
+                    { text: "Explain differently", icon: "fa-comment-alt", action: "explain", color: "#ffb8c6", response: "Let me explain this in a simpler way..." },
+                    { text: "Make it easier", icon: "fa-thumbs-up", action: "easier", color: "#e9a946", response: "I'll make this easier for you! Let's start with the basics." }
+                ]
+            },
+            fear: {
+                title: "Feeling Nervous?",
+                message: "It's okay to feel a bit nervous! Let's take this slowly and build confidence!",
+                options: [
+                    { text: "Take it step by step", icon: "fa-tachometer-alt-slow", action: "slow", color: "#95e1d3", response: "Perfect! Let's break it down into smaller steps. No rush at all!" },
+                    { text: "Start with basics", icon: "fa-undo", action: "basics", color: "#8ac6d1", response: "Great idea! Let's go back to what you already know and build from there!" },
+                    { text: "Take calming break", icon: "fa-spa", action: "calm", color: "#ffb8c6", response: "Let's take a calming moment. Breathe in... and out... You're doing great!" },
+                    { text: "Get encouragement", icon: "fa-heart", action: "encourage", color: "#e9a946", response: "You're doing much better than you think! I believe in you! Let's keep going!" }
+                ]
+            },
+            sad: {
+                title: "Feeling Down?",
+                message: "I notice you're feeling a bit sad. Let's cheer you up!",
+                options: [
+                    { text: "Listen to music", icon: "fa-music", action: "music", color: "#95e1d3", response: "Let's watch a cheerful singing video to lift your mood! 🎵",  video: "https://www.youtube.com/embed/yebNIHKAC4A" },
+                    { text: "Take fun break", icon: "fa-gamepad", action: "funbreak", color: "#8ac6d1", response: "Let's take a fun break! Do a little dance or make a funny face!" },
+                    { text: "Hear a story", icon: "fa-book", action: "story", color: "#ffb8c6", response: "Once, a cat tried to learn to type and ended up writing 'meow' on every page! 😸" },
+                    { text: "Get virtual hug", icon: "fa-hands", action: "hug", color: "#e9a946", response: "Sending you a big virtual hug! 🤗 You're doing amazing!" }
+                ]
+            },
+            distracted: {
+                title: "Need to Refocus?",
+                message: "I notice your attention drifting. Let's get you back on track!",
+                options: [
+                    { text: "Do stretch", icon: "fa-running", action: "stretch", color: "#95e1d3", response: "Great! Stand up and stretch. Reach for the sky and wiggle your fingers!" },
+                    { text: "Take quick break", icon: "fa-hourglass-half", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a quick 1-minute break to reset your focus!" },
+                    { text: "Refocus eyes", icon: "fa-eye", action: "refocus", color: "#ffb8c6", response: "Excellent! Blink three times, then focus on one thing in the room. Ready?" },
+                    { text: "Take deep breaths", icon: "fa-wind", action: "breathe", color: "#e9a946", response: "Breathe in... and out... In... and out... In... and out... Feel better?" }
+                ]
+            }
+        };
+        
+        const interventionData = interventionOptions[data.emotion] || interventionOptions.anger;
+        const options = data.options || interventionData.options;
+        
+        createInterventionOptions(options, data.emotion);
+        
+        const overlay = document.getElementById('fullscreen-intervention-overlay');
+        overlay.classList.add('active');
+        
+        disableAllGameInteractions();
+        
+        startInterventionTimer();
+        
+        speakText(data.message || interventionData.message);
+        
+        console.log(`🎮 Game Center: Intervention shown for ${data.emotion}`);
+    }
+
+    function createInterventionOptions(options, emotion) {
+        const container = document.getElementById('intervention-options-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        options.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'intervention-option-fullscreen';
+            optionElement.style.borderColor = option.color;
+            
+            optionElement.innerHTML = `
+                <i class="fas ${option.icon}" style="color: ${option.color};"></i>
+                <span>${option.text}</span>
             `;
             
-            // Show notification
-            showNotification("Game Completed!", `You earned ${studentScore} points in ${Math.round(totalTime/60)} minutes!`, "success");
-        }
-
-        function calculateAverageEmotion() {
-            if (emotionHistory.length === 0) return 'neutral';
-            
-            const emotionCounts = {};
-            emotionHistory.forEach(emotion => {
-                emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+            optionElement.addEventListener('click', (e) => {
+                handleInterventionOptionClick(option, emotion, e);
             });
             
-            let maxCount = 0;
-            let avgEmotion = 'neutral';
-            
-            for (const [emotion, count] of Object.entries(emotionCounts)) {
-                if (count > maxCount) {
-                    maxCount = count;
-                    avgEmotion = emotion;
-                }
-            }
-            
-            return avgEmotion;
-        }
-
-        function calculateAverageFocus() {
-            if (focusHistory.length === 0) return 'medium';
-            
-            const focusLevels = {
-                'high': 3,
-                'medium': 2,
-                'low': 1,
-                'unknown': 1
-            };
-            
-            const totalScore = focusHistory.reduce((sum, focus) => sum + (focusLevels[focus] || 1), 0);
-            const avgScore = totalScore / focusHistory.length;
-            
-            if (avgScore >= 2.5) return 'high';
-            if (avgScore >= 1.5) return 'medium';
-            return 'low';
-        }
-
-        function closeGame() {
-            document.getElementById('game-container').style.display = 'none';
-            
-            // Hide camera panel when game ends
-            const iframe = document.getElementById('collapsible-iframe');
-            iframe.style.display = 'none';
-            
-            // Send message to stop detection
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
-            }
-            
-            currentGame = null;
-            currentActivityIndex = 0;
-        }
-
-        // ============================================
-        // INTERVENTION HANDLING
-        // ============================================
-
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'SHOW_FULLSCREEN_INTERVENTION') {
-                showFullscreenIntervention(event.data);
-            } else if (event.data.type === 'INTERVENTION_FULLY_COMPLETED') {
-                hideFullscreenIntervention();
-            } else if (event.data.type === 'iframe-loaded') {
-                console.log('Camera controls iframe loaded successfully');
-            } else if (event.data.type === 'start-game-detection') {
-                console.log('Start game detection message received');
-            }
+            container.appendChild(optionElement);
         });
+        
+        console.log(`✅ Created ${options.length} intervention options for ${emotion}`);
+    }
 
-        function showFullscreenIntervention(data) {
-            if (interventionActive) return;
+    function showInterventionVideo(videoUrl, responseText) {
+        console.log('🎬 Creating video player for:', videoUrl);
+        
+        if (currentUtterance) {
+            speechSynthesis.cancel();
+            currentUtterance = null;
+        }
+        
+        const videoContainer = document.createElement('div');
+        videoContainer.id = 'intervention-video-container';
+        videoContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        `;
+        
+        let videoId = videoUrl;
+        if (videoUrl.includes('youtube.com/embed/')) {
+            videoId = videoUrl.split('youtube.com/embed/')[1].split('?')[0];
+        } else if (videoUrl.includes('youtu.be/')) {
+            videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+        }
+        
+        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+        
+        videoContainer.innerHTML = `
+            <div style="width: 90%; max-width: 800px; margin: 0 auto;">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; margin-bottom: 20px;">
+                    <iframe 
+                        src="${embedUrl}"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 10px;"
+                        allow="autoplay; encrypted-media; picture-in-picture; accelerometer; gyroscope"
+                        allowfullscreen
+                        frameborder="0">
+                    </iframe>
+                </div>
+                <div style="text-align: center; padding: 0 20px;">
+                    <button id="close-video-btn" style="
+                        padding: 12px 30px;
+                        background: var(--mickey-green);
+                        color: white;
+                        border: none;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        font-family: inherit;
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        transition: all 0.3s;
+                    ">
+                        <i class="fas fa-check"></i> I'm Feeling Better!
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(videoContainer);
+        
+        document.getElementById('close-video-btn').addEventListener('click', () => {
+            console.log('🎬 Closing video player');
+            if (document.body.contains(videoContainer)) {
+                document.body.removeChild(videoContainer);
+            }
             
-            interventionActive = true;
-            gamePaused = true;
-            window.interventionStartTime = Date.now();
-            
-            // Get intervention data
-            const interventionOptions = {
-                anger: {
-                    title: "Feeling Frustrated?",
-                    message: "I notice you're feeling frustrated. Let's take a moment to calm down before continuing!",
-                    options: [
-                        { text: "Take deep breaths", icon: "fa-wind", action: "breathe", color: "#95e1d3", response: "Great! Let's take three deep breaths together. In... and out... In... and out..." },
-                        { text: "Take a break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a 30-second break. Stretch and relax!" },
-                        { text: "Do stretching", icon: "fa-running", action: "stretch", color: "#ffb8c6", response: "Excellent choice! Let's stretch our arms and shake out the frustration!" },
-                        { text: "Hear a joke", icon: "fa-grin-squint", action: "joke", color: "#e9a946", response: "Why did the math book look sad? Because it had too many problems! 😄 Ready to continue?" }
-                    ]
-                },
-                disgust: {
-                    title: "Not Enjoying This?",
-                    message: "I see you're not enjoying this activity. Let's try something different!",
-                    options: [
-                        { text: "Try different activity", icon: "fa-random", action: "different", color: "#95e1d3", response: "Good idea! Let's switch to something you might enjoy more!" },
-                        { text: "Take a break", icon: "fa-coffee", action: "break", color: "#8ac6d1", response: "Let's take a quick break and come back refreshed!" },
-                        { text: "Explain differently", icon: "fa-comment-alt", action: "explain", color: "#ffb8c6", response: "Let me explain this in a simpler way..." },
-                        { text: "Make it easier", icon: "fa-thumbs-up", action: "easier", color: "#e9a946", response: "I'll make this easier for you! Let's start with the basics." }
-                    ]
-                },
-                fear: {
-                    title: "Feeling Nervous?",
-                    message: "It's okay to feel a bit nervous! Let's take this slowly and build confidence!",
-                    options: [
-                        { text: "Take it step by step", icon: "fa-tachometer-alt-slow", action: "slow", color: "#95e1d3", response: "Perfect! Let's break it down into smaller steps. No rush at all!" },
-                        { text: "Start with basics", icon: "fa-undo", action: "basics", color: "#8ac6d1", response: "Great idea! Let's go back to what you already know and build from there!" },
-                        { text: "Take calming break", icon: "fa-spa", action: "calm", color: "#ffb8c6", response: "Let's take a calming moment. Breathe in... and out... You're doing great!" },
-                        { text: "Get encouragement", icon: "fa-heart", action: "encourage", color: "#e9a946", response: "You're doing much better than you think! I believe in you! Let's keep going!" }
-                    ]
-                },
-                sad: {
-                    title: "Feeling Down?",
-                    message: "I notice you're feeling a bit sad. Let's cheer you up!",
-                    options: [
-                        { text: "Listen to music", icon: "fa-music", action: "music", color: "#95e1d3", response: "Music always helps! Imagine your favorite happy song playing right now! 🎵" },
-                        { text: "Take fun break", icon: "fa-gamepad", action: "funbreak", color: "#8ac6d1", response: "Let's take a fun break! Do a little dance or make a funny face!" },
-                        { text: "Hear a story", icon: "fa-book", action: "story", color: "#ffb8c6", response: "Once, a cat tried to learn to type and ended up writing 'meow' on every page! 😸" },
-                        { text: "Get virtual hug", icon: "fa-hands", action: "hug", color: "#e9a946", response: "Sending you a big virtual hug! 🤗 You're doing amazing!" }
-                    ]
-                },
-                distracted: {
-                    title: "Need to Refocus?",
-                    message: "I notice your attention drifting. Let's get you back on track!",
-                    options: [
-                        { text: "Do stretch", icon: "fa-running", action: "stretch", color: "#95e1d3", response: "Great! Stand up and stretch. Reach for the sky and wiggle your fingers!" },
-                        { text: "Take quick break", icon: "fa-hourglass-half", action: "break", color: "#8ac6d1", response: "Perfect! Let's take a quick 1-minute break to reset your focus!" },
-                        { text: "Refocus eyes", icon: "fa-eye", action: "refocus", color: "#ffb8c6", response: "Excellent! Blink three times, then focus on one thing in the room. Ready?" },
-                        { text: "Take deep breaths", icon: "fa-wind", action: "breathe", color: "#e9a946", response: "Breathe in... and out... In... and out... In... and out... Feel better?" }
-                    ]
+            setTimeout(() => {
+                hideFullscreenIntervention();
+            }, 500);
+        });
+        
+        setTimeout(() => {
+            if (document.getElementById('intervention-video-container') && 
+                document.body.contains(videoContainer)) {
+                console.log('🎬 Auto-closing video after 3 minutes');
+                document.body.removeChild(videoContainer);
+                hideFullscreenIntervention();
+            }
+        }, 180000);
+    }
+
+    
+    function showBreakTimer() {
+        console.log('⏰ Creating break timer interface');
+        
+        const timerContainer = document.createElement('div');
+        timerContainer.id = 'break-timer-container';
+        timerContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        `;
+        
+        const breakDuration = 30;
+        let timeRemaining = breakDuration;
+        let timerInterval = null;
+        
+        timerContainer.innerHTML = `
+            <div style="
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 20px;
+                border: 5px solid var(--mickey-blue);
+                padding: 40px;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            ">                    
+                <div id="timer-display" style="
+                    font-size: 4rem;
+                    font-weight: bold;
+                    color: var(--mickey-red);
+                    margin: 20px 0;
+                    font-family: 'Fredoka One', cursive;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+                ">
+                    ${formatTime(timeRemaining)}
+                </div>
+                
+                <div style="
+                    width: 100%;
+                    height: 20px;
+                    background: rgba(233, 169, 70, 0.3);
+                    border-radius: 10px;
+                    margin: 20px 0;
+                    overflow: hidden;
+                ">
+                    <div id="timer-progress" style="
+                        width: ${(timeRemaining / breakDuration) * 100}%;
+                        height: 100%;
+                        background: linear-gradient(90deg, var(--mickey-green), var(--mickey-blue));
+                        border-radius: 10px;
+                        transition: width 1s linear;
+                    "></div>
+                </div>
+                
+                <div style="
+                    color: var(--mickey-black);
+                    font-size: 1.2rem;
+                    margin: 20px 0;
+                    line-height: 1.5;
+                    font-family: inherit;
+                ">
+                    Let's take a <strong style="color: var(--mickey-blue);">30-second break</strong>!<br>
+                    Stretch, breathe, and relax! 😊
+                </div>
+                
+                <div style="
+                    background: var(--mickey-white);
+                    border: 3px solid var(--mickey-black);
+                    border-radius: 20px;
+                    padding: 15px;
+                    margin: 20px 0;
+                    position: relative;
+                    animation: pulse 2s infinite;
+                ">
+                    <div style="color: var(--mickey-black); font-size: 1rem;">
+                        <i class="fas fa-volume-up" style="color: var(--mickey-blue); margin-right: 10px;"></i>
+                        "Come back when the timer ends!"
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <button id="extend-break-btn" style="
+                        padding: 12px 25px;
+                        background: var(--mickey-yellow);
+                        color: var(--mickey-black);
+                        border: 3px solid var(--mickey-black);
+                        border-radius: 15px;
+                        cursor: pointer;
+                        font-family: inherit;
+                        font-size: 1rem;
+                        font-weight: bold;
+                        transition: all 0.3s;
+                    ">
+                        <i class="fas fa-plus"></i> Add 30s
+                    </button>
+                    
+                    <button id="end-break-btn" style="
+                        padding: 12px 25px;
+                        background: var(--mickey-green);
+                        color: white;
+                        border: 3px solid var(--mickey-black);
+                        border-radius: 15px;
+                        cursor: pointer;
+                        font-family: inherit;
+                        font-size: 1rem;
+                        font-weight: bold;
+                        transition: all 0.3s;
+                        display: none;
+                    ">
+                        <i class="fas fa-check"></i> I'm Ready!
+                    </button>
+                </div>
+                
+                <button id="skip-break-btn" style="
+                    padding: 10px 20px;
+                    background: transparent;
+                    color: var(--mickey-pink);
+                    border: 2px solid var(--mickey-pink);
+                    border-radius: 10px;
+                    cursor: pointer;
+                    font-family: inherit;
+                    font-size: 0.9rem;
+                    margin-top: 20px;
+                    transition: all 0.3s;
+                ">
+                    <i class="fas fa-forward"></i> Skip Break
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(timerContainer);
+        
+        startBreakTimer();
+        
+        function startBreakTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                
+                document.getElementById('timer-display').textContent = formatTime(timeRemaining);
+                
+                const progressPercent = (timeRemaining / breakDuration) * 100;
+                document.getElementById('timer-progress').style.width = `${progressPercent}%`;
+                
+                if (timeRemaining <= 10) {
+                    document.getElementById('timer-display').style.color = 'var(--mickey-red)';
+                    document.getElementById('timer-progress').style.background = 'linear-gradient(90deg, var(--mickey-red), var(--mickey-pink))';
+                } else if (timeRemaining <= 20) {
+                    document.getElementById('timer-display').style.color = 'var(--mickey-yellow)';
+                    document.getElementById('timer-progress').style.background = 'linear-gradient(90deg, var(--mickey-yellow), var(--mickey-green))';
                 }
-            };
-            
-            const interventionData = interventionOptions[data.emotion] || interventionOptions.anger;
-            const options = data.options || interventionData.options;
-            
-            // Create options
-            createInterventionOptions(options, data.emotion);
-            
-            // Show the intervention overlay
-            const overlay = document.getElementById('fullscreen-intervention-overlay');
-            overlay.classList.add('active');
-            
-            // Disable all game interactions
-            disableAllGameInteractions();
-            
-            // Start timer
-            startInterventionTimer();
-            
-            // Speak intervention message
-            speakText(data.message || interventionData.message);
-            
-            console.log(`🎮 Game Center: Intervention shown for ${data.emotion}`);
+                
+                if (timeRemaining <= 5) {
+                    document.getElementById('end-break-btn').style.display = 'block';
+                }
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    endBreakTimer();
+                }
+            }, 1000);
         }
-
-        function createInterventionOptions(options, emotion) {
-            const container = document.getElementById('intervention-options-container');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            options.forEach((option, index) => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'intervention-option-fullscreen';
-                optionElement.style.borderColor = option.color;
-                
-                optionElement.innerHTML = `
-                    <i class="fas ${option.icon}" style="color: ${option.color};"></i>
-                    <span>${option.text}</span>
-                `;
-                
-                optionElement.addEventListener('click', (e) => {
-                    handleInterventionOptionClick(option, emotion, e);
-                });
-                
-                container.appendChild(optionElement);
-            });
-            
-            console.log(`✅ Created ${options.length} intervention options for ${emotion}`);
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
-
-        function handleInterventionOptionClick(option, emotion, event) {
-            console.log(`✅ Intervention option selected: ${option.action} for ${emotion}`);
+        
+        function endBreakTimer() {
+            console.log('⏰ Break time is over!');
             
-            // Calculate time taken to choose intervention
-            const interventionTime = Math.round((Date.now() - window.interventionStartTime) / 1000);
-            
-            // Record intervention selection
-            recordInterventionSelection(option.action, emotion, interventionTime);
-            
-            // Disable all options to prevent multiple clicks
-            const options = document.querySelectorAll('.intervention-option-fullscreen');
-            options.forEach(opt => {
-                opt.style.pointerEvents = 'none';
-                opt.style.opacity = '0.6';
+            speakText("Break time is over! Let's come back to the game refreshed and ready to learn!", () => {
+                if (document.body.contains(timerContainer)) {
+                    document.body.removeChild(timerContainer);
+                }
+                
+                setTimeout(() => {
+                    hideFullscreenIntervention();
+                }, 1000);
             });
+        }
+        
+        document.getElementById('extend-break-btn').addEventListener('click', () => {
+            timeRemaining += 30;
+            breakDuration += 30;
+            console.log('⏰ Break extended by 30 seconds');
             
-            // Highlight selected option
-            event.target.closest('.intervention-option-fullscreen').style.borderColor = '#95e1d3';
-            event.target.closest('.intervention-option-fullscreen').style.boxShadow = '0 0 30px #95e1d3';
+            speakText("Break extended! Take an extra 30 seconds to relax.");
+        });
+        
+        document.getElementById('end-break-btn').addEventListener('click', () => {
+            console.log('⏰ User ended break early');
+            clearInterval(timerInterval);
+            endBreakTimer();
+        });
+        
+        document.getElementById('skip-break-btn').addEventListener('click', () => {
+            console.log('⏰ User skipped break');
+            clearInterval(timerInterval);
             
-            // Speak the option response
+            if (document.body.contains(timerContainer)) {
+                document.body.removeChild(timerContainer);
+            }
+            
+            hideFullscreenIntervention();
+        });
+        
+        setTimeout(() => {
+            if (document.getElementById('break-timer-container') && 
+                document.body.contains(timerContainer)) {
+                console.log('⏰ Auto-ending break after 5 minutes');
+                clearInterval(timerInterval);
+                endBreakTimer();
+            }
+        }, 300000);
+    }
+
+    function handleInterventionOptionClick(option, emotion, event) {
+        console.log(`✅ Intervention option selected: ${option.action} for ${emotion}`);
+        
+        const interventionTime = Math.round((Date.now() - window.interventionStartTime) / 1000);
+        
+        recordInterventionSelection(option.action, emotion, interventionTime);
+        
+        const options = document.querySelectorAll('.intervention-option-fullscreen');
+        options.forEach(opt => {
+            opt.style.pointerEvents = 'none';
+            opt.style.opacity = '0.6';
+        });
+        
+        event.target.closest('.intervention-option-fullscreen').style.borderColor = '#95e1d3';
+        event.target.closest('.intervention-option-fullscreen').style.boxShadow = '0 0 30px #95e1d3';
+        
+        if (option.action === 'break') {
+            console.log('⏰ Break option selected - speaking response first');
+            
             speakText(option.response, () => {
-                // Hide intervention after speech completes
+                console.log('✅ Finished speaking, now showing timer...');
+                
+                showBreakTimer();
+            });
+        } 
+        else if (option.video) {
+            console.log('📺 Option has video:', option.video);
+            
+            speakText(option.response, () => {
+                console.log('✅ Finished speaking, now showing video...');
+                
+                setTimeout(() => {
+                    showInterventionVideo(option.video, "Now let's watch a cheerful singing video!");
+                }, 500);
+            });
+        } else {
+            console.log('🎤 No video, just speaking response');
+            speakText(option.response, () => {
                 setTimeout(() => {
                     hideFullscreenIntervention();
                 }, 500);
             });
         }
+    }
 
-        function startInterventionTimer() {
-            const timerElement = document.getElementById('intervention-timer');
-            if (!timerElement) return;
-            
-            let seconds = 0;
-            window.interventionTimer = setInterval(() => {
-                seconds++;
-                timerElement.textContent = `Complete an option to continue (${seconds}s)`;
-            }, 1000);
+    function startInterventionTimer() {
+        const timerElement = document.getElementById('intervention-timer');
+        if (!timerElement) return;
+        
+        let seconds = 0;
+        window.interventionTimer = setInterval(() => {
+            seconds++;
+            timerElement.textContent = `Complete an option to continue (${seconds}s)`;
+        }, 1000);
+    }
+
+    function hideFullscreenIntervention() {
+        if (!interventionActive) return;
+        
+        interventionActive = false;
+        gamePaused = false;
+        
+        if (currentUtterance) {
+            speechSynthesis.cancel();
+            currentUtterance = null;
         }
-
-        function hideFullscreenIntervention() {
-            if (!interventionActive) return;
-            
-            interventionActive = false;
-            gamePaused = false;
-            
-            // Stop any ongoing speech
-            if (currentUtterance) {
-                speechSynthesis.cancel();
-                currentUtterance = null;
-            }
-            
-            // Hide the intervention overlay
-            const overlay = document.getElementById('fullscreen-intervention-overlay');
-            overlay.classList.remove('active');
-            
-            // Clear options
-            const optionsContainer = document.getElementById('intervention-options-container');
-            if (optionsContainer) {
-                optionsContainer.innerHTML = '';
-            }
-            
-            // Stop timer
-            stopInterventionTimer();
-            
-            // Re-enable all game interactions
-            enableAllGameInteractions();
-            
-            console.log('🎮 Game Center: Intervention completed');
+        
+        const videoContainer = document.getElementById('intervention-video-container');
+        if (videoContainer) {
+            document.body.removeChild(videoContainer);
         }
-
-        function stopInterventionTimer() {
-            if (window.interventionTimer) {
-                clearInterval(window.interventionTimer);
-                window.interventionTimer = null;
-            }
-            
-            const timer = document.getElementById('intervention-timer');
-            if (timer) {
-                timer.textContent = 'Complete an option to continue';
-                timer.style.color = '#ffb8c6';
-                timer.style.borderColor = '#ffb8c6';
-            }
+        
+        const overlay = document.getElementById('fullscreen-intervention-overlay');
+        overlay.classList.remove('active');
+        
+        const optionsContainer = document.getElementById('intervention-options-container');
+        if (optionsContainer) {
+            optionsContainer.innerHTML = '';
         }
+        
+        stopInterventionTimer();
+        
+        enableAllGameInteractions();
+        
+        console.log('🎮 Game Center: Intervention completed');
+    }
 
-        function disableAllGameInteractions() {
-            // Disable game container if visible
-            const gameContainer = document.getElementById('game-container');
-            if (gameContainer.style.display !== 'none') {
-                const gameButtons = document.querySelectorAll('.game-option, .nav-btn, .game-close');
-                gameButtons.forEach(button => {
-                    button.style.pointerEvents = 'none';
-                    button.style.opacity = '0.5';
-                });
-            }
-            
-            // Disable game cards
-            const gameCards = document.querySelectorAll('.module-card');
-            gameCards.forEach(card => {
-                card.style.pointerEvents = 'none';
-                card.style.opacity = '0.5';
+    function stopInterventionTimer() {
+        if (window.interventionTimer) {
+            clearInterval(window.interventionTimer);
+            window.interventionTimer = null;
+        }
+        
+        const timer = document.getElementById('intervention-timer');
+        if (timer) {
+            timer.textContent = 'Complete an option to continue';
+            timer.style.color = '#ffb8c6';
+            timer.style.borderColor = '#ffb8c6';
+        }
+    }
+
+    function disableAllGameInteractions() {
+        const gameContainer = document.getElementById('game-container');
+        if (gameContainer.style.display !== 'none') {
+            const gameButtons = document.querySelectorAll('.game-option, .nav-btn, .game-close, #speaker-btn');
+            gameButtons.forEach(button => {
+                button.style.pointerEvents = 'none';
+                button.style.opacity = '0.5';
             });
-            
-            // Disable navigation tabs
-            const navTabs = document.querySelectorAll('.nav-tab');
-            navTabs.forEach(tab => {
-                tab.style.pointerEvents = 'none';
-                tab.style.opacity = '0.5';
-            });
-            
-            // Disable camera iframe interaction
-            const iframe = document.getElementById('collapsible-iframe');
-            iframe.style.pointerEvents = 'none';
-            
-            // Disable close button
-            const closeBtn = document.getElementById('intervention-close-btn');
-            if (closeBtn) {
-                closeBtn.disabled = true;
-                closeBtn.classList.add('disabled');
-            }
         }
-
-        function enableAllGameInteractions() {
-            // Enable game container if visible
-            const gameContainer = document.getElementById('game-container');
-            if (gameContainer.style.display !== 'none') {
-                const gameButtons = document.querySelectorAll('.game-option, .nav-btn, .game-close');
-                gameButtons.forEach(button => {
-                    button.style.pointerEvents = 'auto';
-                    button.style.opacity = '1';
-                });
-            }
-            
-            // Enable game cards
-            const gameCards = document.querySelectorAll('.module-card');
-            gameCards.forEach(card => {
-                card.style.pointerEvents = 'auto';
-                card.style.opacity = '1';
-            });
-            
-            // Enable navigation tabs
-            const navTabs = document.querySelectorAll('.nav-tab');
-            navTabs.forEach(tab => {
-                tab.style.pointerEvents = 'auto';
-                tab.style.opacity = '1';
-            });
-            
-            // Enable camera iframe interaction
-            const iframe = document.getElementById('collapsible-iframe');
-            iframe.style.pointerEvents = 'auto';
-            
-            // Enable close button
-            const closeBtn = document.getElementById('intervention-close-btn');
-            if (closeBtn) {
-                closeBtn.disabled = false;
-                closeBtn.classList.remove('disabled');
-            }
-        }
-
-        // ============================================
-        // HELPER FUNCTIONS
-        // ============================================
-
-        function speakText(text, onComplete = null) {
-            if (!('speechSynthesis' in window)) {
-                if (onComplete) setTimeout(onComplete, 2000);
-                return;
-            }
-            
-            // Stop any current speech
-            if (currentUtterance) {
-                speechSynthesis.cancel();
-            }
-            
-            // Create utterance
-            currentUtterance = new SpeechSynthesisUtterance(text);
-            currentUtterance.rate = 0.9;
-            currentUtterance.pitch = 1.2;
-            currentUtterance.volume = 1;
-            
-            // Get friendly voice
-            const voices = speechSynthesis.getVoices();
-            const friendlyVoice = voices.find(voice => 
-                voice.name.includes('Child') || 
-                voice.name.includes('Kids') ||
-                voice.lang.includes('en')
-            );
-            
-            if (friendlyVoice) {
-                currentUtterance.voice = friendlyVoice;
-            }
-            
-            // Event handlers
-            currentUtterance.onstart = () => {
-                console.log('🎤 Speaking:', text);
-            };
-            
-            currentUtterance.onend = () => {
-                console.log('✅ Finished speaking');
-                currentUtterance = null;
-                
-                if (onComplete) {
-                    setTimeout(onComplete, 500);
-                }
-            };
-            
-            currentUtterance.onerror = (event) => {
-                console.error('❌ Speech synthesis error:', event);
-                currentUtterance = null;
-                
-                if (onComplete) {
-                    setTimeout(onComplete, 500);
-                }
-            };
-            
-            // Start speaking
-            speechSynthesis.speak(currentUtterance);
-        }
-
-        function toggleCameraPanel() {
-            if (gamePaused) {
-                alert("Please complete the intervention first!");
-                return;
-            }
-            
-            const iframe = document.getElementById('collapsible-iframe');
-            
-            if (iframe.style.display === 'none' || iframe.style.display === '') {
-                iframe.style.display = 'block';
-                
-                // Initialize camera when shown
-                setTimeout(() => {
-                    if (iframe.contentWindow) {
-                        iframe.contentWindow.postMessage({ type: 'initialize-camera' }, '*');
-                    }
-                }, 500);
-            } else {
-                iframe.style.display = 'none';
-                
-                // Send message to stop detection
-                if (iframe.contentWindow) {
-                    iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
-                }
-            }
-        }
-
-        function loadStudentProgress() {
-            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
-            if (progress.points) {
-                studentScore = progress.points;
-            }
-        }
-
-        function saveStudentProgress() {
-            const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
-            progress.points = studentScore;
-            progress.lastPlayed = new Date().toISOString();
-            localStorage.setItem('studentProgress', JSON.stringify(progress));
-        }
-
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-
-        window.addEventListener('load', function() {
-            const savedName = localStorage.getItem('studentName');
-            if (!savedName) {
-                window.location.href = 'welcome.html';
-                return;
-            }
-            
-            // Initialize settings
-            initializeSettings();
-            
-            // Load student progress
-            loadStudentProgress();
-            
-            // Initialize speech synthesis
-            if ('speechSynthesis' in window) {
-                // Warm up speech synthesis
-                speechSynthesis.getVoices();
-            }
+        
+        const gameCards = document.querySelectorAll('.module-card');
+        gameCards.forEach(card => {
+            card.style.pointerEvents = 'none';
+            card.style.opacity = '0.5';
         });
-    </script>
+        
+        const navTabs = document.querySelectorAll('.nav-tab');
+        navTabs.forEach(tab => {
+            tab.style.pointerEvents = 'none';
+            tab.style.opacity = '0.5';
+        });
+        
+        const iframe = document.getElementById('collapsible-iframe');
+        iframe.style.pointerEvents = 'none';
+        
+        const closeBtn = document.getElementById('intervention-close-btn');
+        if (closeBtn) {
+            closeBtn.disabled = true;
+            closeBtn.classList.add('disabled');
+        }
+    }
+
+    function enableAllGameInteractions() {
+        const gameContainer = document.getElementById('game-container');
+        if (gameContainer.style.display !== 'none') {
+            const gameButtons = document.querySelectorAll('.game-option, .nav-btn, .game-close, #speaker-btn');
+            gameButtons.forEach(button => {
+                button.style.pointerEvents = 'auto';
+                button.style.opacity = '1';
+            });
+        }
+        
+        const gameCards = document.querySelectorAll('.module-card');
+        gameCards.forEach(card => {
+            card.style.pointerEvents = 'auto';
+            card.style.opacity = '1';
+        });
+        
+        const navTabs = document.querySelectorAll('.nav-tab');
+        navTabs.forEach(tab => {
+            tab.style.pointerEvents = 'auto';
+            tab.style.opacity = '1';
+        });
+        
+        const iframe = document.getElementById('collapsible-iframe');
+        iframe.style.pointerEvents = 'auto';
+        
+        const closeBtn = document.getElementById('intervention-close-btn');
+        if (closeBtn) {
+            closeBtn.disabled = false;
+            closeBtn.classList.remove('disabled');
+        }
+    }
+
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+
+    function toggleCameraPanel() {
+        if (gamePaused) {
+            alert("Please complete the intervention first!");
+            return;
+        }
+        
+        const iframe = document.getElementById('collapsible-iframe');
+        
+        if (iframe.style.display === 'none' || iframe.style.display === '') {
+            iframe.style.display = 'block';
+            
+            setTimeout(() => {
+                if (iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({ type: 'initialize-camera' }, '*');
+                }
+            }, 500);
+        } else {
+            iframe.style.display = 'none';
+            
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'stop-game-detection' }, '*');
+            }
+        }
+    }
+
+    function loadStudentProgress() {
+        const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
+        if (progress.points) {
+            studentScore = progress.points;
+        }
+    }
+
+    function saveStudentProgress() {
+        const progress = JSON.parse(localStorage.getItem('studentProgress') || '{}');
+        progress.points = studentScore;
+        progress.lastPlayed = new Date().toISOString();
+        localStorage.setItem('studentProgress', JSON.stringify(progress));
+    }
+
+    // ============================================
+    // KEYBOARD SHORTCUTS
+    // ============================================
+
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+R or Cmd+R to read question and options
+        if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+            e.preventDefault();
+            readQuestionAndOptions();
+        }
+        
+        // Space bar to read current question
+        if (e.key === ' ' && !e.target.matches('input, textarea, button')) {
+            e.preventDefault();
+            readQuestionAndOptions();
+        }
+        
+        // Number keys 1-4 to read specific options
+        if (e.key >= '1' && e.key <= '4') {
+            const optionIndex = parseInt(e.key) - 1;
+            e.preventDefault();
+            readOption(optionIndex);
+        }
+        
+        // Number keys 1-3 to speak module descriptions
+        if (e.key >= '1' && e.key <= '3' && document.getElementById('game-container').style.display === 'none') {
+            const moduleIndex = parseInt(e.key) - 1;
+            const modules = ['letters', 'spelling', 'tracing'];
+            if (moduleIndex < modules.length) {
+                e.preventDefault();
+                speakModuleDescription(modules[moduleIndex]);
+            }
+        }
+        
+        // M key to speak all available games
+        if ((e.key === 'm' || e.key === 'M') && document.getElementById('game-container').style.display === 'none') {
+            e.preventDefault();
+            speakAllGames();
+        }
+        
+        // Escape to stop speech
+        if (e.key === 'Escape' && isSpeaking) {
+            e.preventDefault();
+            stopAllSpeech();
+        }
+        
+        // Existing tracing shortcuts
+        if (!tracingCanvas) return;
+        
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+            e.preventDefault();
+            clearTracingCanvas();
+        }
+        
+        if (e.key === ' ') {
+            e.preventDefault();
+            completeTracing(currentGame);
+        }
+        
+        if (e.key === 'h' || e.key === 'H') {
+            e.preventDefault();
+            showTracingHint();
+        }
+    });
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    window.addEventListener('load', function() {
+        const savedName = localStorage.getItem('studentName');
+        if (!savedName) {
+            window.location.href = 'welcome.html';
+            return;
+        }
+        
+        // Initialize settings
+        initializeSettings();
+        
+        // Load student progress
+        loadStudentProgress();
+        
+        // Initialize speech synthesis
+        if ('speechSynthesis' in window) {
+            // Warm up speech synthesis
+            speechSynthesis.getVoices();
+        }
+        
+        // Auto-read welcome message
+        setTimeout(() => {
+            const studentName = localStorage.getItem('studentName') || 'Friend';
+            speakText(`Welcome to Mickey's Learning Hub, ${studentName}! Choose a game to begin. Click the speaker buttons to hear about each game.`);
+        }, 1000);
+    });
+</script>
 </body>
 </html>

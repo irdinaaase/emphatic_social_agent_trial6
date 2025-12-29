@@ -32,28 +32,36 @@
             --irlen-rose: #fff0f0;
         }
 
-        /* DYSLEXIA FONT AS DEFAULT */
-        body {
-            margin: 0;
-            padding: 20px;
+        /* ============================================
+           DYSLEXIA MODE (FOLLOW PROFILE)
+           ============================================ */
+        body.dyslexia-mode {
             font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
             letter-spacing: 0.1em;
             line-height: 1.8;
+            background: var(--irlen-cream) !important;
+            color: #333333;
+        }
+
+        /* ============================================
+           DEFAULT BODY (NO DYSLEXIA MODE)
+           ============================================ */
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Fredoka One', cursive;
             background: linear-gradient(135deg, var(--mickey-bg) 0%, #ffe6e6 100%);
             min-height: 100vh;
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 2px, transparent 2px),
                 radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.8) 2px, transparent 2px);
             background-size: 40px 40px;
+            transition: all 0.3s ease;
         }
 
-        body.standard-mode {
-            font-family: 'Fredoka One', cursive !important;
-            letter-spacing: normal;
-            line-height: normal;
-        }
-
-        /* IRLEN COLOR SCHEMES */
+        /* ============================================
+           IRLEN COLOR SCHEMES (FOLLOW PROFILE)
+           ============================================ */
         body.irlen-cream {
             background: var(--irlen-cream) !important;
             color: #333333;
@@ -94,16 +102,30 @@
             color: #660000;
         }
 
+        /* Apply Irlen colors to dyslexia mode as well */
+        body.dyslexia-mode.irlen-cream {
+            background: var(--irlen-cream) !important;
+            color: #333333;
+        }
+        body.dyslexia-mode.irlen-blue {
+            background: var(--irlen-blue) !important;
+            color: #003366;
+        }
+        body.dyslexia-mode.irlen-green {
+            background: var(--irlen-green) !important;
+            color: #006600;
+        }
+
+        /* ============================================
+           COMMON ELEMENTS STYLES (FOLLOW PROFILE THEME)
+           ============================================ */
         .fixed-header {
-            position: fixed;
-            top: 0;
+            top: 35px;
             left: 0;
             width: 100%;
             z-index: 9999;
             padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 2px solid currentColor;
         }
 
         .header-container {
@@ -146,28 +168,30 @@
         }
 
         .settings-content {
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.98);
+        padding: 30px;
             border-radius: 25px;
-            border: 5px solid currentColor;
             box-shadow: 0 10px 0 currentColor;
-            margin-top: 80px;
-            max-width: 800px;
-            margin: 80px auto 20px;
+            margin-top: 20px;
+            max-width: 1400px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.95) !important;
+    border: 3px solid currentColor !important;
+    color: inherit !important;
         }
-
+        
         .setting-section {
-            background: rgba(233, 169, 70, 0.8);
+            background: rgba(233, 169, 70, 0.1);
             padding: 20px;
             border-radius: 15px;
             border: 3px solid currentColor;
             margin-bottom: 20px;
+            color: inherit;
         }
 
         .setting-btn {
             padding: 12px 20px;
-            background: #fffef0;
-            color: #95e1d3;
+            background: var(--mickey-blue);
+            color: white;
             border: 3px solid currentColor;
             border-radius: 15px;
             font-family: inherit;
@@ -200,7 +224,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            border: 2px solid #333333;
+            border: 2px solid currentColor;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -216,7 +240,7 @@
 
         .irlen-btn-settings.active {
             border: 3px solid #ffffff;
-            box-shadow: 0 0 0 2px #333333;
+            box-shadow: 0 0 0 2px currentColor;
         }
 
         .irlen-label {
@@ -224,6 +248,24 @@
             text-align: center;
             margin-top: 5px;
             color: currentColor;
+        }
+
+        /* ============================================
+           NOTIFICATIONS
+           ============================================ */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: currentColor;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 2px solid currentColor;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            max-width: 300px;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -237,6 +279,14 @@
             }
         }
 
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
         @media (max-width: 768px) {
             body {
                 padding-top: 160px;
@@ -271,24 +321,9 @@
             }
         }
 
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            color: currentColor;
-            padding: 15px 20px;
-            border-radius: 15px;
-            border: 2px solid currentColor;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 10000;
-            max-width: 300px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-20px); }
+        /* Text styles that follow dyslexia mode */
+        .dyslexia-text {
+            font-family: inherit;
         }
     </style>
 </head>
@@ -301,9 +336,6 @@
                 </a>
                 <a href="profile.html" class="nav-tab">
                     <i class="fas fa-user"></i>
-                </a>
-                <a href="about.html" class="nav-tab">
-                    <i class="fas fa-info-circle"></i>
                 </a>
                 <a href="settings.html" class="nav-tab active">
                     <i class="fas fa-cog"></i>
@@ -318,7 +350,6 @@
         </h2>
         
         <!-- Accessibility Settings Section -->
-        <!-- In settings.html -->
         <div class="setting-section">
             <h3 style="color: currentColor; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-book-reader"></i> Accessibility Settings
@@ -449,56 +480,85 @@
     </div>
 
     <script>
+        // ============================================
+        // APPLY SETTINGS FROM LOCALSTORAGE (FOLLOW PROFILE)
+        // ============================================
+        function applySavedSettings() {
+            // Apply dyslexia mode
+            const dyslexiaEnabled = localStorage.getItem('dyslexiaMode') === 'true';
+            if (dyslexiaEnabled) {
+                document.body.classList.add('dyslexia-mode');
+            }
+            
+            // Apply Irlen color scheme
+            const irlenScheme = localStorage.getItem('irlenScheme') || 'default';
+            if (irlenScheme !== 'default') {
+                document.body.classList.add(irlenScheme);
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
         window.addEventListener('load', function() {
             const savedName = localStorage.getItem('studentName');
             if (!savedName) {
                 window.location.href = 'welcome.html';
+                return;
             }
             
-            // Initialize dyslexia mode (default is dyslexia mode ON)
-            const dyslexiaBtn = document.getElementById('toggle-dyslexia');
-            const dyslexiaMode = localStorage.getItem('dyslexiaMode');
+            // Apply saved settings from localStorage (IMPORTANT!)
+            applySavedSettings();
             
-            // Default is dyslexia mode (true), so we show "Standard Font Mode" button
-            if (dyslexiaMode === 'false') {
-                document.body.classList.add('standard-mode');
-                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-off"></i> Dyslexia Mode (OFF)';
-            } else {
-                // Dyslexia mode is ON by default
-                document.body.classList.remove('standard-mode');
-                localStorage.setItem('dyslexiaMode', 'true');
-                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-on"></i> Standard Font Mode (ON)';
-            }
-            
-            dyslexiaBtn.addEventListener('click', function() {
-                const isStandard = document.body.classList.toggle('standard-mode');
-                localStorage.setItem('dyslexiaMode', isStandard ? 'false' : 'true');
-                
-                const statusElement = document.getElementById('dyslexia-status');
-                if (isStandard) {
-                    statusElement.innerHTML = '<i class="fas fa-toggle-off"></i> Dyslexia Mode (OFF)';
-                    showSettingsNotification('Dyslexia-friendly fonts disabled. Using standard fonts.');
-                } else {
-                    statusElement.innerHTML = '<i class="fas fa-toggle-on"></i> Standard Font Mode (ON)';
-                    showSettingsNotification('Dyslexia-friendly fonts enabled!');
-                }
-            });
+            // Initialize dyslexia mode toggle
+            initializeDyslexiaToggle();
             
             // Initialize Irlen color scheme selector
             initializeIrlenSelector();
             
             // Initialize sound toggle
-            const soundBtn = document.getElementById('toggle-sound');
-            const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
-            soundBtn.innerHTML = `<i class="fas fa-volume-${soundEnabled ? 'up' : 'mute'}"></i> Sound ${soundEnabled ? 'ON' : 'OFF'}`;
+            initializeSoundToggle();
             
-            soundBtn.addEventListener('click', function() {
-                const newState = localStorage.getItem('soundEnabled') === 'false';
-                localStorage.setItem('soundEnabled', newState);
-                this.innerHTML = `<i class="fas fa-volume-${newState ? 'up' : 'mute'}"></i> Sound ${newState ? 'ON' : 'OFF'}`;
-                alert(`Sound ${newState ? 'enabled' : 'disabled'}!`);
-            });
+            console.log('⚙️ Settings loaded with profile theme');
         });
+
+        function initializeDyslexiaToggle() {
+            const dyslexiaBtn = document.getElementById('toggle-dyslexia');
+            const dyslexiaMode = localStorage.getItem('dyslexiaMode');
+            
+            // Default is dyslexia mode (true), so we show "Standard Font Mode" button
+            if (dyslexiaMode === 'false') {
+                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-off"></i> Dyslexia Mode (OFF)';
+            } else {
+                // Dyslexia mode is ON by default
+                localStorage.setItem('dyslexiaMode', 'true');
+                dyslexiaBtn.innerHTML = '<i class="fas fa-toggle-on"></i> Standard Font Mode (ON)';
+            }
+            
+            dyslexiaBtn.addEventListener('click', function() {
+                const isDyslexiaMode = localStorage.getItem('dyslexiaMode') === 'true';
+                
+                if (isDyslexiaMode) {
+                    // Currently in dyslexia mode, switch to standard
+                    document.body.classList.remove('dyslexia-mode');
+                    localStorage.setItem('dyslexiaMode', 'false');
+                    this.innerHTML = '<i class="fas fa-toggle-off"></i> Dyslexia Mode (OFF)';
+                    showSettingsNotification('Dyslexia-friendly fonts disabled. Using standard fonts.');
+                } else {
+                    // Currently in standard mode, switch to dyslexia
+                    document.body.classList.add('dyslexia-mode');
+                    localStorage.setItem('dyslexiaMode', 'true');
+                    this.innerHTML = '<i class="fas fa-toggle-on"></i> Standard Font Mode (ON)';
+                    showSettingsNotification('Dyslexia-friendly fonts enabled!');
+                }
+                
+                // Update the button text
+                const statusElement = document.getElementById('dyslexia-status');
+                if (statusElement) {
+                    statusElement.innerHTML = this.innerHTML;
+                }
+            });
+        }
 
         function initializeIrlenSelector() {
             // Load Irlen color scheme
@@ -536,7 +596,7 @@
                 'irlen-rose': 'Rose'
             };
             
-            alert(`${schemeNames[scheme]} color scheme applied!`);
+            showSettingsNotification(`${schemeNames[scheme]} color scheme applied!`);
         }
 
         function applyIrlenScheme(scheme) {
@@ -561,6 +621,22 @@
             });
         }
 
+        function initializeSoundToggle() {
+            const soundBtn = document.getElementById('toggle-sound');
+            const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+            soundBtn.innerHTML = `<i class="fas fa-volume-${soundEnabled ? 'up' : 'mute'}"></i> Sound ${soundEnabled ? 'ON' : 'OFF'}`;
+            
+            soundBtn.addEventListener('click', function() {
+                const newState = localStorage.getItem('soundEnabled') === 'false';
+                localStorage.setItem('soundEnabled', newState);
+                this.innerHTML = `<i class="fas fa-volume-${newState ? 'up' : 'mute'}"></i> Sound ${newState ? 'ON' : 'OFF'}`;
+                showSettingsNotification(`Sound ${newState ? 'enabled' : 'disabled'}!`);
+            });
+        }
+
+        // ============================================
+        // NOTIFICATION FUNCTIONS
+        // ============================================
         function showSettingsNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = 'notification';
@@ -583,11 +659,14 @@
             }, 3000);
         }
 
+        // ============================================
+        // OTHER SETTINGS FUNCTIONS
+        // ============================================
         function changeStudentName() {
             const newName = prompt("Enter your new name:", localStorage.getItem('studentName') || '');
             if (newName && newName.trim()) {
                 localStorage.setItem('studentName', newName.trim());
-                alert(`Name changed to ${newName}!`);
+                showSettingsNotification(`Name changed to ${newName}!`, 'success');
             }
         }
 
@@ -612,14 +691,14 @@
             linkElement.setAttribute('download', exportFileDefaultName);
             linkElement.click();
             
-            alert('Progress exported successfully!');
+            showSettingsNotification('Progress exported successfully!', 'success');
         }
 
         function resetProgress() {
             if (confirm("Are you sure you want to reset your progress? All your points and game progress will be lost.")) {
                 localStorage.removeItem('studentPoints');
                 localStorage.removeItem('gameProgress');
-                alert('Progress reset successfully!');
+                showSettingsNotification('Progress reset successfully!', 'info');
             }
         }
 
