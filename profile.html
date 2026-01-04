@@ -528,22 +528,6 @@
             .data-table td {
                 padding: 8px;
             }
-            
-            /* Adjust control positions for mobile */
-            .irlen-selector {
-                top: 80px;
-                right: 10px;
-                flex-direction: row;
-                flex-wrap: wrap;
-                max-width: 120px;
-            }
-            
-            .dyslexia-toggle {
-                top: 80px;
-                left: 10px;
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
         }
 
         .dyslexia-text {
@@ -669,10 +653,10 @@
             </h3>
             
             <div class="charts-grid">
-                <!-- Radar Chart for Emotions -->
+                <!-- Radar Chart for ALL Emotions -->
                 <div class="chart-container">
                     <div class="chart-title">
-                        <i class="fas fa-radar"></i> Main Emotion Radar
+                        <i class="fas fa-radar"></i> All Emotions Detected
                     </div>
                     <canvas id="emotionRadarChart"></canvas>
                 </div>
@@ -693,10 +677,10 @@
                     <canvas id="interventionChart"></canvas>
                 </div>
                 
-                <!-- Line Chart for Focus Level Over Time -->
+                <!-- Line Chart for Focus Level During Games -->
                 <div class="chart-container">
                     <div class="chart-title">
-                        <i class="fas fa-chart-line"></i> Focus Level Over Time
+                        <i class="fas fa-chart-line"></i> Focus Level During Games
                     </div>
                     <canvas id="focusChart"></canvas>
                 </div>
@@ -710,10 +694,10 @@
             </h3>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-                <!-- Average Emotions per Game -->
+                <!-- All Emotions Felt -->
                 <div>
                     <h4 style="color: currentColor; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-smile"></i> Average Emotions During Tasks
+                        <i class="fas fa-smile"></i> All Emotions Felt During Games
                     </h4>
                     <div id="avg-emotions-container" style="margin-top: 10px;">
                         <!-- Will be populated by JavaScript -->
@@ -744,8 +728,8 @@
                             <th>Time Taken</th>
                             <th>Emotion</th>
                             <th>Focus Level</th>
-                            <th>Intervention</th>
-                            <th>Intervention Time</th>
+                            <th>Intervention Used</th>
+                            <th>Time Spent</th>
                             <th>Score</th>
                         </tr>
                     </thead>
@@ -963,7 +947,8 @@
                 funbreak: { count: 0, avgTime: 0, emotion: '' },
                 story: { count: 0, avgTime: 0, emotion: '' },
                 hug: { count: 0, avgTime: 0, emotion: '' },
-                refocus: { count: 0, avgTime: 0, emotion: '' }
+                refocus: { count: 0, avgTime: 0, emotion: '' },
+                none: { count: 0, avgTime: 0, emotion: '' }
             },
             focusStats: {
                 high: { count: 0, avgEmotion: '', avgTime: 0 },
@@ -1048,6 +1033,11 @@
             // Merge with default structure
             Object.assign(profileAnalytics, analytics);
             
+            // Ensure interventionStats has 'none' category
+            if (!profileAnalytics.interventionStats.none) {
+                profileAnalytics.interventionStats.none = { count: 0, avgTime: 0, emotion: '' };
+            }
+            
             // Calculate derived statistics if not present
             calculateDerivedStatistics();
             
@@ -1062,6 +1052,9 @@
             
             // Calculate success rate
             calculateSuccessRate();
+            
+            // Ensure intervention data is properly set
+            ensureInterventionData();
             
             // Update achievements
             updateAchievements();
@@ -1219,42 +1212,82 @@
             
             container.innerHTML = '';
             
-            // Get top 3 emotions by count
-            const topEmotions = Object.entries(profileAnalytics.emotionStats)
-                .filter(([_, data]) => data.count > 0)
-                .sort((a, b) => b[1].count - a[1].count)
-                .slice(0, 3);
+            // Calculate emotion counts from ALL session data
+            const emotionCounts = {};
             
-            if (topEmotions.length === 0) {
+            // Count emotions from game sessions
+            if (profileAnalytics.gameSessions && profileAnalytics.gameSessions.length > 0) {
+                profileAnalytics.gameSessions.forEach(session => {
+                    if (session.emotion) {
+                        emotionCounts[session.emotion] = (emotionCounts[session.emotion] || 0) + 1;
+                    }
+                });
+            }
+            
+            // Get ALL emotions that were felt (not just top 3)
+            const allEmotions = Object.entries(emotionCounts)
+                .sort((a, b) => b[1] - a[1]);
+            
+            if (allEmotions.length === 0) {
                 container.innerHTML = '<p style="color: currentColor; font-family: ' + (document.body.classList.contains('dyslexia-mode') ? "'OpenDyslexic', 'Comic Sans MS', sans-serif" : "'Comic Neue', cursive") + ';">No emotion data recorded yet.</p>';
                 return;
             }
             
-            topEmotions.forEach(([emotion, data]) => {
+            // Create header
+            const header = document.createElement('h5');
+            header.style.cssText = 'color: currentColor; margin-bottom: 10px; font-family: ' + (document.body.classList.contains('dyslexia-mode') ? "'OpenDyslexic', 'Comic Sans MS', sans-serif" : "'Comic Neue', cursive") + ';';
+            header.textContent = `Emotions Detected (${allEmotions.length} different emotions)`;
+            container.appendChild(header);
+            
+            // Create emotion grid
+            const emotionGrid = document.createElement('div');
+            emotionGrid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px;';
+            
+            allEmotions.forEach(([emotion, count]) => {
                 const emotionDiv = document.createElement('div');
                 emotionDiv.style.cssText = `
                     display: flex;
-                    justify-content: space-between;
+                    flex-direction: column;
                     align-items: center;
-                    margin-bottom: 10px;
-                    padding: 10px;
+                    padding: 12px;
                     background: ${getEmotionColor(emotion)}20;
                     border-radius: 10px;
-                    border-left: 4px solid ${getEmotionColor(emotion)};
+                    border: 2px solid ${getEmotionColor(emotion)};
+                    text-align: center;
                 `;
                 
                 emotionDiv.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span class="emotion-tag emotion-${emotion}">${emotion.toUpperCase()}</span>
-                        <span style="color: currentColor;">${data.count} times</span>
+                    <span class="emotion-tag emotion-${emotion}" style="margin-bottom: 8px;">${emotion.toUpperCase()}</span>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: currentColor;">
+                        ${count}
                     </div>
-                    <div style="color: currentColor; font-weight: bold;">
-                        ${Math.round(data.avgFocus || 0)}% focus
+                    <div style="font-size: 0.8rem; color: currentColor; margin-top: 4px;">
+                        time${count !== 1 ? 's' : ''}
                     </div>
                 `;
                 
-                container.appendChild(emotionDiv);
+                emotionGrid.appendChild(emotionDiv);
             });
+            
+            container.appendChild(emotionGrid);
+            
+            // Add summary
+            const totalEmotions = allEmotions.reduce((sum, [_, count]) => sum + count, 0);
+            const summaryDiv = document.createElement('div');
+            summaryDiv.style.cssText = `
+                margin-top: 15px;
+                padding: 10px;
+                background: rgba(138, 198, 209, 0.1);
+                border-radius: 10px;
+                border-left: 4px solid var(--mickey-blue);
+                font-family: ${document.body.classList.contains('dyslexia-mode') ? "'OpenDyslexic', 'Comic Sans MS', sans-serif" : "'Comic Neue', cursive"};
+            `;
+            summaryDiv.innerHTML = `
+                <strong style="color: currentColor;">Summary:</strong> 
+                Total emotions detected: <strong>${totalEmotions}</strong> across 
+                <strong>${profileAnalytics.gameSessions.length}</strong> game sessions
+            `;
+            container.appendChild(summaryDiv);
         }
 
         function updateInterventionDisplay() {
@@ -1263,17 +1296,21 @@
             
             container.innerHTML = '';
             
-            // Get top 3 interventions by count
+            // Get top 5 interventions by count (excluding 'none')
             const topInterventions = Object.entries(profileAnalytics.interventionStats)
-                .filter(([_, data]) => data.count > 0)
+                .filter(([intervention, data]) => intervention !== 'none' && data.count > 0)
                 .sort((a, b) => b[1].count - a[1].count)
-                .slice(0, 3);
+                .slice(0, 5);
             
-            if (topInterventions.length === 0) {
+            // Count 'none' interventions separately
+            const noneCount = profileAnalytics.interventionStats.none ? profileAnalytics.interventionStats.none.count : 0;
+            
+            if (topInterventions.length === 0 && noneCount === 0) {
                 container.innerHTML = '<p style="color: currentColor; font-family: ' + (document.body.classList.contains('dyslexia-mode') ? "'OpenDyslexic', 'Comic Sans MS', sans-serif" : "'Comic Neue', cursive") + ';">No interventions recorded yet.</p>';
                 return;
             }
             
+            // Show interventions used
             topInterventions.forEach(([intervention, data]) => {
                 const interventionDiv = document.createElement('div');
                 interventionDiv.style.cssText = `
@@ -1292,7 +1329,7 @@
                 interventionDiv.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span class="intervention-tag">${interventionName}</span>
-                        <span style="color: currentColor;">${data.count} times</span>
+                        <span style="color: currentColor;">${data.count} time${data.count !== 1 ? 's' : ''}</span>
                     </div>
                     <div style="color: currentColor; font-weight: bold;">
                         ${Math.round(data.avgTime || 0)}s avg
@@ -1301,6 +1338,49 @@
                 
                 container.appendChild(interventionDiv);
             });
+            
+            // Show "no intervention" count if applicable
+            if (noneCount > 0) {
+                const noneDiv = document.createElement('div');
+                noneDiv.style.cssText = `
+                    margin-top: 15px;
+                    padding: 10px;
+                    background: rgba(200, 200, 200, 0.2);
+                    border-radius: 10px;
+                    border-left: 4px solid #cccccc;
+                `;
+                
+                noneDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="color: #666; font-style: italic;">No intervention needed</span>
+                        </div>
+                        <div style="color: #666; font-weight: bold;">
+                            ${noneCount} time${noneCount !== 1 ? 's' : ''}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(noneDiv);
+            }
+            
+            // Add summary
+            const totalInterventions = topInterventions.reduce((sum, [_, data]) => sum + data.count, 0);
+            const summaryDiv = document.createElement('div');
+            summaryDiv.style.cssText = `
+                margin-top: 15px;
+                padding: 10px;
+                background: rgba(233, 169, 70, 0.1);
+                border-radius: 10px;
+                border-left: 4px solid var(--mickey-yellow);
+                font-family: ${document.body.classList.contains('dyslexia-mode') ? "'OpenDyslexic', 'Comic Sans MS', sans-serif" : "'Comic Neue', cursive"};
+            `;
+            summaryDiv.innerHTML = `
+                <strong style="color: currentColor;">Summary:</strong> 
+                Interventions used: <strong>${totalInterventions}</strong> times
+                ${noneCount > 0 ? ` | No intervention needed: <strong>${noneCount}</strong> times` : ''}
+            `;
+            container.appendChild(summaryDiv);
         }
 
         function updateSessionHistoryTable() {
@@ -1320,10 +1400,10 @@
                 return;
             }
             
-            // Display latest 10 sessions
+            // Display latest 15 sessions
             const recentSessions = [...profileAnalytics.gameSessions]
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 10);
+                .slice(0, 15);
             
             recentSessions.forEach(session => {
                 const row = document.createElement('tr');
@@ -1333,8 +1413,9 @@
                 const timeTaken = session.timeTaken ? `${Math.round(session.timeTaken)}s` : '-';
                 const emotion = session.emotion || 'neutral';
                 const focusLevel = session.focus || 'unknown';
-                const intervention = session.intervention ? getInterventionDisplayName(session.intervention) : '-';
-                const interventionTime = session.interventionTime ? `${Math.round(session.interventionTime)}s` : '-';
+                const intervention = session.intervention ? getInterventionDisplayName(session.intervention) : 'None';
+                const interventionTime = session.interventionTime && session.interventionTime !== '-' && session.intervention !== 'none' ? 
+                    `${Math.round(session.interventionTime)}s` : '-';
                 const score = session.score || '-';
                 
                 row.innerHTML = `
@@ -1352,6 +1433,44 @@
             });
         }
 
+        function ensureInterventionData() {
+            // Check if game sessions have intervention data
+            let needsSave = false;
+            
+            if (profileAnalytics.gameSessions) {
+                profileAnalytics.gameSessions.forEach(session => {
+                    // If session has emotion but no intervention, add 'none'
+                    if (session.emotion && !session.intervention) {
+                        session.intervention = 'none';
+                        session.interventionTime = '-';
+                        needsSave = true;
+                    }
+                    
+                    // Ensure intervention time is properly formatted
+                    if (session.interventionTime === undefined || session.interventionTime === null) {
+                        session.interventionTime = '-';
+                        needsSave = true;
+                    }
+                    
+                    // Ensure intervention is properly formatted
+                    if (session.intervention === undefined || session.intervention === null) {
+                        session.intervention = 'none';
+                        needsSave = true;
+                    }
+                    
+                    // Update intervention stats based on session data
+                    if (session.intervention && profileAnalytics.interventionStats[session.intervention]) {
+                        profileAnalytics.interventionStats[session.intervention].count++;
+                    }
+                });
+            }
+            
+            if (needsSave) {
+                saveAnalyticsData();
+                console.log('🔄 Fixed missing intervention data in sessions');
+            }
+        }
+
         function updateAchievements() {
             // Check for achievements
             if (profileAnalytics.gamesPlayed >= 1) {
@@ -1366,9 +1485,9 @@
                 profileAnalytics.achievements.fiveActivities = true;
             }
             
-            // Count unique interventions
-            const uniqueInterventions = Object.values(profileAnalytics.interventionStats)
-                .filter(data => data.count > 0).length;
+            // Count unique interventions (excluding 'none')
+            const uniqueInterventions = Object.entries(profileAnalytics.interventionStats)
+                .filter(([intervention, data]) => intervention !== 'none' && data.count > 0).length;
             
             if (uniqueInterventions >= 5) {
                 profileAnalytics.achievements.interventionMaster = true;
@@ -1472,23 +1591,39 @@
                             document.body.classList.contains('irlen-rose') ? '#660000' :
                             '#333333';
             
-            // 1. Emotion Radar Chart
+            // 1. ENHANCED Emotion Radar Chart - Shows ALL emotions detected
             const emotionRadarCtx = document.getElementById('emotionRadarChart').getContext('2d');
+
+            // Calculate emotion counts from ALL session data
+            const emotionCounts = {
+                anger: 0, disgust: 0, fear: 0, sad: 0, 
+                happy: 0, surprise: 0, neutral: 0, distracted: 0
+            };
+
+            // Count emotions from game sessions
+            if (profileAnalytics.gameSessions && profileAnalytics.gameSessions.length > 0) {
+                profileAnalytics.gameSessions.forEach(session => {
+                    if (session.emotion && emotionCounts.hasOwnProperty(session.emotion)) {
+                        emotionCounts[session.emotion] = (emotionCounts[session.emotion] || 0) + 1;
+                    }
+                });
+            }
+
             emotionRadarChart = new Chart(emotionRadarCtx, {
                 type: 'radar',
                 data: {
                     labels: ['Anger', 'Disgust', 'Fear', 'Sad', 'Happy', 'Surprise', 'Neutral', 'Distracted'],
                     datasets: [{
-                        label: 'Emotion Frequency',
+                        label: 'Times Detected',
                         data: [
-                            profileAnalytics.emotionStats.anger.count,
-                            profileAnalytics.emotionStats.disgust.count,
-                            profileAnalytics.emotionStats.fear.count,
-                            profileAnalytics.emotionStats.sad.count,
-                            profileAnalytics.emotionStats.happy.count,
-                            profileAnalytics.emotionStats.surprise.count,
-                            profileAnalytics.emotionStats.neutral.count,
-                            profileAnalytics.emotionStats.distracted.count
+                            emotionCounts.anger,
+                            emotionCounts.disgust,
+                            emotionCounts.fear,
+                            emotionCounts.sad,
+                            emotionCounts.happy,
+                            emotionCounts.surprise,
+                            emotionCounts.neutral,
+                            emotionCounts.distracted
                         ],
                         backgroundColor: 'rgba(149, 225, 211, 0.2)',
                         borderColor: 'rgba(149, 225, 211, 1)',
@@ -1507,7 +1642,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // IMPORTANT for custom sizing
+                    maintainAspectRatio: false,
                     scales: {
                         r: {
                             angleLines: {
@@ -1524,14 +1659,26 @@
                                 }
                             },
                             ticks: {
-                                display: false,
-                                backdropColor: 'transparent'
+                                display: true,
+                                backdropColor: 'transparent',
+                                callback: function(value) {
+                                    return value;
+                                }
                             }
                         }
                     },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const emotion = context.label;
+                                    const count = context.raw;
+                                    return `${emotion}: ${count} time${count !== 1 ? 's' : ''}`;
+                                }
+                            }
                         }
                     }
                 }
@@ -1586,7 +1733,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // IMPORTANT for custom sizing
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -1629,9 +1776,9 @@
             // 3. Intervention Distribution Pie Chart
             const interventionCtx = document.getElementById('interventionChart').getContext('2d');
             
-            // Prepare intervention data for chart
+            // Prepare intervention data for chart (excluding 'none')
             const interventionData = Object.entries(profileAnalytics.interventionStats)
-                .filter(([_, data]) => data.count > 0)
+                .filter(([intervention, data]) => intervention !== 'none' && data.count > 0)
                 .sort((a, b) => b[1].count - a[1].count)
                 .slice(0, 8);
             
@@ -1651,7 +1798,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // IMPORTANT for custom sizing
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'right',
@@ -1663,25 +1810,45 @@
                                 color: textColor,
                                 padding: 15
                             }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = interventionData.reduce((sum, [_, data]) => sum + data.count, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} time${value !== 1 ? 's' : ''} (${percentage}%)`;
+                                }
+                            }
                         }
                     }
                 }
             });
             
-            // 4. Focus Level Over Time Line Chart
+            // 4. ENHANCED Focus Chart - Shows focus level for EACH game session
             const focusCtx = document.getElementById('focusChart').getContext('2d');
             
-            // Prepare focus history data
-            const focusData = profileAnalytics.focusHistory.slice(-15);
-            const focusLabels = focusData.map((_, index) => `Session ${index + 1}`);
-            const focusValues = focusData.map(record => {
-                switch(record.level) {
+            // Prepare focus history data - one point per game session
+            const focusData = profileAnalytics.gameSessions
+                .slice(-15) // Last 15 sessions
+                .reverse(); // Oldest to newest for timeline
+            
+            const focusLabels = focusData.map((session, index) => {
+                const date = new Date(session.date);
+                return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            });
+            
+            const focusValues = focusData.map(session => {
+                switch(session.focus) {
                     case 'high': return 90;
                     case 'medium': return 60;
                     case 'low': return 30;
                     default: return 50;
                 }
             });
+            
+            const gameNames = focusData.map(session => getGameDisplayName(session.game));
             
             focusChart = new Chart(focusCtx, {
                 type: 'line',
@@ -1705,7 +1872,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // IMPORTANT for custom sizing
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -1742,6 +1909,24 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const index = tooltipItems[0].dataIndex;
+                                    return `${gameNames[index]} - ${focusLabels[index]}`;
+                                },
+                                label: function(context) {
+                                    const value = context.raw;
+                                    let level = '';
+                                    if (value > 80) level = 'High Focus';
+                                    else if (value > 50) level = 'Medium Focus';
+                                    else if (value > 30) level = 'Low Focus';
+                                    else level = 'Very Low Focus';
+                                    
+                                    return `${level}: ${value}%`;
+                                }
+                            }
                         }
                     }
                 }
@@ -1772,19 +1957,28 @@
                     insights.push(`🏆 <strong>Star Performer!</strong> You're doing amazing in ${getGameDisplayName(bestGame.name)} with ${bestGame.progress}% progress.`);
                 }
                 
-                // Emotion insights
-                const mostCommonEmotion = Object.entries(profileAnalytics.emotionStats)
-                    .reduce((most, [name, data]) => 
-                        data.count > most.count ? {name, ...data} : most, 
+                // Emotion insights based on ALL emotions
+                const emotionCounts = {};
+                if (profileAnalytics.gameSessions && profileAnalytics.gameSessions.length > 0) {
+                    profileAnalytics.gameSessions.forEach(session => {
+                        if (session.emotion) {
+                            emotionCounts[session.emotion] = (emotionCounts[session.emotion] || 0) + 1;
+                        }
+                    });
+                }
+                
+                const mostCommonEmotion = Object.entries(emotionCounts)
+                    .reduce((most, [name, count]) => 
+                        count > most.count ? {name, count} : most, 
                         {name: '', count: 0}
                     );
                 
                 if (mostCommonEmotion.count > 0) {
                     const emotionName = mostCommonEmotion.name;
                     if (['anger', 'fear', 'sad', 'distracted'].includes(emotionName)) {
-                        insights.push(`😊 <strong>Emotion Check:</strong> You often feel ${emotionName} during activities. Remember to use interventions when needed!`);
+                        insights.push(`😊 <strong>Emotion Check:</strong> You often feel ${emotionName} during activities (${mostCommonEmotion.count} times). Remember to use interventions when needed!`);
                     } else if (emotionName === 'happy') {
-                        insights.push(`😄 <strong>Great Mood!</strong> You're usually happy while learning. Keep up the positive attitude!`);
+                        insights.push(`😄 <strong>Great Mood!</strong> You're usually happy while learning (${mostCommonEmotion.count} times). Keep up the positive attitude!`);
                     }
                 }
                 
@@ -1803,15 +1997,19 @@
                 
                 // Intervention insights
                 const totalInterventions = Object.values(profileAnalytics.interventionStats)
+                    .filter((_, intervention) => intervention !== 'none')
                     .reduce((sum, data) => sum + data.count, 0);
                 
-                if (totalInterventions > 0) {
-                    const avgInterventionTime = Object.values(profileAnalytics.interventionStats)
-                        .filter(data => data.count > 0)
-                        .reduce((sum, data) => sum + data.avgTime, 0) / 
-                        Object.values(profileAnalytics.interventionStats).filter(data => data.count > 0).length;
-                    
-                    insights.push(`⏱️ <strong>Quick Recovery:</strong> You take about ${Math.round(avgInterventionTime)} seconds to choose interventions.`);
+                const noneInterventions = profileAnalytics.interventionStats.none ? profileAnalytics.interventionStats.none.count : 0;
+                const totalSessions = profileAnalytics.gameSessions.length;
+                
+                if (totalSessions > 0) {
+                    const interventionRate = Math.round((totalInterventions / totalSessions) * 100);
+                    if (interventionRate > 50) {
+                        insights.push(`💪 <strong>Good Self-Regulation!</strong> You use interventions ${interventionRate}% of the time when needed.`);
+                    } else if (interventionRate < 20 && noneInterventions > 0) {
+                        insights.push(`👍 <strong>Good Emotional Control!</strong> You rarely need interventions (only ${interventionRate}% of sessions).`);
+                    }
                 }
                 
                 // Success rate insight
@@ -1892,7 +2090,8 @@
                 funbreak: 'Fun Break',
                 story: 'Hear Story',
                 hug: 'Virtual Hug',
-                refocus: 'Refocus Eyes'
+                refocus: 'Refocus Eyes',
+                none: 'None'
             };
             return names[intervention] || intervention;
         }
@@ -2043,7 +2242,8 @@
                                 funbreak: { count: 0, avgTime: 0, emotion: '' },
                                 story: { count: 0, avgTime: 0, emotion: '' },
                                 hug: { count: 0, avgTime: 0, emotion: '' },
-                                refocus: { count: 0, avgTime: 0, emotion: '' }
+                                refocus: { count: 0, avgTime: 0, emotion: '' },
+                                none: { count: 0, avgTime: 0, emotion: '' }
                             };
                         } else if (key === 'focusStats') {
                             profileAnalytics.focusStats = {
